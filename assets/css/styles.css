@@ -55,7 +55,6 @@ header {
   position: relative;
   z-index: 3;
 
-  /* 3-column layout: logo | nav | user */
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -87,7 +86,7 @@ header {
   font-weight: 500;
 }
 
-/* Nav Bar */
+/* ===== Nav Bar ===== */
 .menu-bar {
   display: flex;
   align-items: center;
@@ -115,61 +114,48 @@ header {
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
 }
 
-/* Dropdown */
-.menu-item {
-  position: relative;
-}
+/* ===== Frosted Dropdown (fixed position for real blur) ===== */
+header { overflow: visible; }
 
-/* Frosted dropdown — fixed so backdrop-filter blurs the PAGE behind it */
-.dropdown{
-  position: fixed;             /* key change */
-  left: 0;                     /* JS sets exact left/top */
-  top: 0;
+.dropdown {
+  position: fixed;            /* ensures blur shows page background */
+  left: 0; top: 0;            /* JS positions it precisely */
+  width: auto;
   min-width: 240px;
 
-  /* glass look */
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  background: rgba(255,255,255,0.38);
+  backdrop-filter: blur(22px) saturate(140%) contrast(105%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%) contrast(105%);
 
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,255,255,0.55);
   border-radius: 14px;
-  box-shadow: 0 14px 36px rgba(0,0,0,0.28);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.28);
   overflow: hidden;
   z-index: 1000;
 
-  /* show/hide animation */
   opacity: 0;
   visibility: hidden;
   transform: translateY(6px);
-  transition: opacity .15s ease, transform .15s ease, visibility 0s .15s;
+  transition: opacity .16s ease, transform .16s ease, visibility 0s .16s;
 
-  /* perf hints */
   will-change: left, top, opacity, transform;
 }
-
-/* When opened (your JS toggles .is-open) */
-.dropdown.is-open{
+.dropdown.is-open {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
   transition-delay: 0s;
 }
-
-/* Keep this: visual rows */
-.dropdown a{
-  display:block;
-  padding:10px 18px;
-  color:#1d1d1f;
-  text-decoration:none;
-  font-weight:500;
-  transition:background .15s ease;
+.dropdown a {
+  display: block;
+  padding: 12px 18px;
+  color: #1d1d1f;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background .12s ease;
 }
-.dropdown a + a{ border-top:1px solid rgba(0,0,0,.06); }
-.dropdown a:hover{ background: rgba(255,255,255,0.62); }
-
-/* Nice touch: header must not clip the dropdown */
-header{ overflow: visible; }
+.dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
+.dropdown a:hover { background: rgba(255,255,255,0.55); }
 
 /* ===== User Info Section ===== */
 .user-info {
@@ -227,15 +213,13 @@ header{ overflow: visible; }
   margin: 0 0 28px;
 }
 
-/* Dashboard grid */
+/* ===== Dashboard Layout ===== */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   align-items: start;
 }
-
-/* Card styles */
 .dashboard-grid .card {
   background: var(--surface);
   border: 1px solid var(--stroke);
@@ -251,8 +235,6 @@ header{ overflow: visible; }
   color: var(--ink);
   text-align: left;
 }
-
-/* Quick Access links */
 .quick-links {
   display: block;
   margin-top: 12px;
@@ -267,9 +249,7 @@ header{ overflow: visible; }
   border-bottom: 1px solid #efeff2;
 }
 .quick-links a:last-child { border-bottom: 0; }
-.quick-links a:hover {
-  background: rgba(0,0,0,0.03);
-}
+.quick-links a:hover { background: rgba(0,0,0,0.03); }
 
 /* ===== Footer ===== */
 footer {
@@ -283,7 +263,7 @@ footer {
   box-shadow: 0 4px 20px rgba(0,0,0,.25);
 }
 
-/* ===== Fix header alignment & small-screen layout ===== */
+/* ===== Responsive ===== */
 .logo-section a { color: inherit; text-decoration: none; }
 .logo-section a:hover { text-decoration: none; }
 header { grid-auto-columns: 1fr; overflow: visible; }
