@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UTAR Portal — Dashboard (Demo)</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <main class="card" role="main" aria-label="UTAR Dashboard">
+    <div class="logo-well" aria-label="University logo">
+      <img src="assets/img/logo-placeholder.svg" alt="UTAR Logo Placeholder">
+    </div>
+    <h1>Welcome to the UTAR Portal (Demo)</h1>
+    <h2 id="welcome">Hello, Student</h2>
+
+    <p style="text-align:center; margin: 10px 0 20px; color:#4d4d50;">
+      This is a static demonstration dashboard. No real data is shown.
+    </p>
+
+    <div class="actions">
+      <button class="btn" id="logout">Sign out</button>
+    </div>
+    <div class="footer">Demo only — do not enter real credentials.</div>
+  </main>
+
+  <script>
+    const user = localStorage.getItem('demo_user');
+    if (!user) {
+      window.location.replace('index.html');
+    } else {
+      const data = JSON.parse(user);
+      const w = document.getElementById('welcome');
+      if (w) w.textContent = 'Hello, ' + (data.id || 'Student');
+    }
+
+    document.getElementById('logout')?.addEventListener('click', () => {
+      localStorage.removeItem('demo_user');
+      window.location.replace('index.html');
+    });
+  </script>
+</body>
+</html>

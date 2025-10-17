@@ -26,7 +26,7 @@ body {
   padding: 24px;
 }
 .card {
-  width: min(440px, 100%);
+  width: min(460px, 100%);
   background: var(--card-bg);
   backdrop-filter: blur(var(--glass-blur)) saturate(120%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
@@ -37,8 +37,7 @@ body {
   animation: rise .6s ease-out;
 }
 .logo-well {
-  width: clamp(160px, 28vw, 250px);  
-  height: auto;
+  width: clamp(160px, 28vw, 250px);
   margin: 0 auto 18px;
   border-radius: 12px;
   background: none;
@@ -47,12 +46,7 @@ body {
   align-items: center;
   justify-content: center;
 }
-
-.logo-well img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-}
+.logo-well img { width: 100%; height: auto; object-fit: contain; }
 h1{
   margin: 6px 0 8px;
   font-size: clamp(22px, 2.6vw, 30px);
@@ -71,24 +65,19 @@ h2{
 form{ display: grid; gap: 14px; margin-bottom: 10px; text-align: left; }
 .field{ display: grid; gap: 8px; }
 label{ font-size: 13px; color: #4d4d50; }
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"]{
   width: 100%;
   padding: 14px 16px;
   border-radius: var(--radius-md);
   border: 1px solid #d1d1d6;
-  background-color: rgba(255, 255, 255, 0.95); /* keep subtle transparency */
-  color: #1d1d1f;                              /* visible dark text */
+  background-color: rgba(255,255,255,0.95);
+  color: #1d1d1f;
   font-size: 15px;
   outline: none;
   transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
 }
-
-input::placeholder {
-  color: #888; /* makes placeholder text slightly grey */
-  opacity: 1;
-}
-
-input:focus {
+input::placeholder { color: #888; opacity: 1; }
+input:focus{
   border-color: var(--utar-navy);
   box-shadow: 0 0 0 3px rgba(10,42,102,.20);
   transform: translateY(-1px);
@@ -114,5 +103,6 @@ input:focus {
 .aux a{ color: var(--utar-gold); text-decoration: none; font-weight: 600; }
 .aux a:hover{ text-decoration: underline; }
 .footer{ margin-top: 22px; font-size: 12px; color: rgba(0,0,0,.55); text-align: center; }
+.status{ text-align:center; min-height: 1.2em; color:#d02b2b; font-size: 13px; margin-top: 6px; }
 @keyframes rise{ from{ opacity: 0; transform: translateY(12px);} to{ opacity:1; transform: translateY(0);} }
-@media (max-width: 520px){ .card{ padding: 36px 22px 28px; } .logo-well{ width: 200px; height: 60px; } }
+@media (max-width: 520px){ .card{ padding: 36px 22px 28px; } }
