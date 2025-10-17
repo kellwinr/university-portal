@@ -288,3 +288,115 @@ header { grid-auto-columns: 1fr; overflow: visible; }
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* =========================
+   LOGIN PAGE — FIX & POLISH
+   (works even without a .card wrapper)
+   ========================= */
+
+/* Center the page when a login form exists */
+body.login,
+body:has(#login-form) {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+/* Keep your nice gradient */
+body.login,
+body:has(#login-form) {
+  background: linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
+}
+
+/* Make the form itself look like a card */
+#login-form {
+  width: min(460px, 100%);
+  background: var(--surface);
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.06);
+  padding: 28px 24px;
+}
+
+/* Headings above the form (if you have them) */
+body:has(#login-form) h1,
+body:has(#login-form) h2,
+body:has(#login-form) h3 {
+  color: #fff;
+  margin: 8px 0 12px;
+}
+
+/* Optional: logo block spacing on login page */
+body:has(#login-form) .logo-well {
+  margin-bottom: 16px;
+}
+
+/* Labels & fields */
+#login-form label {
+  display: block;
+  font-size: 13px;
+  color: #4d4d50;
+  margin: 10px 0 6px;
+}
+
+#login-form input[type="text"],
+#login-form input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid #d1d1d6;
+  background-color: rgba(255,255,255,0.98);
+  color: var(--ink);
+  font-size: 15px;
+  outline: none;
+  transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
+}
+
+#login-form input::placeholder { color: #888; }
+
+#login-form input:focus {
+  border-color: var(--utar-navy);
+  box-shadow: 0 0 0 3px rgba(10,42,102,.20);
+  transform: translateY(-1px);
+}
+
+/* Submit button */
+#login-form button[type="submit"],
+#login-form .btn {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(180deg,#1b50c9,#0e2f86);
+  box-shadow: 0 8px 20px rgba(9,41,102,.3);
+  transition: transform .16s ease, box-shadow .16s ease;
+  margin-top: 14px;
+}
+
+#login-form button[type="submit"]:hover,
+#login-form .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(9,41,102,.4);
+}
+
+/* Status / error line */
+#status {
+  margin-top: 10px;
+  font-size: 13px;
+  min-height: 1.2em;
+  text-align: center;
+}
+
+/* “Forgot password?” link */
+#login-form a {
+  color: #cfd6ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+#login-form a:hover { text-decoration: underline; }
