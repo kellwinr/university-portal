@@ -15,236 +15,109 @@
   --glass-blur: 18px;
   --radius-lg: 20px;
   --radius-md: 12px;
-  --shadow: 0 16px 40px rgba(0, 0, 0, .16);
+  --shadow: 0 16px 40px rgba(0,0,0,.16);
 }
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-  background: linear-gradient(180deg, #0b1b46 0%, #112a5e 100%);
-  background-attachment: fixed;
-  color: var(--ink);
-  display: grid;
-  place-items: center;
-  padding: 24px;
+/* ===== Layout & Background ===== */
+body{
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  color:var(--ink);
+  background:linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:100vh;
+  padding:24px;
 }
 
-/* ===== LOGIN / CARD STYLE ===== */
+header, .glass-panel, footer{
+  width:92%;
+  max-width:1100px;
+  align-self:center;
+  box-sizing:border-box;
+}
+
+/* ===== Login / Generic Card ===== */
 .card {
-  width: min(460px, 100%);
-  background: var(--surface);
-  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  padding: 44px 44px 36px;
-  text-align: center;
-  animation: rise .6s ease-out;
+  width:min(460px, 100%);
+  background:var(--surface);
+  backdrop-filter:blur(var(--glass-blur)) saturate(120%);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(120%);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);
+  padding:44px 44px 36px;
+  text-align:center;
+  animation:rise .6s ease-out;
 }
 
-/* ===== LOGO BOX ===== */
-.logo-well {
-  width: clamp(180px, 28vw, 260px);
-  aspect-ratio: 2 / 1;
-  margin: 0 auto 20px;
-  border-radius: 16px;
-  border: 2px solid rgba(10, 42, 102, 0.1);
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.5);
-  background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform .3s cubic-bezier(0.25,1,0.3,1);
+/* Logo block (login) */
+.logo-well{
+  width:clamp(180px, 28vw, 260px);
+  aspect-ratio:2/1;
+  margin:0 auto 20px;
+  border-radius:16px;
+  border:2px solid rgba(10,42,102,0.1);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,0.5);
+  background:linear-gradient(180deg,#fff 0%, #f5f5f5 100%);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .3s cubic-bezier(.25,1,.3,1);
 }
-.logo-well:hover { transform: translateY(-2px); }
-.logo-well img { width: 82%; height: auto; border-radius: 10px; }
+.logo-well:hover{ transform:translateY(-2px); }
+.logo-well img{ width:82%; height:auto; border-radius:10px; }
 
-/* ===== FORM FIELDS ===== */
-form { display: grid; gap: 14px; margin-bottom: 10px; text-align: left; }
-.field { display: grid; gap: 8px; }
-label { font-size: 13px; color: #4d4d50; }
-input[type="text"], input[type="password"] {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid #d1d1d6;
-  background-color: rgba(255,255,255,0.95);
-  color: var(--ink);
-  font-size: 15px;
-  outline: none;
-  transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
+/* Form */
+form{ display:grid; gap:14px; margin-bottom:10px; text-align:left; }
+.field{ display:grid; gap:8px; }
+label{ font-size:13px; color:#4d4d50; }
+input[type="text"], input[type="password"]{
+  width:100%; padding:14px 16px; border-radius:var(--radius-md);
+  border:1px solid #d1d1d6; background:rgba(255,255,255,.95);
+  color:var(--ink); font-size:15px; outline:none;
+  transition: box-shadow .16s, border-color .16s, transform .16s;
 }
-input::placeholder { color: #888; }
-input:focus {
-  border-color: var(--utar-navy);
-  box-shadow: 0 0 0 3px rgba(10,42,102,.20);
-  transform: translateY(-1px);
-}
+input::placeholder{ color:#888; }
+input:focus{ border-color:var(--utar-navy); box-shadow:0 0 0 3px rgba(10,42,102,.20); transform:translateY(-1px); }
 
-/* ===== BUTTONS ===== */
-.actions { margin-top: 6px; display: grid; gap: 10px; }
-.btn {
-  width: 100%;
-  padding: 14px 16px;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
-  background: linear-gradient(180deg, #1b50c9 0%, #0e2f86 100%);
-  box-shadow: 0 8px 20px rgba(9,41,102,.3);
-  transition: transform .16s ease, box-shadow .16s ease;
+.actions{ margin-top:6px; display:grid; gap:10px; }
+.btn{
+  width:100%; padding:14px 16px; border:none; border-radius:14px;
+  font-size:16px; font-weight:700; color:#fff; cursor:pointer;
+  background:linear-gradient(180deg,#1b50c9,#0e2f86);
+  box-shadow:0 8px 20px rgba(9,41,102,.3);
+  transition:transform .16s, box-shadow .16s;
 }
-.btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(9,41,102,.4); }
-.btn:active { transform: translateY(0); }
+.btn:hover{ transform:translateY(-1px); box-shadow:0 12px 26px rgba(9,41,102,.4); }
+.btn:active{ transform:translateY(0); }
 
-/* ===== AUX ===== */
-.aux { text-align: center; font-size: 13px; margin-top: 2px; }
-.aux a { color: var(--utar-gold); text-decoration: none; font-weight: 600; }
-.aux a:hover { text-decoration: underline; }
+.aux{ text-align:center; font-size:13px; margin-top:2px; }
+.aux a{ color:var(--utar-gold); text-decoration:none; font-weight:600; }
+.aux a:hover{ text-decoration:underline; }
 
-.footer {
-  margin-top: 22px;
-  font-size: 12px;
-  color: rgba(0,0,0,.55);
-  text-align: center;
-}
-.status { text-align:center; min-height: 1.2em; color:#d02b2b; font-size: 13px; margin-top: 6px; }
+.footer{ margin-top:22px; font-size:12px; color:rgba(0,0,0,.55); text-align:center; }
+.status{ text-align:center; min-height:1.2em; color:#d02b2b; font-size:13px; margin-top:6px; }
 
-/* ===== DASHBOARD CONTAINERS ===== */
-header {
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.22);
-  box-shadow: 0 6px 18px rgba(0,0,0,.16);
-  border-radius: 16px;
-
-  /* stacking above the panel for menus */
-  position: relative;
-  z-index: 100;
-}
-.glass-panel {
-  background: var(--glass);
-  backdrop-filter: blur(14px) saturate(115%);
-  -webkit-backdrop-filter: blur(14px) saturate(115%);
-  border: 1px solid rgba(0,0,0,.08);
-  box-shadow: 0 8px 24px rgba(0,0,0,.12);
-  border-radius: 16px;
-
-  position: relative;
-  z-index: 1;
-  margin-top: 44px; /* breathing room below nav */
-}
-.dashboard-grid {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 24px;
-}
-.dashboard-grid .card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+/* ===== Header (glass) ===== */
+header{
+  margin-top:40px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.16);
+  backdrop-filter:blur(20px) saturate(140%);
+  -webkit-backdrop-filter:blur(20px) saturate(140%);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px;
+  position:relative; z-index:3;
 }
 
-/* ===== Card content ===== */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--stroke);
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
-  border-radius: 10px;
-}
-.card h3 { font-weight: 700; color: var(--ink); text-align: left; }
-.card a  { color: var(--link); text-decoration: none; }
-.card a:hover { text-decoration: underline; }
+/* Branding chunk inside header lives in your HTML; no extra CSS needed */
 
-/* ===== Quick Access (calm list) ===== */
-.quick-links { display:block; margin-top:8px; padding:0; }
-.quick-links a{
-  display:block;
-  padding:12px 0;
-  color:#0a2a66;
-  font-weight:500;
-  font-size:14px;
-  text-decoration:none;
-  border-bottom:1px solid #efeff2;
-}
-.quick-links a:last-child{ border-bottom:0; }
-.quick-links a:hover{ background:rgba(0,0,0,0.03); text-decoration:none; }
-.quick-links a:focus-visible{
-  outline:2px solid rgba(10,75,211,.25);
-  outline-offset:2px;
-}
-
-/* ===== Glassy dropdown nav ===== */
-.menu-bar{ display:flex; align-items:center; gap:10px; position:relative; }
-.menu-item{ position:relative; }
-.menu-item>.menu-trigger{
-  color:#fff; text-decoration:none; font-weight:600; font-size:14px;
-  padding:8px 14px; border-radius:10px;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.25);
-  transition:.25s; backdrop-filter:blur(10px) saturate(130%);
-}
-.menu-item>.menu-trigger:hover,
-.menu-item.open>.menu-trigger{
-  background:rgba(255,255,255,0.22); color:#0a2a66; box-shadow:0 6px 16px rgba(0,0,0,.25);
-}
-
-/* Dropdown panel: fixed so backdrop-filter blurs the page */
-.dropdown{
-  position: fixed;
-  left: 0; top: 0;                 /* JS will set position */
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .15s ease, transform .15s ease, visibility 0s .15s;
-
-  min-width: 240px;
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 14px;
-  box-shadow: 0 14px 36px rgba(0,0,0,.28);
-  overflow: hidden;
-  z-index: 1000;
-}
-.dropdown.is-open{
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0s;
-}
-.dropdown a{
-  display:block; padding:10px 16px; text-decoration:none; color:#1d1d1f; font-weight:500;
-  transition:background .15s ease;
-}
-.dropdown a:hover{ background: rgba(255,255,255,0.65); }
-.dropdown a + a{ border-top:1px solid rgba(0,0,0,.05); }
-
-/* ===== Footer ===== */
-footer {
-  background: rgba(255,255,255,.08);
-  box-shadow: 0 3px 14px rgba(0,0,0,.16);
-  border-radius: 14px;
-  color: #e9e9ee;
-}
-
-/* ===== Animations ===== */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 520px) {
-  .card { padding: 36px 22px 28px; }
-}
-
-/* ===== NAV (glassy) ===== */
+/* ===== Nav (Apple-glass) ===== */
 .menu-bar{ display:flex; align-items:center; gap:10px; }
 .menu-item{ position:relative; }
 .menu-item > .menu-trigger{
@@ -259,7 +132,7 @@ footer {
   background:rgba(255,255,255,0.22); color:#0a2a66; box-shadow:0 6px 16px rgba(0,0,0,.25);
 }
 
-/* Dropdown – simple, anchored to the button (no fixed, no reflow issues) */
+/* Dropdown – anchored to the button (simple + reliable) */
 .dropdown{
   display:none;
   position:absolute;
@@ -284,71 +157,78 @@ footer {
 .dropdown a + a{ border-top:1px solid rgba(0,0,0,.06); }
 .dropdown a:hover{ background:rgba(255,255,255,0.62); }
 
-@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+/* ===== Main Glass Panel ===== */
+.glass-panel{
+  margin-top:32px;
+  background:var(--glass);
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+  backdrop-filter:blur(14px) saturate(115%);
+  -webkit-backdrop-filter:blur(14px) saturate(115%);
+  padding:32px;
+  position:relative; z-index:1;
+}
 
-/* Ensure stacking order: header above the panel */
-header{ position:relative; z-index:3; }
-.glass-panel{ position:relative; z-index:1; }
+/* Greeting + description */
+.greeting{
+  text-align:center; font-size:28px; font-weight:700; color:#1d1d1f; margin:0 0 6px;
+}
+.desc{
+  text-align:center; color:#555; margin:0 0 28px;
+}
 
-/* ===== Dashboard layout – recentre, equal columns ===== */
-.glass-panel{ width:92%; max-width:1100px; margin-inline:auto; }
-header, footer{ width:92%; max-width:1100px; margin-inline:auto; }
-
-/* Use grid with sensible minimums so the cards don’t squish */
+/* Two-column layout for cards */
 .dashboard-grid{
   display:grid;
-  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap:24px;
+  align-items:start;
 }
 
-/* Quick Access – calm list style (left aligned) */
-.quick-links{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+/* Cards inside dashboard */
+.dashboard-grid .card{
+  background:var(--surface);
+  border:1px solid var(--stroke);
+  border-radius:10px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+  padding:20px;
+  height:100%;
+}
+.dashboard-grid .card h3{
+  margin:0 0 12px;
+  font-size:16px; font-weight:700; color:var(--ink); text-align:left;
+}
+
+/* Quick Access – calm list */
+.quick-links{ display:block; margin-top:12px; }
 .quick-links a{
-  display:block;
-  text-align:left;
-  padding:10px 0;
+  display:block; padding:12px 0;
+  text-align:left; color:#0a2a66; font-weight:600; text-decoration:none;
   border-bottom:1px solid #efeff2;
-  color:#0a2a66; font-weight:600; text-decoration:none;
 }
 .quick-links a:last-child{ border-bottom:0; }
-.quick-links a:hover{ background:transparent; text-decoration:underline; }
+.quick-links a:hover{ background:rgba(0,0,0,0.03); }
 
-/* --- Layout Fix for Centered Header & Dashboard --- */
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 100vh;
-  margin: 0;
-  background: linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
+/* ===== Footer ===== */
+footer{
+  margin-top:28px;
+  padding:16px 24px;
+  background:rgba(255,255,255,.08);
+  border-radius:20px;
+  color:#e6e6e6;
+  font-size:13px; text-align:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
 }
 
-/* Center the header block */
-header {
-  margin-top: 40px;
-  width: 92%;
-  max-width: 1100px;
-  align-self: center;
-}
+/* ===== Animations & Responsive ===== */
+@keyframes rise{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;} }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
 
-/* Glass panel right below header */
-.glass-panel {
-  margin-top: 32px;
-  width: 92%;
-  max-width: 1100px;
-  align-self: center;
+@media (max-width: 900px){
+  .menu-bar{ flex-wrap:wrap; justify-content:center; }
+  .dashboard-grid{ grid-template-columns: 1fr; }
 }
-
-/* Footer spacing and centering */
-footer {
-  margin-top: 28px;
-  width: 92%;
-  max-width: 1100px;
-  align-self: center;
-}
-
-/* Make sure everything sits on the same visual axis */
-header, .glass-panel, footer {
-  box-sizing: border-box;
+@media (max-width: 520px){
+  .card{ padding:36px 22px 28px; }
 }
