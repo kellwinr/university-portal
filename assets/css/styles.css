@@ -345,3 +345,40 @@ header{
 @media (max-width: 520px){
   .dropdown{ min-width: 200px; }
 }
+
+/* Keep header above content */
+header { position: relative; z-index: 100; }
+
+/* Panel stays below header */
+.glass-panel { position: relative; z-index: 1; }
+
+/* Let each trigger be the anchor; dropdown will be fixed */
+.menu-item { position: relative; }
+
+/* Glossy dropdown – fixed to viewport so backdrop-filter can blur the page */
+.dropdown{
+  position: fixed;          /* was absolute */
+  left: 0; top: 0;          /* JS will reposition */
+  visibility: hidden;       /* hidden until positioned */
+  opacity: 0;               /* fade in */
+  transform: translateY(6px);
+  transition: opacity .15s ease, transform .15s ease, visibility 0s .15s;
+
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(0,0,0,.28);
+  min-width: 240px;
+  overflow: hidden;
+  z-index: 1000;            /* over panels */
+}
+
+/* When JS marks it visible */
+.dropdown.is-open{
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
