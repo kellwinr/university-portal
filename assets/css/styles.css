@@ -37,23 +37,26 @@ body {
   animation: rise .6s ease-out;
 }
 .logo-well {
-  width: clamp(160px, 28vw, 250px);
-  margin: 0 auto 18px;
-  border-radius: 12px;
-  background: none;
-  box-shadow: none;
+  width: clamp(180px, 28vw, 280px);
+  aspect-ratio: 2.2 / 1;
+  margin: 0 auto 20px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%);
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 6px 12px rgba(0, 0, 0, 0.12),
+    0 12px 24px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
-.logo-well img { width: 100%; height: auto; object-fit: contain; }
-h1{
-  margin: 6px 0 8px;
-  font-size: clamp(22px, 2.6vw, 30px);
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--text-strong);
-  text-align: center;
+
+.logo-well img {
+  width: 90%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px; /* keeps smooth edges on logo */
 }
 h2{
   margin: 0 0 26px;
