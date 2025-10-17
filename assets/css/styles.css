@@ -37,16 +37,17 @@ body {
   animation: rise .6s ease-out;
 }
 .logo-well {
-  width: 340px;        
-  height: 170px;        
+  width: 250px;       
+  height: auto;       
   margin: 0 auto 18px;
   border-radius: 12px;
-  background: none;     
-  box-shadow: none;     
+  background: none;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .logo-well img {
   width: 100%;
   height: auto;
