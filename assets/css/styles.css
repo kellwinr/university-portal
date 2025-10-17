@@ -71,17 +71,24 @@ h2{
 form{ display: grid; gap: 14px; margin-bottom: 10px; text-align: left; }
 .field{ display: grid; gap: 8px; }
 label{ font-size: 13px; color: #4d4d50; }
-input[type="text"], input[type="password"]{
+input[type="text"], input[type="password"] {
   width: 100%;
   padding: 14px 16px;
   border-radius: var(--radius-md);
   border: 1px solid #d1d1d6;
-  background: #fff;
+  background-color: rgba(255, 255, 255, 0.95); /* keep subtle transparency */
+  color: #1d1d1f;                              /* visible dark text */
   font-size: 15px;
   outline: none;
   transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
 }
-input:focus{
+
+input::placeholder {
+  color: #888; /* makes placeholder text slightly grey */
+  opacity: 1;
+}
+
+input:focus {
   border-color: var(--utar-navy);
   box-shadow: 0 0 0 3px rgba(10,42,102,.20);
   transform: translateY(-1px);
