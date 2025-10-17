@@ -37,8 +37,8 @@ body {
   animation: rise .6s ease-out;
 }
 .logo-well {
-  width: 250px;       
-  height: auto;       
+  width: clamp(160px, 28vw, 250px);  
+  height: auto;
   margin: 0 auto 18px;
   border-radius: 12px;
   background: none;
