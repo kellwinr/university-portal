@@ -77,68 +77,49 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =======================
-// NAVBAR DROPDOWN (glassy, fixed)
+// NAVBAR DROPDOWN (CSS-positioned, anchored)
 // =======================
 (() => {
   const items = document.querySelectorAll('.menu-item');
   if (!items.length) return;
 
-  let openItem = null;
-
-  function placeDropdown(item){
-    const btn = item.querySelector('.menu-trigger');
-    const panel = item.querySelector('.dropdown');
-    if (!btn || !panel) return;
-
-    const r = btn.getBoundingClientRect();
-    const gap = 8; // space under button
-    panel.style.left = `${Math.round(r.left)}px`;
-    panel.style.top  = `${Math.round(r.bottom + gap)}px`;
-
-    // Optional: match width to button
-    // panel.style.minWidth = `${Math.max(240, Math.round(r.width))}px`;
-  }
-
-  function open(item){
-    const btn = item.querySelector('.menu-trigger');
-    const panel = item.querySelector('.dropdown');
-    if (!btn || !panel) return;
-
-    btn.setAttribute('aria-expanded','true');
-    placeDropdown(item);
-    item.classList.add('open');
-    panel.classList.add('is-open');
-    openItem = item;
-  }
-
-  function closeAll(){
+  function closeAll() {
     items.forEach(i => {
       i.classList.remove('open');
-      i.querySelector('.dropdown')?.classList.remove('is-open');
-      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded','false');
+      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded', 'false');
+      const panel = i.querySelector('.dropdown');
+      if (panel) {
+        panel.style.left = '';
+        panel.style.top = '';
+      }
     });
-    openItem = null;
   }
 
-  // Click to toggle
   items.forEach(i => {
     const btn = i.querySelector('.menu-trigger');
     if (!btn) return;
-    btn.setAttribute('aria-haspopup','true');
-    btn.setAttribute('aria-expanded','false');
+
+    btn.setAttribute('aria-haspopup', 'true');
+    btn.setAttribute('aria-expanded', 'false');
+
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      if (openItem === i) closeAll();
-      else { closeAll(); open(i); }
+      if (i.classList.contains('open')) {
+        i.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        closeAll();
+        i.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
     });
   });
 
-  // Reposition while open
-  ['resize','scroll'].forEach(ev => {
-    window.addEventListener(ev, () => { if (openItem) placeDropdown(openItem); }, { passive: true });
+  // Close dropdown on outside click or Escape key
+  window.addEventListener('click', (e) => {
+    if (!e.target.closest('.menu-item')) closeAll();
   });
-
-  // Dismiss
-  window.addEventListener('click', (e) => { if (!e.target.closest('.menu-item')) closeAll(); });
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
 })();
