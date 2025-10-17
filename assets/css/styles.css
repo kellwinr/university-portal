@@ -102,7 +102,7 @@ input:focus {
 .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(9,41,102,.4); }
 .btn:active { transform: translateY(0); }
 
-/* ===== AUX LINKS ===== */
+/* ===== AUX ===== */
 .aux { text-align: center; font-size: 13px; margin-top: 2px; }
 .aux a { color: var(--utar-gold); text-decoration: none; font-weight: 600; }
 .aux a:hover { text-decoration: underline; }
@@ -113,20 +113,18 @@ input:focus {
   color: rgba(0,0,0,.55);
   text-align: center;
 }
-.status {
-  text-align:center;
-  min-height: 1.2em;
-  color:#d02b2b;
-  font-size: 13px;
-  margin-top: 6px;
-}
+.status { text-align:center; min-height: 1.2em; color:#d02b2b; font-size: 13px; margin-top: 6px; }
 
-/* ===== DASHBOARD STYLING ===== */
+/* ===== DASHBOARD CONTAINERS ===== */
 header {
   background: rgba(255,255,255,.10);
   border: 1px solid rgba(255,255,255,.22);
   box-shadow: 0 6px 18px rgba(0,0,0,.16);
   border-radius: 16px;
+
+  /* stacking above the panel for menus */
+  position: relative;
+  z-index: 100;
 }
 .glass-panel {
   background: var(--glass);
@@ -135,57 +133,98 @@ header {
   border: 1px solid rgba(0,0,0,.08);
   box-shadow: 0 8px 24px rgba(0,0,0,.12);
   border-radius: 16px;
+
+  position: relative;
+  z-index: 1;
+  margin-top: 44px; /* breathing room below nav */
 }
+.dashboard-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 24px;
+}
+.dashboard-grid .card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Card content ===== */
 .card {
   background: var(--surface);
   border: 1px solid var(--stroke);
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
   border-radius: 10px;
 }
-.card h3 {
-  font-weight: 700;
-  color: var(--ink);
-  text-align: left;
-}
-.card a {
-  color: var(--link);
-  text-decoration: none;
-}
+.card h3 { font-weight: 700; color: var(--ink); text-align: left; }
+.card a  { color: var(--link); text-decoration: none; }
 .card a:hover { text-decoration: underline; }
 
-/* ===== Quick Links (Calm, Apple-like) ===== */
-.quick-links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
+/* ===== Quick Access (calm list) ===== */
+.quick-links { display:block; margin-top:8px; padding:0; }
+.quick-links a{
+  display:block;
+  padding:12px 0;
+  color:#0a2a66;
+  font-weight:500;
+  font-size:14px;
+  text-decoration:none;
+  border-bottom:1px solid #efeff2;
 }
-.quick-links a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--stroke);
-  background: transparent;
-  color: var(--ink);
-  font-weight: 600;
-  transition: background .15s ease, border-color .15s ease;
+.quick-links a:last-child{ border-bottom:0; }
+.quick-links a:hover{ background:rgba(0,0,0,0.03); text-decoration:none; }
+.quick-links a:focus-visible{
+  outline:2px solid rgba(10,75,211,.25);
+  outline-offset:2px;
 }
-.quick-links a::after {
-  content: "›";
-  color: #8e8e93;
-  font-size: 16px;
+
+/* ===== Glassy dropdown nav ===== */
+.menu-bar{ display:flex; align-items:center; gap:10px; position:relative; }
+.menu-item{ position:relative; }
+.menu-item>.menu-trigger{
+  color:#fff; text-decoration:none; font-weight:600; font-size:14px;
+  padding:8px 14px; border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.25);
+  transition:.25s; backdrop-filter:blur(10px) saturate(130%);
 }
-.quick-links a:hover {
-  background: #f7f7f8;
-  border-color: var(--stroke-strong);
+.menu-item>.menu-trigger:hover,
+.menu-item.open>.menu-trigger{
+  background:rgba(255,255,255,0.22); color:#0a2a66; box-shadow:0 6px 16px rgba(0,0,0,.25);
 }
-.quick-links a:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(10,75,211,.18);
-  background: #fff;
+
+/* Dropdown panel: fixed so backdrop-filter blurs the page */
+.dropdown{
+  position: fixed;
+  left: 0; top: 0;                 /* JS will set position */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .15s ease, transform .15s ease, visibility 0s .15s;
+
+  min-width: 240px;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(0,0,0,.28);
+  overflow: hidden;
+  z-index: 1000;
 }
+.dropdown.is-open{
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+.dropdown a{
+  display:block; padding:10px 16px; text-decoration:none; color:#1d1d1f; font-weight:500;
+  transition:background .15s ease;
+}
+.dropdown a:hover{ background: rgba(255,255,255,0.65); }
+.dropdown a + a{ border-top:1px solid rgba(0,0,0,.05); }
 
 /* ===== Footer ===== */
 footer {
@@ -198,187 +237,9 @@ footer {
 /* ===== Animations ===== */
 @keyframes rise {
   from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 520px) {
   .card { padding: 36px 22px 28px; }
-}
-
-/* --- Quick Access: de-pill and de-ad-ify (only this section) --- */
-.quick-links{
-  display:block;
-  margin-top:8px;
-  padding:0;
-  border:0;
-  background:transparent;
-}
-
-.quick-links a{
-  display:block;
-  padding:12px 4px;
-  background:transparent;
-  color:#1d1d1f;
-  font-weight:500;
-  font-size:14px;
-  text-decoration:none;
-  border:0;
-  border-bottom:1px solid #efeff2; /* thin divider */
-  border-radius:0;                 /* remove pill shape */
-  box-shadow:none;                 /* remove card feel */
-}
-
-.quick-links a:last-child{ border-bottom:0; }
-
-/* remove chevrons from earlier styles */
-.quick-links a::after{ content:none !important; }
-
-/* subtle interaction */
-.quick-links a:hover{ text-decoration:underline; background:transparent; }
-.quick-links a:focus-visible{
-  outline:2px solid rgba(10,75,211,.25);
-  outline-offset:2px;
-  text-decoration:none;
-}
-
-/* --- Adjust Quick Access alignment & dashboard centering --- */
-
-/* Left-align text in Quick Access list */
-.quick-links a {
-  text-align: left;
-  padding-left: 0;
-  padding-right: 0;
-  color: #0a2a66; /* UTAR navy tone for a professional link look */
-}
-
-/* Optional subtle hover background (modern macOS-like feel) */
-.quick-links a:hover {
-  background: rgba(0,0,0,0.03);
-  text-decoration: none;
-}
-
-/* Re-centre dashboard grid inside glass panel */
-.dashboard-grid {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 24px;
-}
-
-/* Make both cards equal height and aligned */
-.dashboard-grid .card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-/* ===== Glassy dropdown nav ===== */
-.menu-bar{display:flex;align-items:center;gap:10px;position:relative}
-.menu-item{position:relative}
-.menu-item>.menu-trigger{
-  color:#fff;text-decoration:none;font-weight:600;font-size:14px;
-  padding:8px 14px;border-radius:10px;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.25);
-  transition:.25s; backdrop-filter:blur(10px) saturate(130%)
-}
-.menu-item>.menu-trigger:hover,
-.menu-item.open>.menu-trigger{
-  background:rgba(255,255,255,0.22);color:#0a2a66;box-shadow:0 6px 16px rgba(0,0,0,.25)
-}
-
-/* panel */
-.dropdown{
-  display:none; position:absolute; top:110%; left:0; min-width:240px; z-index:1000;
-  background:rgba(255,255,255,0.72);
-  backdrop-filter:blur(18px) saturate(150%); -webkit-backdrop-filter:blur(18px) saturate(150%);
-  border:1px solid rgba(0,0,0,.08); border-radius:14px; overflow:hidden;
-  box-shadow:0 14px 36px rgba(0,0,0,.28); animation:fadeIn .18s ease-out
-}
-.menu-item:hover .dropdown,
-.menu-item.open .dropdown{display:block}
-
-/* rows */
-.dropdown a{
-  display:block; padding:10px 16px; text-decoration:none; color:#1d1d1f; font-weight:500;
-  transition:background .15s ease
-}
-.dropdown a:hover{background:rgba(255,255,255,0.65)}
-.dropdown a + a{border-top:1px solid rgba(0,0,0,.05)}
-
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
-/* Mobile: stack and make dropdowns full-width under button */
-@media (max-width:900px){
-  .menu-bar{gap:6px;flex-wrap:wrap;justify-content:center}
-  .dropdown{position:fixed;left:12px;right:12px;top:calc(70px + 12px);min-width:unset}
-}
-
-/* --- Fix dropdown alignment & stacking --- */
-
-/* Put the header above the glass panel */
-header{
-  position: relative;
-  z-index: 100;            /* higher than the panel */
-}
-
-/* Keep the main panel underneath the nav */
-.glass-panel{
-  position: relative;
-  z-index: 1;
-  margin-top: 44px;        /* a touch more breathing room under the nav */
-}
-
-/* Ensure each menu item is the positioning context */
-.menu-item{ position: relative; }
-
-/* Make the dropdown sit just below its trigger and above everything */
-.dropdown{
-  top: calc(100% + 8px);   /* align neatly under the button */
-  left: 0;
-  z-index: 1000;           /* well above the panel */
-  min-width: 240px;        /* consistent width */
-}
-
-/* Optional: keep the dropdown from feeling too wide on tiny screens */
-@media (max-width: 520px){
-  .dropdown{ min-width: 200px; }
-}
-
-/* Keep header above content */
-header { position: relative; z-index: 100; }
-
-/* Panel stays below header */
-.glass-panel { position: relative; z-index: 1; }
-
-/* Let each trigger be the anchor; dropdown will be fixed */
-.menu-item { position: relative; }
-
-/* Glossy dropdown – fixed to viewport so backdrop-filter can blur the page */
-.dropdown{
-  position: fixed;          /* was absolute */
-  left: 0; top: 0;          /* JS will reposition */
-  visibility: hidden;       /* hidden until positioned */
-  opacity: 0;               /* fade in */
-  transform: translateY(6px);
-  transition: opacity .15s ease, transform .15s ease, visibility 0s .15s;
-
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 14px;
-  box-shadow: 0 14px 36px rgba(0,0,0,.28);
-  min-width: 240px;
-  overflow: hidden;
-  z-index: 1000;            /* over panels */
-}
-
-/* When JS marks it visible */
-.dropdown.is-open{
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0s;
 }
