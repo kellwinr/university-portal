@@ -22,213 +22,262 @@
 html, body { height: 100%; }
 
 /* ===== Layout & Background ===== */
-body{
-  margin:0;
-  font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-  color:var(--ink);
-  background:linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  min-height:100vh;
-  padding:24px;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 24px;
 }
 
-header, .glass-panel, footer{
-  width:92%;
-  max-width:1100px;
-  align-self:center;
-  box-sizing:border-box;
+header, .glass-panel, footer {
+  width: 92%;
+  max-width: 1100px;
+  align-self: center;
+  box-sizing: border-box;
 }
 
-/* ===== Login / Generic Card ===== */
-.card {
-  width:min(460px, 100%);
-  background:var(--surface);
-  backdrop-filter:blur(var(--glass-blur)) saturate(120%);
-  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(120%);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow);
-  padding:44px 44px 36px;
-  text-align:center;
-  animation:rise .6s ease-out;
+/* ===== Header (Apple Glass Style) ===== */
+header {
+  margin-top: 40px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.16);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  padding: 12px 24px;
+  position: relative;
+  z-index: 3;
+
+  /* 3-column layout: logo | nav | user */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 16px;
 }
 
-/* Logo block (login) */
-.logo-well{
-  width:clamp(180px, 28vw, 260px);
-  aspect-ratio:2/1;
-  margin:0 auto 20px;
-  border-radius:16px;
-  border:2px solid rgba(10,42,102,0.1);
-  box-shadow:inset 0 0 0 2px rgba(255,255,255,0.5);
-  background:linear-gradient(180deg,#fff 0%, #f5f5f5 100%);
-  display:flex; align-items:center; justify-content:center;
-  transition:transform .3s cubic-bezier(.25,1,.3,1);
+.logo-section {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.logo-well:hover{ transform:translateY(-2px); }
-.logo-well img{ width:82%; height:auto; border-radius:10px; }
-
-/* Form */
-form{ display:grid; gap:14px; margin-bottom:10px; text-align:left; }
-.field{ display:grid; gap:8px; }
-label{ font-size:13px; color:#4d4d50; }
-input[type="text"], input[type="password"]{
-  width:100%; padding:14px 16px; border-radius:var(--radius-md);
-  border:1px solid #d1d1d6; background:rgba(255,255,255,.95);
-  color:var(--ink); font-size:15px; outline:none;
-  transition: box-shadow .16s, border-color .16s, transform .16s;
+.logo-section img {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 12px;
 }
-input::placeholder{ color:#888; }
-input:focus{ border-color:var(--utar-navy); box-shadow:0 0 0 3px rgba(10,42,102,.20); transform:translateY(-1px); }
-
-.actions{ margin-top:6px; display:grid; gap:10px; }
-.btn{
-  width:100%; padding:14px 16px; border:none; border-radius:14px;
-  font-size:16px; font-weight:700; color:#fff; cursor:pointer;
-  background:linear-gradient(180deg,#1b50c9,#0e2f86);
-  box-shadow:0 8px 20px rgba(9,41,102,.3);
-  transition:transform .16s, box-shadow .16s;
+.logo-text {
+  color: #fff;
+  font-weight: 700;
+  line-height: 1.15;
+  font-size: 16px;
 }
-.btn:hover{ transform:translateY(-1px); box-shadow:0 12px 26px rgba(9,41,102,.4); }
-.btn:active{ transform:translateY(0); }
-
-.aux{ text-align:center; font-size:13px; margin-top:2px; }
-.aux a{ color:var(--utar-gold); text-decoration:none; font-weight:600; }
-.aux a:hover{ text-decoration:underline; }
-
-.footer{ margin-top:22px; font-size:12px; color:rgba(0,0,0,.55); text-align:center; }
-.status{ text-align:center; min-height:1.2em; color:#d02b2b; font-size:13px; margin-top:6px; }
-
-/* ===== Header (glass) ===== */
-header{
-  margin-top:40px;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:16px;
-  box-shadow:0 6px 18px rgba(0,0,0,.16);
-  backdrop-filter:blur(20px) saturate(140%);
-  -webkit-backdrop-filter:blur(20px) saturate(140%);
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 24px;
-  position:relative; z-index:3;
+.logo-text small {
+  display: block;
+  color: rgba(255,255,255,.85);
+  font-size: 13px;
+  font-weight: 500;
 }
 
-/* Branding chunk inside header lives in your HTML; no extra CSS needed */
+/* Nav Bar */
+.menu-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-self: center;
+}
+.menu-item { position: relative; }
 
-/* ===== Nav (Apple-glass) ===== */
-.menu-bar{ display:flex; align-items:center; gap:10px; }
-.menu-item{ position:relative; }
-.menu-item > .menu-trigger{
-  color:#fff; text-decoration:none; font-weight:600; font-size:14px;
-  padding:8px 14px; border-radius:10px;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.25);
-  transition:.25s; backdrop-filter:blur(10px) saturate(130%);
+.menu-item > .menu-trigger {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  transition: all .25s ease;
+  backdrop-filter: blur(10px) saturate(130%);
 }
 .menu-item > .menu-trigger:hover,
-.menu-item.open > .menu-trigger{
-  background:rgba(255,255,255,0.22); color:#0a2a66; box-shadow:0 6px 16px rgba(0,0,0,.25);
+.menu-item.open > .menu-trigger {
+  background: rgba(255,255,255,0.22);
+  color: #0a2a66;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
 }
 
-/* Dropdown – anchored to the button (simple + reliable) */
-.dropdown{
-  display:none;
-  position:absolute;
-  top:calc(100% + 8px);
-  left:0;
-  min-width:240px;
-  background:rgba(255,255,255,0.75);
-  backdrop-filter:blur(18px) saturate(150%);
-  -webkit-backdrop-filter:blur(18px) saturate(150%);
-  border:1px solid rgba(0,0,0,0.08);
-  border-radius:14px;
-  box-shadow:0 12px 32px rgba(0,0,0,0.28);
-  overflow:hidden;
-  z-index:1000;
-  animation:fadeIn .18s ease-out;
+/* Dropdown */
+.dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 240px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.28);
+  overflow: hidden;
+  z-index: 1000;
+  animation: fadeIn .18s ease-out;
 }
-.menu-item.open .dropdown{ display:block; }
-.dropdown a{
-  display:block; padding:10px 18px; color:#1d1d1f; text-decoration:none; font-weight:500;
-  transition:background .15s ease;
+.menu-item.open .dropdown { display: block; }
+.dropdown a {
+  display: block;
+  padding: 10px 18px;
+  color: #1d1d1f;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background .15s ease;
 }
-.dropdown a + a{ border-top:1px solid rgba(0,0,0,.06); }
-.dropdown a:hover{ background:rgba(255,255,255,0.62); }
+.dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
+.dropdown a:hover { background: rgba(255,255,255,0.62); }
 
-/* ===== Main Glass Panel ===== */
-.glass-panel{
-  margin-top:32px;
-  background:var(--glass);
-  border:1px solid rgba(0,0,0,.08);
-  border-radius:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.12);
-  backdrop-filter:blur(14px) saturate(115%);
-  -webkit-backdrop-filter:blur(14px) saturate(115%);
-  padding:32px;
-  position:relative; z-index:1;
+/* ===== User Info Section ===== */
+.user-info {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.id-chip {
+  background: #fff;
+  color: #0a2a66;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+.logout-btn {
+  background: linear-gradient(180deg,#1b50c9,#0e2f86);
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  transition: transform .25s ease;
+}
+.logout-btn:hover { transform: translateY(-2px); }
+
+/* ===== Glass Panel ===== */
+.glass-panel {
+  margin-top: 32px;
+  background: var(--glass);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  backdrop-filter: blur(14px) saturate(115%);
+  -webkit-backdrop-filter: blur(14px) saturate(115%);
+  padding: 32px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Greeting + description */
-.greeting{
-  text-align:center; font-size:28px; font-weight:700; color:#1d1d1f; margin:0 0 6px;
+.greeting {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0 0 6px;
 }
-.desc{
-  text-align:center; color:#555; margin:0 0 28px;
+.desc {
+  text-align: center;
+  color: #555;
+  margin: 0 0 28px;
 }
 
-/* Two-column layout for cards */
-.dashboard-grid{
-  display:grid;
+/* Dashboard grid */
+.dashboard-grid {
+  display: grid;
   grid-template-columns: 1fr 1fr;
-  gap:24px;
-  align-items:start;
+  gap: 24px;
+  align-items: start;
 }
 
-/* Cards inside dashboard */
-.dashboard-grid .card{
-  background:var(--surface);
-  border:1px solid var(--stroke);
-  border-radius:10px;
-  box-shadow:0 1px 2px rgba(0,0,0,.04);
-  padding:20px;
-  height:100%;
+/* Card styles */
+.dashboard-grid .card {
+  background: var(--surface);
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  padding: 20px;
+  height: 100%;
 }
-.dashboard-grid .card h3{
-  margin:0 0 12px;
-  font-size:16px; font-weight:700; color:var(--ink); text-align:left;
+.dashboard-grid .card h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: left;
 }
 
-/* Quick Access – calm list */
-.quick-links{ display:block; margin-top:12px; }
-.quick-links a{
-  display:block; padding:12px 0;
-  text-align:left; color:#0a2a66; font-weight:600; text-decoration:none;
-  border-bottom:1px solid #efeff2;
+/* Quick Access links */
+.quick-links {
+  display: block;
+  margin-top: 12px;
 }
-.quick-links a:last-child{ border-bottom:0; }
-.quick-links a:hover{ background:rgba(0,0,0,0.03); }
+.quick-links a {
+  display: block;
+  padding: 12px 0;
+  text-align: left;
+  color: #0a2a66;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid #efeff2;
+}
+.quick-links a:last-child { border-bottom: 0; }
+.quick-links a:hover {
+  background: rgba(0,0,0,0.03);
+}
 
 /* ===== Footer ===== */
-footer{
-  margin-top:28px;
-  padding:16px 24px;
-  background:rgba(255,255,255,.08);
-  border-radius:20px;
-  color:#e6e6e6;
-  font-size:13px; text-align:center;
-  box-shadow:0 4px 20px rgba(0,0,0,.25);
+footer {
+  margin-top: 28px;
+  padding: 16px 24px;
+  background: rgba(255,255,255,.08);
+  border-radius: 20px;
+  color: #e6e6e6;
+  font-size: 13px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
 }
 
-/* ===== Animations & Responsive ===== */
-@keyframes rise{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;} }
-@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+/* ===== Fix header alignment & small-screen layout ===== */
+.logo-section a { color: inherit; text-decoration: none; }
+.logo-section a:hover { text-decoration: none; }
+header { grid-auto-columns: 1fr; overflow: visible; }
+.menu-bar { justify-self: center; min-width: 0; }
 
-@media (max-width: 900px){
-  .menu-bar{ flex-wrap:wrap; justify-content:center; }
-  .dashboard-grid{ grid-template-columns: 1fr; }
+@media (max-width: 720px) {
+  header {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+    justify-items: center;
+  }
+  .logo-section, .user-info { justify-self: center; }
+  .menu-bar { flex-wrap: wrap; justify-content: center; }
 }
-@media (max-width: 520px){
-  .card{ padding:36px 22px 28px; }
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
