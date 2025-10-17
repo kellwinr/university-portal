@@ -19,3 +19,7 @@ university-portal/
 - Replace `assets/img/logo-placeholder.svg` with the actual logo and update the `<img src>` path in `index.html` if the file name changes.
 - Tweak colours in `assets/css/styles.css` under the `:root { ... }` brand tokens.
 - `assets/js/main.js` currently blocks actual form submission for safety — wire it to the back-end if needed.
+
+#### Demo testing
+- ID: `22123456`
+- Pass: `password123`
