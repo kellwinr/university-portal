@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  [idEl, pwdEl].forEach(el => el?.addEventListener('keydown', e => {
-    if (e.key === 'Enter') form.requestSubmit();
-  }));
+  [idEl, pwdEl].forEach(el =>
+    el?.addEventListener('keydown', e => { if (e.key === 'Enter') form.requestSubmit(); })
+  );
 });
 
 // =============================
@@ -85,88 +85,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let openItem = null;
 
-  function placeDropdown(item) {
+  function placeDropdown(item){
     const btn   = item.querySelector('.menu-trigger');
     const panel = item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
     const r = btn.getBoundingClientRect();
-    const gap = 8;
+    const gap     = 8;
+    const margin  = 12;
     const scrollX = window.scrollX || document.documentElement.scrollLeft || 0;
     const scrollY = window.scrollY || document.documentElement.scrollTop  || 0;
-    const vw = document.documentElement.clientWidth;
+    const vw      = document.documentElement.clientWidth;
 
-    // Optional: match width to trigger (min 240)
+    // Use a deterministic width so clamping works while hidden
     const targetWidth = Math.max(240, Math.round(r.width));
-    panel.style.minWidth = `${targetWidth}px`;
+    panel.style.width = `${targetWidth}px`;   // <-- explicit width
 
-    // Prevent overflow off right edge
-    const margin = 12;
-    const panelWidth = panel.offsetWidth || targetWidth;
+    // Left align under trigger, clamped to viewport
     let left = Math.round(r.left + scrollX);
-    left = Math.min(left, vw - panelWidth - margin + scrollX);
-    left = Math.max(left, margin + scrollX);
+    const maxLeft = scrollX + vw - targetWidth - margin;
+    if (left > maxLeft) left = maxLeft;
+    if (left < scrollX + margin) left = scrollX + margin;
 
     panel.style.left = `${left}px`;
     panel.style.top  = `${Math.round(r.bottom + scrollY + gap)}px`;
   }
 
-  function closeAll() {
+  function closeAll(){
     items.forEach(i => {
       i.classList.remove('open');
-      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded', 'false');
+      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded','false');
       const p = i.querySelector('.dropdown');
-      if (p) {
+      if (p){
         p.classList.remove('is-open');
         p.style.left = '';
         p.style.top  = '';
+        p.style.width = '';
       }
     });
     openItem = null;
   }
 
-  function open(item) {
+  function open(item){
     const btn   = item.querySelector('.menu-trigger');
     const panel = item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
     closeAll();
     item.classList.add('open');
-    btn.setAttribute('aria-expanded', 'true');
+    btn.setAttribute('aria-expanded','true');
+
+    // Position first (with known width), then reveal
     placeDropdown(item);
     panel.classList.add('is-open');
     openItem = item;
 
-    // Accessibility: focus first link
-    const firstLink = panel.querySelector('a,button,[tabindex]:not([tabindex="-1"])');
-    firstLink?.focus({ preventScroll: true });
+    // a11y: focus first interactive
+    const first = panel.querySelector('a,button,[tabindex]:not([tabindex="-1"])');
+    first?.focus({ preventScroll: true });
   }
 
-  // Toggle on click
+  // Toggle on click/touch
   items.forEach(i => {
     const btn = i.querySelector('.menu-trigger');
     if (!btn) return;
-    btn.setAttribute('aria-haspopup', 'true');
-    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-haspopup','true');
+    btn.setAttribute('aria-expanded','false');
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       if (openItem === i) closeAll();
       else open(i);
-    });
+    }, { passive:false });
   });
 
-  // Keep it aligned while scrolling / resizing / orientation change
+  // Keep aligned while scrolling/resizing/orientation change
   ['scroll','resize','orientationchange'].forEach(ev => {
     window.addEventListener(ev, () => { if (openItem) placeDropdown(openItem); }, { passive:true });
   });
 
-  // Close on outside click or touch
+  // Dismiss on outside click/touch
   ['click','touchstart'].forEach(ev => {
     window.addEventListener(ev, (e) => {
       if (!e.target.closest('.menu-item')) closeAll();
     }, { passive:true });
   });
 
-  // Close on Escape
+  // Esc to close
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
 })();
