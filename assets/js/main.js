@@ -2,10 +2,9 @@
 // UTAR Portal Demo JavaScript
 // =============================
 
-// --- Demo user database (for front-end mock login only) ---
+// --- Demo user database (front-end mock only) ---
 const USERS = {
   "22123456": { name: "Demo Student", password: "password123" },
-  // Add more users if you like:
   // "22111111": { name: "Kelvin Lim", password: "pass123" },
 };
 
@@ -14,7 +13,7 @@ const USERS = {
 // =============================
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('login-form');
-  if (!form) return; // Skip if not on login page
+  if (!form) return; // not on login page
 
   const idEl   = document.getElementById('id');
   const pwdEl  = document.getElementById('pwd');
@@ -31,34 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const id  = (idEl.value  || '').trim();
     const pwd = (pwdEl.value || '').trim();
 
-    if (!id || !pwd) {
-      setStatus('Please enter both Student ID and Password.');
-      return;
-    }
+    if (!id || !pwd) return setStatus('Please enter both Student ID and Password.');
 
     const user = USERS[id];
     if (user && user.password === pwd) {
       setStatus('Login successful. Redirecting…', true);
-
-      // Save minimal user profile
-      localStorage.setItem('demo_user', JSON.stringify({
-        id,
-        name: user.name || 'Student',
-        time: Date.now(),
-      }));
-
-      setTimeout(() => window.location.href = 'dashboard.html', 600);
+      localStorage.setItem('demo_user', JSON.stringify({ id, name: user.name || 'Student', time: Date.now() }));
+      setTimeout(() => (window.location.href = 'dashboard.html'), 600);
     } else {
       setStatus('Invalid credentials (try ID 22123456 / password123).');
     }
   });
 
-  // Pressing Enter also triggers login
-  [idEl, pwdEl].forEach(el => {
-    el?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') form.requestSubmit();
-    });
-  });
+  [idEl, pwdEl].forEach(el => el?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') form.requestSubmit();
+  }));
 });
 
 // =============================
@@ -68,21 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const welcome = document.getElementById('welcome');
   const chipId  = document.getElementById('chipId');
   const logout  = document.getElementById('logout');
-
-  // Only runs on dashboard.html
-  if (!welcome || !chipId) return;
+  if (!welcome || !chipId) return; // not on dashboard
 
   const raw = localStorage.getItem('demo_user');
-  if (!raw) {
-    window.location.replace('index.html');
-    return;
-  }
+  if (!raw) return window.location.replace('index.html');
 
   try {
     const data = JSON.parse(raw);
     const name = data?.name || 'Student';
     const id   = data?.id   || '';
-
     welcome.textContent = `Hello, ${name}${id ? ` (${id})` : ''}`;
     chipId.textContent  = id ? `ID: ${id}` : 'ID: —';
   } catch {
@@ -96,53 +76,69 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// =============================
-// NAVBAR DROPDOWN MENU HANDLER
-// =============================
-(function () {
+// =======================
+// NAVBAR DROPDOWN (glassy, fixed)
+// =======================
+(() => {
   const items = document.querySelectorAll('.menu-item');
   if (!items.length) return;
 
-  // Toggle open / close
+  let openItem = null;
+
+  function placeDropdown(item){
+    const btn = item.querySelector('.menu-trigger');
+    const panel = item.querySelector('.dropdown');
+    if (!btn || !panel) return;
+
+    const r = btn.getBoundingClientRect();
+    const gap = 8; // space under button
+    panel.style.left = `${Math.round(r.left)}px`;
+    panel.style.top  = `${Math.round(r.bottom + gap)}px`;
+
+    // Optional: match width to button
+    // panel.style.minWidth = `${Math.max(240, Math.round(r.width))}px`;
+  }
+
+  function open(item){
+    const btn = item.querySelector('.menu-trigger');
+    const panel = item.querySelector('.dropdown');
+    if (!btn || !panel) return;
+
+    btn.setAttribute('aria-expanded','true');
+    placeDropdown(item);
+    item.classList.add('open');
+    panel.classList.add('is-open');
+    openItem = item;
+  }
+
+  function closeAll(){
+    items.forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.dropdown')?.classList.remove('is-open');
+      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded','false');
+    });
+    openItem = null;
+  }
+
+  // Click to toggle
   items.forEach(i => {
     const btn = i.querySelector('.menu-trigger');
     if (!btn) return;
-
-    btn.addEventListener('click', e => {
+    btn.setAttribute('aria-haspopup','true');
+    btn.setAttribute('aria-expanded','false');
+    btn.addEventListener('click', (e) => {
       e.preventDefault();
-      const openNow = i.classList.toggle('open');
-      btn.setAttribute('aria-expanded', openNow ? 'true' : 'false');
-
-      // Close others
-      items.forEach(o => {
-        if (o !== i) {
-          o.classList.remove('open');
-          const otherBtn = o.querySelector('.menu-trigger');
-          if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
-        }
-      });
+      if (openItem === i) closeAll();
+      else { closeAll(); open(i); }
     });
   });
 
-  // Close when clicking outside
-  window.addEventListener('click', e => {
-    if (!e.target.closest('.menu-item')) {
-      items.forEach(i => {
-        i.classList.remove('open');
-        const btn = i.querySelector('.menu-trigger');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
-      });
-    }
+  // Reposition while open
+  ['resize','scroll'].forEach(ev => {
+    window.addEventListener(ev, () => { if (openItem) placeDropdown(openItem); }, { passive: true });
   });
 
-  // Close on Esc key
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      items.forEach(i => {
-        i.classList.remove('open');
-        const btn = i.querySelector('.menu-trigger');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
-      });
-    }
-  });
+  // Dismiss
+  window.addEventListener('click', (e) => { if (!e.target.closest('.menu-item')) closeAll(); });
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
 })();
