@@ -90,25 +90,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const panel = item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
-    const r = btn.getBoundingClientRect();
-    const gap     = 8;
-    const margin  = 12;
-    const scrollX = window.scrollX || document.documentElement.scrollLeft || 0;
-    const scrollY = window.scrollY || document.documentElement.scrollTop  || 0;
-    const vw      = document.documentElement.clientWidth;
+    const r  = btn.getBoundingClientRect();   // viewport coordinates
+    const vw = document.documentElement.clientWidth;
+    const gap = 8;
+    const margin = 12;
 
-    // Use a deterministic width so clamping works while hidden
+    // Use explicit width so clamping is reliable while hidden
     const targetWidth = Math.max(240, Math.round(r.width));
-    panel.style.width = `${targetWidth}px`;   // <-- explicit width
+    panel.style.width = `${targetWidth}px`;
 
-    // Left align under trigger, clamped to viewport
-    let left = Math.round(r.left + scrollX);
-    const maxLeft = scrollX + vw - targetWidth - margin;
-    if (left > maxLeft) left = maxLeft;
-    if (left < scrollX + margin) left = scrollX + margin;
+    // Left align under trigger, clamped within viewport (NO scroll offsets)
+    let left = Math.round(r.left);
+    const panelWidth = panel.offsetWidth || targetWidth;
+    left = Math.min(left, vw - panelWidth - margin);
+    left = Math.max(left, margin);
 
     panel.style.left = `${left}px`;
-    panel.style.top  = `${Math.round(r.bottom + scrollY + gap)}px`;
+    panel.style.top  = `${Math.round(r.bottom + gap)}px`;
   }
 
   function closeAll(){
@@ -140,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     panel.classList.add('is-open');
     openItem = item;
 
-    // a11y: focus first interactive
+    // a11y: focus first interactive control
     const first = panel.querySelector('a,button,[tabindex]:not([tabindex="-1"])');
     first?.focus({ preventScroll: true });
   }
@@ -155,11 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       if (openItem === i) closeAll();
       else open(i);
-    }, { passive:false });
+    });
   });
 
-  // Keep aligned while scrolling/resizing/orientation change
-  ['scroll','resize','orientationchange'].forEach(ev => {
+  // Keep aligned on resize/orientation changes (no need to handle scroll for fixed)
+  ['resize','orientationchange'].forEach(ev => {
     window.addEventListener(ev, () => { if (openItem) placeDropdown(openItem); }, { passive:true });
   });
 
