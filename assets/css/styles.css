@@ -240,3 +240,35 @@ footer {
   outline-offset:2px;
   text-decoration:none;
 }
+
+/* --- Adjust Quick Access alignment & dashboard centering --- */
+
+/* Left-align text in Quick Access list */
+.quick-links a {
+  text-align: left;
+  padding-left: 0;
+  padding-right: 0;
+  color: #0a2a66; /* UTAR navy tone for a professional link look */
+}
+
+/* Optional subtle hover background (modern macOS-like feel) */
+.quick-links a:hover {
+  background: rgba(0,0,0,0.03);
+  text-decoration: none;
+}
+
+/* Re-centre dashboard grid inside glass panel */
+.dashboard-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* Make both cards equal height and aligned */
+.dashboard-grid .card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
