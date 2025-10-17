@@ -37,39 +37,40 @@ body {
   animation: rise .6s ease-out;
 }
 .logo-well {
-  width: clamp(180px, 28vw, 260px); /* slightly smaller max width for balance */
-  aspect-ratio: 2.3 / 1;            /* thinner tile shape to match UTAR logo */
+  width: clamp(180px, 28vw, 260px);
+  aspect-ratio: 2 / 1;              /* shortened box to match logo's ratio */
   margin: 0 auto 20px;
   border-radius: 16px;
-  
-  /* Subtle navy border + glow */
+
+  /* Subtle UTAR navy border glow */
   border: 2px solid rgba(10, 42, 102, 0.15);
   box-shadow:
-    0 6px 12px rgba(10, 42, 102, 0.15),
-    0 12px 24px rgba(10, 42, 102, 0.08),
+    0 5px 10px rgba(10, 42, 102, 0.15),
+    0 10px 20px rgba(10, 42, 102, 0.08),
     inset 0 0 0 2px rgba(255, 255, 255, 0.5);
-  
+
   background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease; /* for smooth hover effect */
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.25, 1, 0.3, 1);
 }
 
 .logo-well:hover {
-  transform: translateY(-3px); /* gentle lift */
+  transform: translateY(-3px);
   box-shadow:
-    0 10px 22px rgba(10, 42, 102, 0.22),
+    0 8px 18px rgba(10, 42, 102, 0.22),
     inset 0 0 0 2px rgba(255, 255, 255, 0.6);
 }
 
 .logo-well img {
-  width: 82%;          /* gives breathing room around logo */
+  width: 82%;
   height: auto;
   object-fit: contain;
-  border-radius: 10px; /* smooths logo edges */
-  margin-top: 4px;     /* optical centering tweak */
+  border-radius: 10px;
+  margin-top: 4px;
 }
 h2{
   margin: 0 0 26px;
