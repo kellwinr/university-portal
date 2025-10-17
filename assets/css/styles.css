@@ -314,3 +314,34 @@ footer {
   .menu-bar{gap:6px;flex-wrap:wrap;justify-content:center}
   .dropdown{position:fixed;left:12px;right:12px;top:calc(70px + 12px);min-width:unset}
 }
+
+/* --- Fix dropdown alignment & stacking --- */
+
+/* Put the header above the glass panel */
+header{
+  position: relative;
+  z-index: 100;            /* higher than the panel */
+}
+
+/* Keep the main panel underneath the nav */
+.glass-panel{
+  position: relative;
+  z-index: 1;
+  margin-top: 44px;        /* a touch more breathing room under the nav */
+}
+
+/* Ensure each menu item is the positioning context */
+.menu-item{ position: relative; }
+
+/* Make the dropdown sit just below its trigger and above everything */
+.dropdown{
+  top: calc(100% + 8px);   /* align neatly under the button */
+  left: 0;
+  z-index: 1000;           /* well above the panel */
+  min-width: 240px;        /* consistent width */
+}
+
+/* Optional: keep the dropdown from feeling too wide on tiny screens */
+@media (max-width: 520px){
+  .dropdown{ min-width: 200px; }
+}
