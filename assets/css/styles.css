@@ -400,3 +400,45 @@ body:has(#login-form) .logo-well {
   font-weight: 600;
 }
 #login-form a:hover { text-decoration: underline; }
+
+/* ===== LOGIN PAGE LAYOUT (center the whole stack) ===== */
+
+/* 1) Don't grid-center the entire body—use normal flow on login */
+body.login,
+body:has(#login-form) {
+  display: block;
+  padding: 40px 24px;
+}
+
+/* 2) If you have no wrapper, center each piece individually */
+body.login .logo-well,
+body:has(#login-form) .logo-well,
+body.login h1,
+body.login h2,
+body:has(#login-form) h1,
+body:has(#login-form) h2,
+body.login #login-form,
+body:has(#login-form) #login-form {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 640px;     /* keeps the stack narrow and centered */
+}
+
+/* 3) Nice spacing for the stack */
+body.login .logo-well,
+body:has(#login-form) .logo-well { margin-bottom: 16px; }
+body.login h1,
+body:has(#login-form) h1 { margin: 10px 0 8px; text-align: center; color: #fff; }
+body.login h2,
+body:has(#login-form) h2 { margin: 0 0 18px; text-align: center; color: #dfe6ff; }
+
+/* 4) The form stays as a card and is centered */
+body.login #login-form,
+body:has(#login-form) #login-form {
+  width: 100%;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: var(--shadow);
+  padding: 28px 24px;
+}
