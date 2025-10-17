@@ -204,3 +204,39 @@ footer {
 @media (max-width: 520px) {
   .card { padding: 36px 22px 28px; }
 }
+
+/* --- Quick Access: de-pill and de-ad-ify (only this section) --- */
+.quick-links{
+  display:block;
+  margin-top:8px;
+  padding:0;
+  border:0;
+  background:transparent;
+}
+
+.quick-links a{
+  display:block;
+  padding:12px 4px;
+  background:transparent;
+  color:#1d1d1f;
+  font-weight:500;
+  font-size:14px;
+  text-decoration:none;
+  border:0;
+  border-bottom:1px solid #efeff2; /* thin divider */
+  border-radius:0;                 /* remove pill shape */
+  box-shadow:none;                 /* remove card feel */
+}
+
+.quick-links a:last-child{ border-bottom:0; }
+
+/* remove chevrons from earlier styles */
+.quick-links a::after{ content:none !important; }
+
+/* subtle interaction */
+.quick-links a:hover{ text-decoration:underline; background:transparent; }
+.quick-links a:focus-visible{
+  outline:2px solid rgba(10,75,211,.25);
+  outline-offset:2px;
+  text-decoration:none;
+}
