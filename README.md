@@ -1,4 +1,4 @@
-# Uni Portal Demo (GitHub Pages Ready)
+# University Portal Demo (login interface)
 
 A simple, modern UTAR-themed login page with glass blur, separated assets, and a landscape logo well.
 
