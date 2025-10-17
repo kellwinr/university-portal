@@ -272,3 +272,45 @@ footer {
   flex-direction: column;
   justify-content: flex-start;
 }
+
+/* ===== Glassy dropdown nav ===== */
+.menu-bar{display:flex;align-items:center;gap:10px;position:relative}
+.menu-item{position:relative}
+.menu-item>.menu-trigger{
+  color:#fff;text-decoration:none;font-weight:600;font-size:14px;
+  padding:8px 14px;border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.25);
+  transition:.25s; backdrop-filter:blur(10px) saturate(130%)
+}
+.menu-item>.menu-trigger:hover,
+.menu-item.open>.menu-trigger{
+  background:rgba(255,255,255,0.22);color:#0a2a66;box-shadow:0 6px 16px rgba(0,0,0,.25)
+}
+
+/* panel */
+.dropdown{
+  display:none; position:absolute; top:110%; left:0; min-width:240px; z-index:1000;
+  background:rgba(255,255,255,0.72);
+  backdrop-filter:blur(18px) saturate(150%); -webkit-backdrop-filter:blur(18px) saturate(150%);
+  border:1px solid rgba(0,0,0,.08); border-radius:14px; overflow:hidden;
+  box-shadow:0 14px 36px rgba(0,0,0,.28); animation:fadeIn .18s ease-out
+}
+.menu-item:hover .dropdown,
+.menu-item.open .dropdown{display:block}
+
+/* rows */
+.dropdown a{
+  display:block; padding:10px 16px; text-decoration:none; color:#1d1d1f; font-weight:500;
+  transition:background .15s ease
+}
+.dropdown a:hover{background:rgba(255,255,255,0.65)}
+.dropdown a + a{border-top:1px solid rgba(0,0,0,.05)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Mobile: stack and make dropdowns full-width under button */
+@media (max-width:900px){
+  .menu-bar{gap:6px;flex-wrap:wrap;justify-content:center}
+  .dropdown{position:fixed;left:12px;right:12px;top:calc(70px + 12px);min-width:unset}
+}
