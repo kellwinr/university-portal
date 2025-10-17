@@ -442,3 +442,50 @@ body:has(#login-form) #login-form {
   box-shadow: var(--shadow);
   padding: 28px 24px;
 }
+
+/* Headings: center + spacing */
+body.login h1,
+body:has(#login-form) h1 {
+  text-align: center;
+  margin: 14px 0 6px;
+  color: #ffffff;
+}
+body.login h2,
+body:has(#login-form) h2 {
+  text-align: center;
+  margin: 0 0 20px;
+  color: #dfe6ff;
+  font-weight: 600;
+}
+
+/* Forgot password visibility */
+#login-form a {
+  color: #2a66ff;           /* stronger contrast than the faint pastel */
+  font-weight: 600;
+  text-decoration: none;
+}
+#login-form a:hover { text-decoration: underline; }
+
+/* Card spacing and controls */
+#login-form {
+  gap: 10px;                /* if you switch to display:grid later */
+}
+#login-form label { margin: 10px 0 6px; }
+#login-form input { margin-bottom: 8px; }
+
+/* Make button squarely full-width on iOS */
+#login-form button[type="submit"] {
+  width: 100%;
+  -webkit-appearance: none;
+}
+
+/* Responsive: let the card breathe on small screens */
+@media (max-width: 480px) {
+  body.login, body:has(#login-form) { padding: 16px; }
+  #login-form { padding: 20px 16px; }
+}
+
+/* Optional: bring the whole stack slightly higher on tall screens */
+@media (min-height: 900px) {
+  body.login, body:has(#login-form) { padding-top: 48px; }
+}
