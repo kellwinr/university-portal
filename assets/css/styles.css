@@ -1,33 +1,41 @@
-:root{
+:root {
   --utar-navy: #0a2a66;
   --utar-navy-2: #041a44;
   --utar-gold: #f0b400;
-  --text-strong: #1d1d1f;
-  --text-muted: #6e6e73;
-  --card-bg: rgba(255,255,255,0.86);
-  --glass-blur: 22px;
+
+  /* Neutral Apple-inspired palette */
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+  --stroke: #e6e6ea;
+  --stroke-strong: #d8d8de;
+  --surface: #ffffff;
+  --glass: rgba(255, 255, 255, 0.60);
+  --link: #0a4bd3;
+
+  --glass-blur: 18px;
   --radius-lg: 20px;
   --radius-md: 12px;
-  --shadow: 0 28px 60px rgba(0,0,0,.22);
+  --shadow: 0 16px 40px rgba(0, 0, 0, .16);
 }
+
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-  background:
-    radial-gradient(1200px 500px at 80% 120%, rgba(240,180,0,0.18), transparent 60%),
-    radial-gradient(900px 600px at -10% -10%, rgba(255,255,255,0.12), transparent 60%),
-    linear-gradient(135deg, var(--utar-navy) 0%, var(--utar-navy-2) 70%);
+  background: linear-gradient(180deg, #0b1b46 0%, #112a5e 100%);
   background-attachment: fixed;
-  color: var(--text-strong);
+  color: var(--ink);
   display: grid;
   place-items: center;
   padding: 24px;
 }
+
+/* ===== LOGIN / CARD STYLE ===== */
 .card {
   width: min(460px, 100%);
-  background: var(--card-bg);
+  background: var(--surface);
   backdrop-filter: blur(var(--glass-blur)) saturate(120%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
   border-radius: var(--radius-lg);
@@ -36,186 +44,91 @@ body {
   text-align: center;
   animation: rise .6s ease-out;
 }
+
+/* ===== LOGO BOX ===== */
 .logo-well {
   width: clamp(180px, 28vw, 260px);
-  aspect-ratio: 2 / 1;              /* shortened box to match logo's ratio */
+  aspect-ratio: 2 / 1;
   margin: 0 auto 20px;
   border-radius: 16px;
-
-  /* Subtle UTAR navy border glow */
-  border: 2px solid rgba(10, 42, 102, 0.15);
-  box-shadow:
-    0 5px 10px rgba(10, 42, 102, 0.15),
-    0 10px 20px rgba(10, 42, 102, 0.08),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.5);
-
+  border: 2px solid rgba(10, 42, 102, 0.1);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.5);
   background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.3, 1),
-              box-shadow 0.3s cubic-bezier(0.25, 1, 0.3, 1);
+  transition: transform .3s cubic-bezier(0.25,1,0.3,1);
 }
+.logo-well:hover { transform: translateY(-2px); }
+.logo-well img { width: 82%; height: auto; border-radius: 10px; }
 
-.logo-well:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 8px 18px rgba(10, 42, 102, 0.22),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.6);
-}
-
-.logo-well img {
-  width: 82%;
-  height: auto;
-  object-fit: contain;
-  border-radius: 10px;
-  margin-top: 4px;
-}
-h2{
-  margin: 0 0 26px;
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-align: center;
-}
-form{ display: grid; gap: 14px; margin-bottom: 10px; text-align: left; }
-.field{ display: grid; gap: 8px; }
-label{ font-size: 13px; color: #4d4d50; }
-input[type="text"], input[type="password"]{
+/* ===== FORM FIELDS ===== */
+form { display: grid; gap: 14px; margin-bottom: 10px; text-align: left; }
+.field { display: grid; gap: 8px; }
+label { font-size: 13px; color: #4d4d50; }
+input[type="text"], input[type="password"] {
   width: 100%;
   padding: 14px 16px;
   border-radius: var(--radius-md);
   border: 1px solid #d1d1d6;
   background-color: rgba(255,255,255,0.95);
-  color: #1d1d1f;
+  color: var(--ink);
   font-size: 15px;
   outline: none;
   transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
 }
-input::placeholder { color: #888; opacity: 1; }
-input:focus{
+input::placeholder { color: #888; }
+input:focus {
   border-color: var(--utar-navy);
   box-shadow: 0 0 0 3px rgba(10,42,102,.20);
   transform: translateY(-1px);
 }
-.actions{ margin-top: 6px; display: grid; gap: 10px; }
-.btn{
+
+/* ===== BUTTONS ===== */
+.actions { margin-top: 6px; display: grid; gap: 10px; }
+.btn {
   width: 100%;
   padding: 14px 16px;
   border: none;
   border-radius: 14px;
   font-size: 16px;
   font-weight: 700;
-  letter-spacing: .2px;
   color: #fff;
   cursor: pointer;
-  background-image: linear-gradient(180deg, #1b50c9 0%, #0e2f86 100%);
-  box-shadow: 0 10px 24px rgba(9,41,102,.35), inset 0 1px 0 rgba(255,255,255,.15);
-  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+  background: linear-gradient(180deg, #1b50c9 0%, #0e2f86 100%);
+  box-shadow: 0 8px 20px rgba(9,41,102,.3);
+  transition: transform .16s ease, box-shadow .16s ease;
 }
-.btn:hover{ transform: translateY(-1px); box-shadow: 0 14px 28px rgba(9,41,102,.42); }
-.btn:active{ transform: translateY(0); filter: saturate(.96); }
-.aux{ text-align: center; font-size: 13px; margin-top: 2px; }
-.aux a{ color: var(--utar-gold); text-decoration: none; font-weight: 600; }
-.aux a:hover{ text-decoration: underline; }
-.footer{ margin-top: 22px; font-size: 12px; color: rgba(0,0,0,.55); text-align: center; }
-.status{ text-align:center; min-height: 1.2em; color:#d02b2b; font-size: 13px; margin-top: 6px; }
-@keyframes rise{ from{ opacity: 0; transform: translateY(12px);} to{ opacity:1; transform: translateY(0);} }
-@media (max-width: 520px){ .card{ padding: 36px 22px 28px; } }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(9,41,102,.4); }
+.btn:active { transform: translateY(0); }
 
-/* ===== Apple-style Quick Links with icons ===== */
-.quick-links{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-top:10px;
+/* ===== AUX LINKS ===== */
+.aux { text-align: center; font-size: 13px; margin-top: 2px; }
+.aux a { color: var(--utar-gold); text-decoration: none; font-weight: 600; }
+.aux a:hover { text-decoration: underline; }
+
+.footer {
+  margin-top: 22px;
+  font-size: 12px;
+  color: rgba(0,0,0,.55);
+  text-align: center;
 }
-
-.quick-links a{
-  position: relative;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:12px 16px 12px 48px;       /* space for left icon */
-  border-radius:12px;
-  background:rgba(255,255,255,0.82);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(0,0,0,0.06);
-  box-shadow:0 2px 6px rgba(0,0,0,0.06);
-  text-decoration:none;
-  color:#0a2a66;
-  font-weight:600;
-  font-size:14px;
-  transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+.status {
+  text-align:center;
+  min-height: 1.2em;
+  color:#d02b2b;
+  font-size: 13px;
+  margin-top: 6px;
 }
 
-/* Left circular icon */
-.quick-links a::before{
-  content: attr(data-icon);
-  position:absolute;
-  left:12px;
-  width:26px;
-  height:26px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:rgba(10,42,102,0.10);   /* subtle UTAR-navy tint */
-  border:1px solid rgba(10,42,102,0.18);
-  font-size:14px;                    /* emoji size */
-  line-height:1;
-}
-
-/* Right chevron */
-.quick-links a::after{
-  content: "›";
-  opacity:.45;
-  font-size:18px;
-  margin-left:8px;
-}
-
-/* Hover effect */
-.quick-links a:hover{
-  background:rgba(255,255,255,0.95);
-  transform:translateY(-2px);
-  box-shadow:0 6px 14px rgba(0,0,0,0.10);
-}
-
-/* Keep tiles clean: no underline on hover/focus */
-.quick-links a:hover,
-.quick-links a:focus { text-decoration: none; outline: none; }
-
-.quick-links a:focus-visible{
-  box-shadow: 0 0 0 3px rgba(10,42,102,0.22), 0 6px 14px rgba(0,0,0,0.10);
-  background: rgba(255,255,255,0.98);
-  transform: translateY(-1px);
-}
-
-/* ===== Calm / Institutional Apple overrides ===== */
-
-/* Colours */
-:root{
-  --ink: #1d1d1f;
-  --muted: #6e6e73;
-  --stroke: #e6e6ea;
-  --stroke-strong: #d8d8de;
-  --surface: #ffffff;
-  --glass: rgba(255,255,255,.60);
-  --link: #0a4bd3; /* Apple-ish link blue, less saturated */
-}
-
-/* Header: lighter, flatter */
-header{
+/* ===== DASHBOARD STYLING ===== */
+header {
   background: rgba(255,255,255,.10);
   border: 1px solid rgba(255,255,255,.22);
   box-shadow: 0 6px 18px rgba(0,0,0,.16);
   border-radius: 16px;
 }
-
-/* Main glass panel: reduce blur & shadow */
-.glass-panel{
+.glass-panel {
   background: var(--glass);
   backdrop-filter: blur(14px) saturate(115%);
   -webkit-backdrop-filter: blur(14px) saturate(115%);
@@ -223,80 +136,71 @@ header{
   box-shadow: 0 8px 24px rgba(0,0,0,.12);
   border-radius: 16px;
 }
-
-/* Cards: flat, crisp edges */
-.card{
+.card {
   background: var(--surface);
   border: 1px solid var(--stroke);
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
-  border-radius: 12px;
+  border-radius: 10px;
 }
-
-/* Headings: left-align inside cards for a more serious tone */
-.card h3{ 
-  font-weight: 700; 
-  color: var(--ink); 
+.card h3 {
+  font-weight: 700;
+  color: var(--ink);
+  text-align: left;
 }
+.card a {
+  color: var(--link);
+  text-decoration: none;
+}
+.card a:hover { text-decoration: underline; }
 
-/* Links inside cards */
-.card a{ color: var(--link); text-decoration: none; }
-.card a:hover{ text-decoration: underline; }
-
-/* ---------- Quick Access: replace “ad-like tiles” with calm list rows ---------- */
-.quick-links{
+/* ===== Quick Links (Calm, Apple-like) ===== */
+.quick-links {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 12px;
 }
-
-/* Remove emoji circles & heavy shadows */
-.quick-links a{
-  position: relative;
+.quick-links a {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
   border-radius: 10px;
-  background: transparent;
   border: 1px solid var(--stroke);
-  box-shadow: none;
+  background: transparent;
   color: var(--ink);
   font-weight: 600;
   transition: background .15s ease, border-color .15s ease;
 }
-
-/* Hide previous emoji icon bubble */
-.quick-links a::before{ content: none; }
-
-/* Softer chevron */
-.quick-links a::after{
+.quick-links a::after {
   content: "›";
   color: #8e8e93;
   font-size: 16px;
-  margin-left: 12px;
-  opacity: .9;
 }
-
-/* Calm hover */
-.quick-links a:hover{
+.quick-links a:hover {
   background: #f7f7f8;
   border-color: var(--stroke-strong);
-  transform: none;
-  box-shadow: none;
 }
-
-/* Keyboard focus ring – subtle */
-.quick-links a:focus-visible{
+.quick-links a:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(10,75,211,.18);
   background: #fff;
 }
 
-/* Footer: reduce glow */
-footer{
+/* ===== Footer ===== */
+footer {
   background: rgba(255,255,255,.08);
   box-shadow: 0 3px 14px rgba(0,0,0,.16);
   border-radius: 14px;
   color: #e9e9ee;
+}
+
+/* ===== Animations ===== */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 520px) {
+  .card { padding: 36px 22px 28px; }
 }
