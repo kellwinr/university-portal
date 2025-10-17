@@ -9,7 +9,7 @@
 <body>
   <main class="card" role="main" aria-label="UTAR Dashboard">
     <div class="logo-well" aria-label="University logo">
-      <img src="assets/img/logo-placeholder.svg" alt="UTAR Logo Placeholder">
+      <img src="assets/img/Universiti_Tunku_Abdul_Rahman_Logo.jpg" alt="UTAR Logo">
     </div>
     <h1>Welcome to the UTAR Portal (Demo)</h1>
     <h2 id="welcome">Hello, Student</h2>
@@ -24,14 +24,16 @@
     <div class="footer">Demo only — do not enter real credentials.</div>
   </main>
 
-  <script>
-    const user = localStorage.getItem('demo_user');
-    if (!user) {
+<script>    
+    const userStr = localStorage.getItem('demo_user');
+    if (!userStr) {
       window.location.replace('index.html');
     } else {
-      const data = JSON.parse(user);
+      const data = JSON.parse(userStr);
       const w = document.getElementById('welcome');
-      if (w) w.textContent = 'Hello, ' + (data.id || 'Student');
+      const name = data.name || 'Student';
+      const id = data.id || '';
+      if (w) w.textContent = `Hello, ${name}${id ? ` (${id})` : ''}`;
     }
 
     document.getElementById('logout')?.addEventListener('click', () => {
