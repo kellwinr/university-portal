@@ -460,3 +460,30 @@ body:has(#login-form) img[alt*="UTAR"] {
   max-width: 360px;        /* keeps logo from overpowering on desktop */
   width: 70vw;             /* still scales nicely on small screens */
 }
+
+/* ===== UTAR LOGO — SMALLER APPLE-GLASS CARD STYLE ===== */
+body.login img[alt*="UTAR"],
+body:has(#login-form) img[alt*="UTAR"] {
+  display: block;
+  margin: 0 auto 24px;
+  max-width: 260px;               /* 👈 smaller for better proportion */
+  width: 60vw;
+  height: auto;
+
+  /* Apple-glass floating look */
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 10px 14px;             /* reduced padding to match smaller size */
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Hover animation for a soft lift */
+body.login img[alt*="UTAR"]:hover,
+body:has(#login-form) img[alt*="UTAR"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+}
