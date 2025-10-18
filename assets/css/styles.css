@@ -1163,3 +1163,83 @@ header .user-info .logout-btn:hover{
   #chipId, header .user-info .id-chip{ font-size:12.5px !important; padding:3px 9px !important; }
   #logout.logout-btn, header .user-info .logout-btn{ font-size:12.5px !important; padding:6px 9px !important; }
 }
+
+/* 1) Ambient spotlight behind the form */
+#login-form {
+  position: relative;
+  isolation: isolate;
+}
+#login-form::before {
+  content: "";
+  position: absolute;
+  inset: -60px -80px;
+  z-index: -1;
+  background: radial-gradient(420px 280px at 50% 20%, rgba(255,255,255,.16), transparent 60%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+/* 2) Button micro-sheen + press state */
+#login-form .btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform .12s ease, box-shadow .18s ease;
+}
+#login-form .btn::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.22) 40%, transparent 80%);
+  transform: translateX(-120%);
+  transition: transform .6s ease;
+}
+#login-form .btn:hover::after { transform: translateX(120%); }
+#login-form .btn:active { transform: translateY(1px) scale(.995); }
+
+/* 3) Input focus ring + subtle lift */
+#login-form input:focus {
+  border-color: #8fb1ff;
+  box-shadow:
+    0 0 0 3px rgba(41,102,255,.18),
+    0 1px 0 rgba(255,255,255,.9) inset;
+  transform: translateY(-1px);
+}
+
+/* 4) Logo micro-tilt on hover */
+.logo-well img {
+  transform-origin: center 70%;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.logo-well img:hover { transform: translateY(-2px) rotate(-1.2deg); }
+
+/* 5) Copyright shimmer (very faint) */
+#copyright {
+  position: relative;
+  overflow: hidden;
+}
+#copyright::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,.12) 35%, transparent 70%);
+  transform: translateX(-120%);
+  animation: sweep 3.2s linear infinite;
+  pointer-events: none;
+}
+@keyframes sweep { to { transform: translateX(120%); } }
+
+/* 6) Validation states (ready to use) */
+.input-error { border-color:#e24d4d !important; box-shadow: 0 0 0 3px rgba(226,77,77,.18); }
+.input-success { border-color:#3fb17a !important; box-shadow: 0 0 0 3px rgba(63,177,122,.18); }
+
+/* 7) Password toggle icon/button */
+.pwd-wrap { position: relative; }
+.pwd-toggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  padding: 6px 8px; border: none; background: transparent; cursor: pointer;
+  color: #4a63a8;
+}
+.pwd-toggle:hover { color: #2a66ff; }
+
+/* 8) Respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
