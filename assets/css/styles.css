@@ -1280,3 +1280,47 @@ header .user-info .logout-btn:hover{
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* === Password eye alignment fix === */
+.pwd-wrap { position: relative; }
+
+.pwd-wrap input[type="password"],
+.pwd-wrap input[type="text"] {
+  /* leave space for the button so text/caret never collide */
+  padding-right: 48px !important;
+}
+
+/* place the icon precisely inside the right-end pill corner */
+.pwd-toggle {
+  position: absolute;
+  inset-inline-end: 12px;       /* right: 12px (RTL-safe) */
+  inset-block-start: 50%;       /* vertical center anchor */
+  transform: translateY(-52%);  /* nudge up a hair for optical centering */
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #2a4fb2;               /* matches your blue */
+}
+
+/* hover/active remain subtle */
+.pwd-toggle:hover { background: rgba(42,102,255,0.08); }
+.pwd-toggle:active { transform: translateY(calc(-52% + 1px)); }
+
+/* crisp strokes */
+.pwd-toggle svg {
+  width: 20px; height: 20px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* show/hide correct icon */
+.icon-eye-off { display: none; }
+.pwd-toggle.visible .icon-eye { display: none; }
+.pwd-toggle.visible .icon-eye-off { display: block; }
