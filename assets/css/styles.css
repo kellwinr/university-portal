@@ -445,3 +445,26 @@ header.tworow .menu-bar { justify-self: stretch; }
   header.tworow .top-utils { justify-self: center; }
   header.tworow .menu-bar  { justify-content: center; }
 }
+
+/* --- Force two-row header layout --- */
+header.tworow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;               /* two rows */
+  column-gap: 16px;
+  row-gap: 10px;
+}
+
+/* Place items */
+header.tworow .logo-section { grid-column: 1; grid-row: 1; }
+header.tworow .top-utils    { grid-column: 3; grid-row: 1; justify-self: end; }
+
+/* Make nav occupy the whole second row */
+header.tworow .menu-bar {
+  grid-column: 1 / -1;                          /* span all columns */
+  grid-row: 2;                                   /* second row */
+  justify-self: stretch;                         /* override earlier center */
+  width: 100%;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.25);
+}
