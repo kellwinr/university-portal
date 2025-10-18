@@ -400,3 +400,30 @@ header.tworow{
   z-index: 10;
 }
 */
+
+/* --- Force the two-row layout to take over --- */
+header{            /* neutralize any earlier grid on plain <header> */
+  display: block;  /* or remove your old `header { display:grid; ... }` block */
+}
+
+header.tworow{
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  grid-template-rows: auto auto !important;
+  grid-template-areas:
+    "logo . utils"
+    "nav  nav nav" !important;
+}
+
+/* put children into their areas */
+header.tworow .logo-section{ grid-area: logo !important; }
+header.tworow .top-utils   { grid-area: utils !important; justify-self:end; }
+header.tworow .menu-bar{
+  grid-area: nav !important;
+  justify-self: stretch;
+  width: 100%;
+  display:flex; align-items:center; flex-wrap:wrap;
+  gap:12px; padding-top:6px;
+  border-top:1px solid rgba(255,255,255,.25);
+  justify-content:flex-start;      /* center if you prefer */
+}
