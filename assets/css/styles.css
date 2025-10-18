@@ -442,3 +442,21 @@ body.login, body:has(#login-form){
 .dropdown{
   contain: layout style;               /* fewer reflows on show */
 }
+
+/* ===== FINAL LOGIN TWEAKS (append at end) ===== */
+
+/* Center the whole login stack perfectly */
+body.login,
+body:has(#login-form) {
+  place-items: center;     /* vertical + horizontal centering */
+  min-height: 100vh;       /* needed for true vertical center */
+  padding-top: 0;          /* remove extra top gap */
+}
+
+/* Logo rhythm above the card */
+body.login img[alt*="UTAR"],
+body:has(#login-form) img[alt*="UTAR"] {
+  margin-bottom: 24px;     /* more breathing room before the form */
+  max-width: 360px;        /* keeps logo from overpowering on desktop */
+  width: 70vw;             /* still scales nicely on small screens */
+}
