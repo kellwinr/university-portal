@@ -16,15 +16,29 @@
     <h1>UNIVERSITI TUNKU ABDUL RAHMAN</h1>
     <h2>University Portal Login (Demo)</h2>
 
+    <!-- ===== LOGIN FORM ===== -->
     <form id="login-form" action="#" method="post" novalidate>
       <div class="field">
         <label for="id">Student ID</label>
-        <input id="id" name="id" type="text" inputmode="numeric" placeholder="e.g. 22XXXXXX" autocomplete="username" required>
+        <input id="id" name="id" type="text" inputmode="numeric"
+               placeholder="e.g. 22XXXXXX" autocomplete="username" required>
       </div>
 
-      <div class="field">
+      <!-- Add the password toggle wrapper here -->
+      <div class="field pwd-wrap">
         <label for="pwd">Password</label>
-        <input id="pwd" name="pwd" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+        <input id="pwd" name="pwd" type="password"
+               placeholder="Enter your password"
+               autocomplete="current-password" required>
+        <button type="button" class="pwd-toggle" aria-label="Show password" 
+          onclick="
+            const i=document.getElementById('pwd');
+            const t=this;
+            const show=i.type==='password';
+            i.type = show ? 'text' : 'password';
+            t.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+            t.textContent = show ? '🙈' : '👁️';
+          ">👁️</button>
       </div>
 
       <div class="actions">
@@ -35,9 +49,13 @@
       <p id="status" class="status" aria-live="polite"></p>
     </form>
 
-    <footer id="copyright" class="footer">© 2025 Universiti Tunku Abdul Rahman — Demo only</footer>
+    <!-- ===== FOOTER ===== -->
+    <footer id="copyright" class="footer">
+      © 2025 Universiti Tunku Abdul Rahman — Demo only
+    </footer>
   </main>
 
+  <!-- Load JS after DOM is ready -->
   <script src="assets/js/main.js"></script>
 </body>
 </html>
