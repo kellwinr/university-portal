@@ -531,3 +531,26 @@ header.tworow > .menu-bar{
   padding-top: 6px;
   border-top: 1px solid rgba(255,255,255,.25);
 }
+
+/* ===== FINAL FIX: force two-row header with named areas ===== */
+header.tworow{
+  /* one line that sets both columns, rows, and areas */
+  display: grid !important;
+  grid: "logo . utils" auto
+        "nav  nav nav" auto
+        / auto 1fr auto !important;
+  column-gap: 16px;
+  row-gap: 10px;
+}
+
+/* map the three direct children into those areas */
+header.tworow > .logo-section { grid-area: logo !important; }
+header.tworow > .top-utils    { grid-area: utils !important; justify-self: end !important; }
+header.tworow > .menu-bar     {
+  grid-area: nav !important;
+  justify-self: stretch !important;
+  width: 100% !important;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.25);
+}
+
