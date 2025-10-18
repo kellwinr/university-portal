@@ -802,3 +802,27 @@ footer.footer:hover, #copyright:hover {
   .logo-well img { max-width: 200px; width: 70vw; margin-bottom: 12px; }
   #login-form { width: 92%; }
 }
+
+/* === Logo → title spacing fix (no margin collapse) === */
+.logo-well {
+  margin-block-end: 8px;         /* was ~16px; reduce the gap */
+}
+.card h1 {
+  margin-block-start: 0;         /* prevent added top space */
+}
+
+/* Optional: slightly slimmer logo bubble padding to reduce visual gap */
+.logo-well img {
+  padding: 8px 12px;             /* was 10px 14px */
+}
+
+/* Keep subtitle rhythm tidy under the title */
+.card h2 {
+  margin: 4px 0 16px;            /* small breath below the title */
+}
+
+/* Mobile: add a hair more air so it doesn't feel cramped */
+@media (max-width: 480px) {
+  .logo-well { margin-block-end: 10px; }
+  .logo-well img { padding: 9px 12px; }
+}
