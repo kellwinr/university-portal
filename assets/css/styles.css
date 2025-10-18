@@ -826,3 +826,52 @@ footer.footer:hover, #copyright:hover {
   .logo-well { margin-block-end: 10px; }
   .logo-well img { padding: 9px 12px; }
 }
+
+/* ===== Dynamic Responsive Scaling (for fluid layout) ===== */
+
+/* Scale logo and heading sizes relative to viewport width */
+:root {
+  --scale-factor: clamp(0.8, 1.2vw + 0.6, 1.1); /* responsive scaling multiplier */
+}
+
+.logo-well img {
+  max-width: clamp(140px, 22vw, 260px);
+  padding: calc(8px * var(--scale-factor)) calc(12px * var(--scale-factor));
+  border-radius: calc(16px * var(--scale-factor));
+}
+
+/* Headings scale smoothly */
+.card h1 {
+  font-size: clamp(1.3rem, 1vw + 1rem, 2rem);
+}
+.card h2 {
+  font-size: clamp(0.9rem, 0.6vw + 0.8rem, 1.3rem);
+}
+
+/* Form width adjusts to viewport */
+#login-form {
+  width: clamp(320px, 55vw, 440px);
+  padding: clamp(16px, 3vw, 24px);
+  border-radius: clamp(14px, 2vw, 20px);
+}
+
+/* Inputs and buttons scale consistently */
+#login-form input,
+#login-form .btn {
+  font-size: clamp(14px, 1vw + 0.4rem, 16px);
+  border-radius: clamp(10px, 1vw, 14px);
+  padding: clamp(10px, 2vw, 14px);
+}
+
+/* Footer bubble scales subtly */
+#copyright {
+  font-size: clamp(12px, 0.5vw + 0.6rem, 14px);
+  padding: clamp(8px, 2vw, 12px) clamp(14px, 3vw, 18px);
+  border-radius: clamp(10px, 1vw, 14px);
+}
+
+/* Maintain vertical centering for various screen heights */
+body:has(#login-form) {
+  justify-content: center;
+  padding-block: clamp(16px, 4vh, 48px);
+}
