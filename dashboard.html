@@ -570,6 +570,27 @@ document.addEventListener('click', (e) => {
   // Esc to close
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
 })();
+
+// =======================================================
+// DASHBOARD EXTRAS — for demo visuals only
+// =======================================================
+  
+// --- Clear bell badge when clicked ---
+document.addEventListener('click', (e) => {
+  const bell = e.target.closest('.icon-btn.bell');
+  if (!bell) return;
+  const badge = document.getElementById('notifBadge');
+  if (badge) badge.textContent = '';
+});
+
+// --- Optional: quick search field behaviour ---
+document.addEventListener('input', (e) => {
+  const search = e.target.closest('.portal-search input[type="search"]');
+  if (!search) return;
+  // You could implement live search here (for now it's just cosmetic)
+  console.log('Search query:', search.value);
+});
+
 </script>
 </body>
 </html>
