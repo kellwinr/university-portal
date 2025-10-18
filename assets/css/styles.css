@@ -1324,3 +1324,56 @@ header .user-info .logout-btn:hover{
 .icon-eye-off { display: none; }
 .pwd-toggle.visible .icon-eye { display: none; }
 .pwd-toggle.visible .icon-eye-off { display: block; }
+
+/* === Password toggle: pixel-perfect size & alignment === */
+.pwd-wrap { position: relative; }
+
+/* Give the text/caret room so it never hits the icon */
+.pwd-wrap input[type="password"],
+.pwd-wrap input[type="text"] {
+  padding-right: 56px !important;          /* room for 32px button + gap */
+  line-height: 1.25;                        /* predictable vertical center */
+}
+
+/* Button capsule that sits inside the input’s right corner */
+.pwd-toggle {
+  position: absolute;
+  inset-inline-end: 12px;                   /* right: 12px (RTL-safe) */
+  inset-block-start: 50%;                   /* top: 50% */
+  transform: translateY(-50%);              /* exact vertical center */
+  width: 32px;                              /* consistent hit area */
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #274bb7;                           /* your blue */
+}
+
+/* Subtle hover/active states (keeps the “Apple” feel) */
+.pwd-toggle:hover { background: rgba(39,75,183,.08); }
+.pwd-toggle:active { transform: translateY(calc(-50% + 1px)); }
+
+/* Icon itself — optically crisp at small sizes */
+.pwd-toggle svg {
+  width: 18px;                              /* fixed, not auto-scaling */
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;        /* keeps stroke crisp when scaled */
+}
+
+/* Show/hide correct glyph */
+.icon-eye-off { display: none; }
+.pwd-toggle.visible .icon-eye { display: none; }
+.pwd-toggle.visible .icon-eye-off { display: block; }
+
+/* Safari/iOS tiny optical nudge (their form borders look thicker) */
+@supports (-webkit-touch-callout: none) {
+  .pwd-toggle { transform: translateY(calc(-50% - .5px)); }
+}
