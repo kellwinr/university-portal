@@ -520,3 +520,16 @@ body:has(#login-form) footer:not(#copyright) { display: none; }
   background-clip: padding-box;
 }
 .dropdown:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); }
+
+/* === Dropdown size overrides (paste at end) === */
+
+/* 1) Narrower, fixed-ish width */
+:root { --menuW: 300px; }           /* was 340px; tweak to taste */
+
+/* 2) Tighter row height + padding */
+.dropdown a{
+  min-height: 46px;                 /* was 52px */
+  padding: 10px 16px;               /* was 12px 18px */
+  font-weight: 700;                 /* keep your weight */
+  line-height: 1.2;
+}
