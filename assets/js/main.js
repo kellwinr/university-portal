@@ -109,13 +109,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =======================================================
-   NAVBAR DROPDOWN — hover only + true blur + perfect alignment
+   NAVBAR DROPDOWN — hover intent + portal + true blur
+   Stays open while hovering the trigger OR the popup panel.
    ======================================================= */
 (() => {
   const items = document.querySelectorAll('.menu-item');
   if (!items.length) return;
 
-  // --- Create a portal for clean z-layering ---
+  // ---- Portal for the glassy panels (keeps blur and z-order perfect)
   let portal = document.getElementById('menu-portal');
   if (!portal) {
     portal = document.createElement('div');
@@ -123,19 +124,28 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(portal);
   }
 
-  const origin = new WeakMap(); // track where each dropdown came from
+  // Remember original location to restore later
+  const origin = new WeakMap();
 
-  // Measure size invisibly without ghosting
-  function measure(panel) {
+  function moveToPortal(panel){
+    if (!origin.has(panel)) origin.set(panel, { parent: panel.parentNode, next: panel.nextSibling });
+    if (panel.parentNode !== portal) portal.appendChild(panel);
+  }
+  function restore(panel){
+    const o = origin.get(panel);
+    if (!o) return;
+    const { parent, next } = o;
+    next ? parent.insertBefore(panel, next) : parent.appendChild(panel);
+    origin.delete(panel);
+  }
+
+  // Measure at real size without flashing
+  function measure(panel){
     const clone = panel.cloneNode(true);
     clone.classList.add('is-open');
     Object.assign(clone.style, {
-      position: 'fixed',
-      left: '-9999px',
-      top: '0',
-      visibility: 'hidden',
-      pointerEvents: 'none',
-      display: 'block',
+      position: 'fixed', left: '-9999px', top: '0',
+      visibility: 'hidden', pointerEvents: 'none', display: 'block'
     });
     portal.appendChild(clone);
     const rect = clone.getBoundingClientRect();
@@ -143,67 +153,107 @@ document.addEventListener("DOMContentLoaded", () => {
     return { w: Math.max(rect.width, 260), h: rect.height };
   }
 
-  function moveToPortal(panel) {
-    if (!origin.has(panel)) {
-      origin.set(panel, { parent: panel.parentNode, next: panel.nextSibling });
-    }
-    if (panel.parentNode !== portal) portal.appendChild(panel);
-  }
+  let openItem = null;
+  let openPanel = null;
+  let closeTimer = null;
 
-  function restore(panel) {
-    const info = origin.get(panel);
-    if (!info) return;
-    const { parent, next } = info;
-    next ? parent.insertBefore(panel, next) : parent.appendChild(panel);
-    origin.delete(panel);
-  }
-
-  function placeDropdown(item) {
-    const btn = item.querySelector('.menu-trigger');
+  function place(item){
+    const btn   = item.querySelector('.menu-trigger');
     const panel = item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
     moveToPortal(panel);
-
-    const r = btn.getBoundingClientRect();
     const { w: pw, h: ph } = measure(panel);
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const EDGE = 12;
-    const GAP = 8;
+    const r  = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const EDGE = 12, GAP = 8;
 
-    // left alignment, clamp edges
+    // Align to trigger; clamp to viewport
     let left = Math.min(Math.max(EDGE, r.left), vw - pw - EDGE);
-    let top = r.bottom + GAP;
+    let top  = r.bottom + GAP;
     if (top + ph + EDGE > vh) top = Math.max(EDGE, r.top - ph - GAP);
 
-    panel.style.left = `${left}px`;
-    panel.style.top = `${top}px`;
+    panel.style.left = `${Math.round(left)}px`;
+    panel.style.top  = `${Math.round(top)}px`;
   }
 
-  // --- Hover behaviour ---
-  items.forEach(item => {
-    const btn = item.querySelector('.menu-trigger');
+  function open(item){
+    if (openItem && openItem !== item) hide(openItem);
+    const panel = item.querySelector('.dropdown');
+    if (!panel) return;
+    place(item);
+    panel.classList.add('is-open');
+    openItem  = item;
+    openPanel = panel;
+  }
+
+  function hide(item = openItem){
+    if (!item) return;
+    const panel = item.querySelector('.dropdown');
+    item.classList.remove('open');
+    if (panel){
+      panel.classList.remove('is-open');
+      panel.style.left = '';
+      panel.style.top  = '';
+      restore(panel);
+    }
+    if (openItem === item) { openItem = null; openPanel = null; }
+  }
+
+  // Hover-intent: keep open while either area is hovered
+  function wire(item){
+    const btn   = item.querySelector('.menu-trigger');
     const panel = item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
-    item.addEventListener('mouseenter', () => {
-      placeDropdown(item);
-      panel.classList.add('is-open');
+    let overBtn = false;
+    let overPanel = false;
+
+    const startClose = () => {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        if (!overBtn && !overPanel) hide();
+      }, 120); // small grace to cross the GAP
+    };
+    const cancelClose = () => clearTimeout(closeTimer);
+
+    // Trigger hover
+    btn.addEventListener('mouseenter', () => {
+      overBtn = true;
+      cancelClose();
+      open(item);
+    });
+    btn.addEventListener('mouseleave', () => {
+      overBtn = false;
+      startClose();
     });
 
-    item.addEventListener('mouseleave', () => {
-      panel.classList.remove('is-open');
-      restore(panel);
+    // Panel hover (note: panel lives in portal, so we listen on panel itself)
+    panel.addEventListener('mouseenter', () => {
+      overPanel = true;
+      cancelClose();
+      // ensure positioned (in case of tiny scroll/resize between hops)
+      if (openItem === item) place(item);
     });
+    panel.addEventListener('mouseleave', () => {
+      overPanel = false;
+      startClose();
+    });
+
+    // Keyboard: open on focus, close when focus leaves both
+    btn.addEventListener('focusin', () => { overBtn = true; open(item); });
+    btn.addEventListener('focusout', () => { overBtn = false; startClose(); });
+    panel.addEventListener('focusin', () => { overPanel = true; cancelClose(); });
+    panel.addEventListener('focusout', () => { overPanel = false; startClose(); });
+  }
+
+  items.forEach(wire);
+
+  // Reposition while open on resize/orientation
+  ['resize','orientationchange'].forEach(ev => {
+    window.addEventListener(ev, () => { if (openItem) place(openItem); }, { passive:true });
   });
 
-  // Keep alignment on resize/orientation change
-  ['resize', 'orientationchange'].forEach(ev => {
-    window.addEventListener(ev, () => {
-      const open = document.querySelector('.dropdown.is-open');
-      const item = open ? [...items].find(i => i.contains(open)) : null;
-      if (item) placeDropdown(item);
-    }, { passive: true });
-  });
+  // Close on Escape
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
 })();
