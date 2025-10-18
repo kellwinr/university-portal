@@ -96,10 +96,9 @@ header {
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
 }
 
-/* ---------- Frosted Dropdown (portal, true blur) ---------- */
+/* ---------- Frosted Dropdown (portal, true blur, no ghosting) ---------- */
 .dropdown {
-  position: fixed;             /* viewport coordinates */
-  inset: auto auto auto auto;  /* JS sets left/top */
+  position: fixed;                 /* viewport coords; JS sets left/top */
   min-width: 260px;
 
   background: rgba(255,255,255,0.38);
@@ -109,19 +108,20 @@ header {
   border-radius: 14px;
   box-shadow: 0 18px 44px rgba(0,0,0,0.28);
   overflow: hidden;
-  z-index: 2147483647;         /* above everything */
+  z-index: 2147483647;
 
+  /* hidden state — remove from paint to avoid Safari blur ghosts */
+  display: none;
   opacity: 0;
-  visibility: hidden;
-  transform: translateY(6px);
-  transition: opacity .16s ease, transform .16s ease, visibility 0s .16s;
+  transform: translateY(6px) scale(.98);
   pointer-events: none;
+  transition: opacity .16s ease, transform .16s ease;
 }
 
 .dropdown.is-open {
+  display: block;                  /* now it can paint */
   opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
@@ -139,6 +139,11 @@ header {
 /* Fallback if no backdrop-filter support */
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .dropdown { background: rgba(255,255,255,.95); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .dropdown { transition: none; transform: none; }
 }
 
 /* ---------- User Area (Header, optional) ---------- */
