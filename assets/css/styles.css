@@ -402,6 +402,46 @@ body:has(#login-form) footer:not(#copyright){ display:none; }
   header.tworow .menu-bar{ justify-content:center; }
 }
 
-/* Optional: make the header sticky
-header.tworow{ position:sticky; top:12px; z-index:10; }
-*/
+/* === Force the header into two rows when class="tworow" === */
+header.tworow {
+  /* make a 2-row grid */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "logo . utils"
+    "nav  nav nav";
+  row-gap: 10px;
+  column-gap: 16px;
+}
+
+/* place children into those areas */
+header.tworow .logo-section { grid-area: logo; }
+header.tworow .top-utils    { grid-area: utils; justify-self: end; }
+header.tworow .menu-bar     {
+  grid-area: nav;            /* this makes it the full second row */
+  justify-self: stretch;
+  width: 100%;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.25);
+  justify-content: flex-start;   /* instead of center */
+  gap: 12px;
+}
+
+/* kill the centering from the base rule for this header only */
+header.tworow .menu-bar { justify-self: stretch; }
+
+/* small screens: stack logo / utils / nav */
+@media (max-width: 720px){
+  header.tworow{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "logo"
+      "utils"
+      "nav";
+    justify-items: center;
+  }
+  header.tworow .top-utils { justify-self: center; }
+  header.tworow .menu-bar  { justify-content: center; }
+}
