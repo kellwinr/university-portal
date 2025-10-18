@@ -646,3 +646,7 @@ h1 + h2 {               /* the subtitle directly under the title */
 
 /* …and the old full-width footer disappears on this page */
 footer:not(#copyright) { display: none !important; }
+
+footer:not(#copyright), 
+.site-footer:not(#copyright), 
+.copyright:not(#copyright) { display: none !important; }
