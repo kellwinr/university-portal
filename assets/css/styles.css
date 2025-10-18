@@ -1243,3 +1243,40 @@ header .user-info .logout-btn:hover{
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* === Minimal SVG Eye Toggle === */
+.pwd-wrap { position: relative; }
+.pwd-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #4a63a8;
+  border-radius: 50%;
+  transition: color .2s ease, background .2s ease, transform .15s ease;
+}
+.pwd-toggle:hover {
+  color: #1c3fd9;
+  background: rgba(42,102,255,0.08);
+}
+.pwd-toggle:active {
+  transform: scale(0.94);
+}
+.icon-eye-off { display: none; }
+.pwd-toggle.visible .icon-eye { display: none; }
+.pwd-toggle.visible .icon-eye-off { display: block; }
+
+/* Adjust the SVG stroke to match your aesthetic */
+.pwd-toggle svg {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
