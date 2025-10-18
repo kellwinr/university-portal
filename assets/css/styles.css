@@ -426,18 +426,40 @@ body:has(#login-form) h2 {
   display: inline-block;
   margin-top: 12px;     /* clear, comfortable gap from the button */
 }
+/* === Apple-Glass Footer Bubble (Final Clean Version) === */
+body.login footer,
+body:has(#login-form) footer,
+body.login .copyright,
+body:has(#login-form) .copyright,
+body.login #copyright,
+body:has(#login-form) #copyright,
+body.login .site-footer,
+body:has(#login-form) .site-footer {
+  width: fit-content;
+  max-width: 90%;
+  margin: 24px auto 0;                    /* nice spacing under the login card */
+  padding: 10px 18px;
 
-/* Copyright/footer line: center, subtle, aligned */
-body.login :is(footer, .copyright, #copyright, .site-footer),
-body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer) {
-  width: 100%;
-  max-width: 900px;
-  margin: 16px auto 0;            /* nice space under the card */
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
-  border: 0;
-  color: rgba(255,255,255,.72);
-  font-size: 12.5px;
+  /* Apple-glass style */
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 14px;
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
   text-align: center;
+  line-height: 1.4;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Gentle hover lift */
+body.login footer:hover,
+body:has(#login-form) footer:hover,
+body.login .copyright:hover,
+body:has(#login-form) .copyright:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
 }
