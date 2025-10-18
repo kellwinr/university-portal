@@ -875,3 +875,147 @@ body:has(#login-form) {
   justify-content: center;
   padding-block: clamp(16px, 4vh, 48px);
 }
+
+/* =========================
+   PREMIUM POLISH PACK
+   ========================= */
+
+/* 0) Tokens */
+:root{
+  --accent: #2a66ff;
+  --accent-2: #00b1ff;
+  --ink-soft: rgba(255,255,255,.85);
+}
+
+/* 1) Background: soft vignette + spotlight */
+body{
+  background:
+    radial-gradient(1200px 600px at 50% 22%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(800px 400px at 50% 85%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%) !important;
+}
+
+/* 2) Logo well: cleaner glass + glow ring */
+.logo-well{
+  display:flex; justify-content:center;
+  margin-block: clamp(8px, 2.2vh, 18px) clamp(10px, 2.6vh, 22px);
+}
+.logo-well img{
+  max-width: clamp(150px, 21vw, 260px);
+  border-radius: 18px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.22);
+  backdrop-filter: blur(14px) saturate(135%);
+  -webkit-backdrop-filter: blur(14px) saturate(135%);
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.35),
+    0 0 0 6px rgba(255,255,255,.03) inset;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.logo-well img:hover{
+  transform: translateY(-2px);
+  box-shadow:
+    0 28px 60px rgba(0,0,0,.42),
+    0 0 0 6px rgba(255,255,255,.05) inset;
+}
+
+/* 3) Headings: gradient ink + subtle glow */
+h1{
+  letter-spacing: .02em;
+  font-weight: 800;
+  background: linear-gradient(180deg, #fff 0%, #cfe0ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 12px rgba(0,0,0,.25);
+  margin-block: 6px 2px !important;
+}
+h2{
+  color: var(--ink-soft);
+  font-weight: 700;
+  margin-block: 0 16px !important;
+}
+
+/* 4) Login card: glass border with light edge (no HTML change) */
+#login-form{
+  /* double-background trick: solid for content + gradient for border */
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.15)) border-box;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.28),
+    0 1px 0 rgba(255,255,255,.5) inset;
+}
+
+/* 5) Inputs: softer fill + active glow ring */
+#login-form input{
+  background: linear-gradient(180deg,#fff,#f7f8fc);
+  border: 1px solid #d9dbe7;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+#login-form input:focus{
+  border-color: #9bb4ff;
+  box-shadow:
+    0 0 0 3px rgba(42,102,255,.18),
+    0 1px 0 rgba(255,255,255,.9) inset;
+}
+
+/* 6) Button: deep gradient + sheen on hover */
+#login-form .btn{
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #2a66ff, #0e2f86);
+  box-shadow:
+    0 12px 28px rgba(14,47,134,.45),
+    0 1px 0 rgba(255,255,255,.25) inset;
+  border-radius: 14px;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+#login-form .btn::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.22) 35%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform .6s ease;
+}
+#login-form .btn:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 36px rgba(14,47,134,.55),
+    0 1px 0 rgba(255,255,255,.25) inset;
+}
+#login-form .btn:hover::before{ transform: translateX(120%); }
+
+/* 7) Forgot password: nicer state */
+#login-form .actions .aux a{
+  color: var(--accent);
+  text-decoration: none;
+}
+#login-form .actions .aux a:hover{ text-decoration: underline; }
+
+/* 8) Footer bubble: crisper edge + slight gradient */
+.footer, #copyright{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  border: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 10px 24px rgba(0,0,0,.28);
+  color: rgba(255,255,255,.90);
+}
+
+/* 9) Micro-layout rhythm */
+#login-form{ row-gap: 14px; }
+#login-form .actions .btn{ margin-top: 6px; }
+#login-form .actions .aux{ margin-top: 12px; justify-self: start; }
+
+/* 10) Subtle entrance */
+@keyframes floatIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.logo-well img, h1, h2, #login-form, .footer, #copyright{
+  animation: floatIn .32s ease both;
+}
