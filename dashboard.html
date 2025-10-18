@@ -260,8 +260,9 @@ header { padding: 10px 16px; }
 
 <body>
 
-<!-- ===== HEADER ===== -->
-<header>
+<!-- ===== HEADER (Two-row layout) ===== -->
+<header class="tworow">
+  <!-- ===== Row 1: Logo + Utility Bar ===== -->
   <div class="logo-section">
     <img src="assets/img/Universiti_Tunku_Abdul_Rahman_Logo.jpg" alt="UTAR Logo">
     <div class="logo-text">
@@ -270,7 +271,35 @@ header { padding: 10px 16px; }
     </div>
   </div>
 
-  <!-- ===== NAV ===== -->
+  <div class="user-info top-utils">
+    <form class="portal-search" role="search" onsubmit="return false;">
+      <input type="search" placeholder="Search courses, codes, people…" />
+    </form>
+
+    <button class="icon-btn bell" aria-label="Notifications">
+      <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="1.8">
+        <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" />
+        <path d="M9 17a3 3 0 0 0 6 0" />
+      </svg>
+      <span class="badge" id="notifBadge">3</span>
+    </button>
+
+    <span class="id-chip" id="chipId">ID: —</span>
+
+    <div class="menu-item">
+      <a href="#" class="menu-trigger avatar-trigger" aria-haspopup="true" aria-expanded="false">
+        <img class="avatar" src="assets/img/avatar-student.png" alt="Profile" />
+      </a>
+      <div class="dropdown">
+        <a href="#">Profile &amp; Settings</a>
+        <a href="#">My Documents</a>
+        <a href="#">Security</a>
+        <a href="#" id="logout">Sign out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Row 2: Navigation Bar ===== -->
   <nav class="menu-bar">
     <div class="menu-item">
       <a href="#" class="menu-trigger">Home</a>
@@ -312,36 +341,6 @@ header { padding: 10px 16px; }
       </div>
     </div>
   </nav>
-
-  <!-- ===== UTILITY BAR ===== -->
-  <div class="user-info top-utils">
-    <form class="portal-search" role="search" onsubmit="return false;">
-      <input type="search" placeholder="Search courses, codes, people…" />
-    </form>
-
-    <button class="icon-btn bell" aria-label="Notifications">
-      <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="1.8">
-        <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" />
-        <path d="M9 17a3 3 0 0 0 6 0" />
-      </svg>
-      <span class="badge" id="notifBadge">3</span>
-    </button>
-
-    <span class="id-chip" id="chipId">ID: —</span>
-
-    <!-- Avatar menu uses the same dropdown system -->
-    <div class="menu-item">
-      <a href="#" class="menu-trigger avatar-trigger" aria-haspopup="true" aria-expanded="false">
-        <img class="avatar" src="assets/img/avatar-student.png" alt="Profile" />
-      </a>
-      <div class="dropdown">
-        <a href="#">Profile &amp; Settings</a>
-        <a href="#">My Documents</a>
-        <a href="#">Security</a>
-        <a href="#" id="logout">Sign out</a>
-      </div>
-    </div>
-  </div>
 </header>
 
 <!-- ===== MAIN CONTENT ===== -->
