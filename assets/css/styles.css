@@ -592,3 +592,57 @@ body:has(#login-form) footer:not(#copyright) { display: none !important; }
 }
 #copyright:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(0,0,0,0.35); }
 #copyright small { font-size: 12px; opacity: .75; }
+
+/* ===== HARD OVERRIDES FOR LOGIN PAGE ===== */
+
+/* 1) Tighter title → subtitle spacing */
+h1 + h2 {               /* the subtitle directly under the title */
+  margin-top: 2px !important;
+  margin-bottom: 16px !important;
+  line-height: 1.2 !important;
+}
+
+/* 2) Button vs “Forgot password?” spacing + alignment */
+#login-form button[type="submit"],
+#login-form .btn {
+  margin-top: 6px !important;
+}
+#login-form button[type="submit"] + a[href*="forgot"],
+#login-form .btn + a[href*="forgot"] {
+  display: inline-block !important;
+  margin-top: 12px !important;
+  align-self: start !important;    /* left edge with inputs */
+}
+#status:empty { display: none !important; }
+
+/* 3) Make sure the GLASS copyright bubble shows… */
+#copyright {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+
+  width: fit-content !important;
+  max-width: 92% !important;
+  margin: 22px auto 0 !important;
+  padding: 10px 16px !important;
+
+  color: rgba(255,255,255,.88) !important;
+  font-size: 13px !important;
+  text-align: center !important;
+
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(14px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(130%) !important;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25) !important;
+}
+#copyright:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
+}
+#copyright small { font-size: 12px !important; opacity: .75 !important; }
+
+/* …and the old full-width footer disappears on this page */
+footer:not(#copyright) { display: none !important; }
