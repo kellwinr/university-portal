@@ -463,3 +463,60 @@ body:has(#login-form) .copyright:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 26px rgba(0,0,0,0.35);
 }
+
+/* --- 1) Title & subtitle spacing (clean, consistent) --- */
+body.login h1,
+body:has(#login-form) h1 { margin: 6px 0 2px; }
+body.login h2,
+body:has(#login-form) h2 { margin: 0 0 16px; }
+
+/* --- 2) Form internals & button/link spacing --- */
+#login-form { display: grid; row-gap: 12px; }
+#login-form label { margin: 0; }
+#login-form input { margin: 0; }
+#login-form .btn,
+#login-form button[type="submit"] { margin-top: 6px; }      /* closer to password */
+#login-form .btn + a,
+#login-form button[type="submit"] + a {
+  display: inline-block;
+  margin-top: 12px;                                         /* neat gap to link */
+}
+
+/* Align the “Forgot password?” to the left edge of inputs */
+#login-form a[href*="forgot"] { align-self: start; }
+
+/* --- 3) Apple-glass copyright bubble (works with footer or plain <p>) --- */
+/* Preferred: wrap your copy in <footer id="copyright">…</footer> */
+/* Fallback: this also styles a plain last paragraph on the page */
+body.login :is(footer, .copyright, #copyright, .site-footer,
+               p:last-of-type),
+body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer,
+                          p:last-of-type) {
+  width: fit-content;
+  max-width: 92%;
+  margin: 22px auto 0;                                      /* space under card */
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255,255,255,.88);
+
+  /* frosted card */
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 14px;
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+
+  /* override any earlier wide footer rules */
+  inline-size: auto;
+  block-size: auto;
+}
+body.login :is(footer, .copyright, #copyright, .site-footer,
+               p:last-of-type):hover,
+body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer,
+                          p:last-of-type):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
