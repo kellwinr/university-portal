@@ -596,3 +596,43 @@ header.tworow .menu-bar {
     justify-content: center;
   }
 }
+
+/* ===== Two-row header polish (drop-in overrides) ===== */
+
+/* 1) Nav row: left-align items and give a consistent gap */
+header.tworow .menu-bar{
+  justify-content: flex-start;     /* was space-around */
+  gap: 12px;                       /* a touch more breathing room */
+}
+
+/* Ensure each nav item stays compact and doesn’t stretch */
+header.tworow .menu-bar .menu-item{ flex: 0 0 auto; }
+header.tworow .menu-bar .menu-trigger{ white-space: nowrap; }
+
+/* 2) Utilities row: keep stable height/placement */
+header.tworow .top-utils{          /* .user-info.top-utils already on utils area */
+  min-height: 38px;                /* aligns visually with nav chips */
+  align-items: center;
+  gap: 12px;
+}
+
+/* 3) Search: comfortable width on desktop, safe on small screens */
+.portal-search input[type="search"]{
+  width: clamp(220px, 28vw, 420px);  /* replaces fixed 220px */
+}
+
+/* 4) Slightly tighter nav chip sizing on smaller widths */
+@media (max-width: 880px){
+  header.tworow .menu-bar{ gap: 10px; }
+  .menu-item > .menu-trigger{ padding: 6px 12px; font-size: 13px; }
+}
+
+/* 5) Optional: make the header float nicely as you scroll
+   (uncomment if you want it sticky) */
+/*
+header.tworow{
+  position: sticky;
+  top: 12px;
+  z-index: 10;
+}
+*/
