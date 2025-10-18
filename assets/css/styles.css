@@ -1482,3 +1482,67 @@ header .user-info .logout-btn:hover{
 .icon-eye-off{ display:none; }
 .pwd-toggle.visible .icon-eye{ display:none; }
 .pwd-toggle.visible .icon-eye-off{ display:block; }
+
+/* === FINAL OVERRIDE: Password eye — lock size & centering === */
+#login-form .pwd-wrap{
+  position: relative !important;
+  display: block !important;           /* kill any grid from earlier */
+}
+
+#login-form .pwd-wrap > label{
+  display: block;
+  margin-bottom: 6px !important;
+}
+
+#login-form .pwd-wrap > input{
+  display: block;
+  width: 100%;
+  padding-right: 56px !important;      /* space for 32px button + gutter */
+  line-height: 1.25;                    /* stable vertical centering */
+}
+
+/* The button is always centered vertically and flush to the right */
+#login-form .pwd-wrap .pwd-toggle{
+  position: absolute !important;
+  right: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  color: #274bb7;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+#login-form .pwd-wrap .pwd-toggle:active{ transform: translateY(calc(-50% + 1px)) !important; }
+
+/* Icon size (kept crisp) */
+#login-form .pwd-wrap .pwd-toggle svg{
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Swap glyphs */
+#login-form .pwd-wrap .icon-eye-off{ display: none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display: none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display: block; }
+
+/* iOS/Safari 0.5px optical nudge (optional) */
+@supports (-webkit-touch-callout: none) {
+  #login-form .pwd-wrap .pwd-toggle{ top: calc(50% - .5px) !important; }
+}
+
