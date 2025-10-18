@@ -97,9 +97,12 @@ header {
 }
 
 /* ---------- Frosted Dropdown (fixed for true blur) ---------- */
-.dropdown {
-  position: fixed; left: 0; top: 0; /* JS sets actual coords */
-  min-width: 240px;
+.dropdown{
+  position: fixed;                 /* viewport-based */
+  left: 0; top: 0;                 /* JS will set real coords */
+  min-width: 260px;                /* a touch wider */
+  max-width: min(92vw, 420px);     /* never overflow on small screens */
+
   background: rgba(255,255,255,0.38);
   backdrop-filter: blur(22px) saturate(140%) contrast(105%);
   -webkit-backdrop-filter: blur(22px) saturate(140%) contrast(105%);
@@ -111,25 +114,22 @@ header {
 
   opacity: 0; visibility: hidden; transform: translateY(6px);
   transition: opacity .16s ease, transform .16s ease, visibility 0s .16s;
-
   will-change: left, top, opacity, transform;
   pointer-events: none;
   transform-origin: top left;
   background-clip: padding-box;
 }
-.dropdown.is-open { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
-.dropdown a {
+.dropdown.is-open{ opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+
+.dropdown a{
   display:block; padding:12px 18px; color:#1d1d1f; text-decoration:none; font-weight:600;
   transition: background .12s ease;
 }
-.dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
-.dropdown a:hover { background: rgba(255,255,255,0.55); }
+.dropdown a + a{ border-top: 1px solid rgba(0,0,0,.06); }
+.dropdown a:hover{ background: rgba(255,255,255,0.55); }
 
-/* Fallback if no backdrop-filter support */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .dropdown { background: rgba(255,255,255,.95); }
-  header { background: rgba(255,255,255,.12); }
-  .glass-panel { background: rgba(255,255,255,.80); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  .dropdown{ background: rgba(255,255,255,.95); }
 }
 
 /* ---------- User Area (Header, optional) ---------- */
