@@ -537,41 +537,50 @@ body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer,
   opacity: 0.75;
 }
 
-/* ===== Login polish patch (paste at very end) ===== */
+/* === Login page spacing polish (FINAL) === */
 
-/* 1) Title + subtitle rhythm (tighter & even) */
+/* Title + subtitle rhythm */
 body.login h1,
 body:has(#login-form) h1 { margin: 6px 0 2px; line-height: 1.15; }
 body.login h2,
-body:has(#login-form) h2 { margin: 0 0 14px; line-height: 1.2; }
+body:has(#login-form) h2 { margin: 0 0 16px; line-height: 1.2; }
 
-/* 2) Form internals: consistent vertical spacing */
+/* Form internals: consistent vertical spacing */
 #login-form { display: grid; row-gap: 12px; }
 #login-form label { margin: 0; }
 #login-form input { margin: 0; }
 
-/* 3) Button + “Forgot password?” spacing (looks off in your screenshot) */
-#login-form .btn,
-#login-form button[type="submit"] { margin-top: 6px; }         /* closer to field */
-#login-form button[type="submit"] + a {                        /* forgot link */
+/* Button + “Forgot password?” spacing (tight but breathable) */
+#login-form button[type="submit"],
+#login-form .btn { margin-top: 6px; }
+#login-form button[type="submit"] + a,
+#login-form .btn + a {
   display: inline-block;
-  margin-top: 12px;                                            /* clean gap */
-  align-self: start;                                           /* left align with inputs */
+  margin-top: 12px;        /* gap below the button */
+  align-self: start;       /* left-align with inputs */
 }
 
-/* 4) Hide the empty status line so no stray “dot/ghost” appears */
+/* Hide empty status rows */
 #status:empty { display: none; }
 
-/* 5) Apple-glass copyright bubble – centered, neat, never full-width */
-body.login :is(footer, .copyright, #copyright, .site-footer),
-body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer) {
+/* --- Apple-glass footer bubble --- */
+/* Hide any legacy/wide footer, keep only the glass one */
+body.login footer:not(#copyright),
+body:has(#login-form) footer:not(#copyright) { display: none !important; }
+
+/* Bubble styles */
+#copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   width: fit-content;
   max-width: 92%;
-  margin: 22px auto 0;                                         /* space under card */
+  margin: 22px auto 0;
   padding: 10px 16px;
-  text-align: center;
-  font-size: 13px;
   color: rgba(255,255,255,.88);
+  font-size: 13px;
+  text-align: center;
 
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.18);
@@ -581,11 +590,5 @@ body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer) {
   box-shadow: 0 4px 18px rgba(0,0,0,0.25);
   transition: transform .25s ease, box-shadow .25s ease;
 }
-body.login :is(footer, .copyright, #copyright, .site-footer):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
-}
-
-/* Optional: tidy stacked disclaimer line inside footer */
-#copyright { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+#copyright:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(0,0,0,0.35); }
 #copyright small { font-size: 12px; opacity: .75; }
