@@ -1,8 +1,3 @@
-/* =========================================================
-   UTAR Portal — Full CSS (Two-row Header Layout)
-   ========================================================= */
-
-/* ---------- Design Tokens ---------- */
 :root{
   --utar-navy:#0a2a66;
   --utar-navy-2:#041a44;
@@ -465,6 +460,36 @@ header.tworow .menu-bar {
   grid-row: 2;                                   /* second row */
   justify-self: stretch;                         /* override earlier center */
   width: 100%;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.25);
+}
+
+/* === HARD OVERRIDE: force two-row header layout === */
+header.tworow {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  grid-template-rows: auto auto !important;   /* <- row for nav */
+  column-gap: 16px;
+  row-gap: 10px;
+}
+
+/* Put children into explicit grid cells */
+header.tworow > .logo-section {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+header.tworow > .top-utils {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  justify-self: end !important;
+}
+
+header.tworow > .menu-bar {
+  grid-column: 1 / -1 !important;  /* span full width */
+  grid-row: 2 !important;          /* second row */
+  justify-self: stretch !important;
+  width: 100% !important;
   padding-top: 6px;
   border-top: 1px solid rgba(255,255,255,.25);
 }
