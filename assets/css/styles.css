@@ -96,21 +96,32 @@ header {
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
 }
 
-/* ---------- Frosted Dropdown (portal, true blur, no ghosting) ---------- */
+/* ---------- Frosted Dropdown (Apple-style, depth lighting, no ghosting) ---------- */
 .dropdown {
-  position: fixed;                 /* viewport coords; JS sets left/top */
+  position: fixed;                 /* viewport coordinates set by JS */
   min-width: 260px;
+  box-sizing: border-box;
 
-  background: rgba(255,255,255,0.38);
+  /* Realistic frosted glass */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.35) 100%);
   -webkit-backdrop-filter: blur(22px) saturate(140%) contrast(105%);
           backdrop-filter: blur(22px) saturate(140%) contrast(105%);
+
+  /* Soft glass edges */
   border: 1px solid rgba(255,255,255,0.55);
   border-radius: 14px;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.28);
+
+  /* Light from above (inner glow illusion) */
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.65) inset,
+    0 -1px 0 rgba(0,0,0,0.05) inset,
+    0 18px 44px rgba(0,0,0,0.28); /* soft ambient shadow */
+
   overflow: hidden;
   z-index: 2147483647;
 
-  /* hidden state — remove from paint to avoid Safari blur ghosts */
+  /* hidden state (no Safari blur ghosts) */
   display: none;
   opacity: 0;
   transform: translateY(6px) scale(.98);
@@ -119,62 +130,67 @@ header {
 }
 
 .dropdown.is-open {
-  display: block;                  /* now it can paint */
+  display: block;                  /* now visible */
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
+/* ---------- Uniform dropdown sizing ---------- */
+:root {
+  --menuW: 340px;   /* fallback width before JS recalculates */
+}
+
+.dropdown {
+  width: var(--menuW);             /* unified width for all menus */
+  max-height: 70vh;                /* cap height if too tall */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;           /* Firefox */
+}
+
+/* ---------- Dropdown items ---------- */
 .dropdown a {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 52px;                /* uniform row height */
   padding: 12px 18px;
+  line-height: 1.25;
   color: #1d1d1f;
   text-decoration: none;
   font-weight: 700;
-  transition: background .12s ease;
-}
-.dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
-.dropdown a:hover { background: rgba(255,255,255,0.55); }
-
-/* Fallback if no backdrop-filter support */
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .dropdown { background: rgba(255,255,255,.95); }
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .dropdown { transition: none; transform: none; }
-}
-/* Uniform dropdown sizing */
-:root { --menuW: 340px; }               /* tweak once to taste */
-
-.dropdown {
-  box-sizing: border-box;
-  width: var(--menuW);                   /* same width for every menu */
-}
-
-/* Consistent item height + alignment */
-.dropdown a{
-  display: flex;
-  align-items: center;
-  min-height: 52px;                      /* uniform rows */
-  padding: 12px 18px;
-  line-height: 1.25;
-}
-
-/* Prevent text wrap so every row stays the same height */
-.dropdown a {
+  transition: background .12s ease, color .12s ease;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  backdrop-filter: blur(0px);
 }
 
-/* Optional: cap height & scroll if a menu gets long */
-.dropdown {
-  max-height: 70vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;                 /* Firefox */
+/* Divider lines between rows */
+.dropdown a + a {
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* Hover glow (subtle, frosted-light response) */
+.dropdown a:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45));
+  color: var(--utar-navy);
+}
+
+/* ---------- Fallback if no backdrop-filter support ---------- */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .dropdown {
+    background: rgba(255,255,255,.95);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+  }
+}
+
+/* ---------- Reduced motion accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .dropdown {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* ---------- User Area (Header, optional) ---------- */
@@ -493,3 +509,14 @@ body:has(#login-form) footer:not(#copyright) { display: none; }
 @supports (-webkit-touch-callout: none) {
   .pwd-toggle{ top: calc(50% - .5px); }
 }
+
+/* WebKit scrollbar styling inside dropdown */
+.dropdown::-webkit-scrollbar { width: 10px; }
+.dropdown::-webkit-scrollbar-track { background: transparent; }
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.12);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.dropdown:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); }
