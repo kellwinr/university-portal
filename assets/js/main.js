@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const id  = (idEl.value  || '').trim();
-    const pwd = (pwdEl.value || '').trim();
+    const id  = (idEl?.value  || '').trim();
+    const pwd = (pwdEl?.value || '').trim();
 
     if (!id || !pwd) return setStatus('Please enter both Student ID and Password.');
 
@@ -45,6 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
   [idEl, pwdEl].forEach(el =>
     el?.addEventListener('keydown', e => { if (e.key === 'Enter') form.requestSubmit(); })
   );
+
+  // Optional: password-eye toggle (works only if the button exists)
+  const toggleBtn = document.querySelector('.pwd-toggle');
+  if (toggleBtn && pwdEl) {
+    toggleBtn.addEventListener('click', () => {
+      const isText = pwdEl.type === 'text';
+      pwdEl.type = isText ? 'password' : 'text';
+      toggleBtn.classList.toggle('visible', !isText);
+      pwdEl.focus({ preventScroll: true });
+    });
+  }
 });
 
 // =============================
@@ -77,13 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // -------------------------------------------------------
-// Find the widest dropdown once, set CSS variable --menuW
+// Uniform dropdown width — computes max menu width once
+// and sets CSS variable --menuW. Re-runs on load/fonts/resize.
 // -------------------------------------------------------
-(function setUniformMenuWidth() {
+function setUniformMenuWidth() {
   const panels = Array.from(document.querySelectorAll('.dropdown'));
   if (!panels.length) return;
 
-  // Make sure layout is ready before we measure
   requestAnimationFrame(() => {
     let maxW = 260;
 
@@ -128,7 +139,19 @@ document.addEventListener('DOMContentLoaded', () => {
     maxW = Math.min(Math.max(260, maxW), 420);
     document.documentElement.style.setProperty('--menuW', `${maxW}px`);
   });
-})();
+}
+
+// initial + after load + after fonts + debounced resize
+document.addEventListener('DOMContentLoaded', setUniformMenuWidth);
+window.addEventListener('load', setUniformMenuWidth, { passive: true });
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(setUniformMenuWidth);
+}
+let _mwTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(_mwTimer);
+  _mwTimer = setTimeout(setUniformMenuWidth, 150);
+}, { passive: true });
 
 // =======================================================
 // NAVBAR DROPDOWN — portal + true blur + hover hold logic
@@ -149,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let openItem = null;       // <li.menu-item> currently open
   let openPanel = null;      // its .dropdown
   let restore = null;        // { parent, next } to restore panel to DOM
-  let hoverTimers = new WeakMap(); // per-item close timers
+  const hoverTimers = new WeakMap(); // per-item close timers
 
   // Helpers
   function moveToPortal(panel) {
@@ -267,32 +290,32 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.setAttribute('aria-expanded','false');
     btn.addEventListener('click', e => e.preventDefault());
 
-    // On entering the trigger: open + cancel any pending close
-    btn.addEventListener('pointerenter', () => {
-      open(item);
-      cancelCloseTimer(item);
-    });
-
-    // Leaving the trigger: if going *into* the panel, do nothing;
-    // otherwise schedule close.
-    btn.addEventListener('pointerleave', (e) => {
+    const onEnter = () => { open(item); cancelCloseTimer(item); };
+    const onLeaveFromBtn = (e) => {
       const to = e.relatedTarget;
       if (to && panel.contains(to)) return; // into panel
       scheduleClose(item);
-    });
-
-    // Keep open while pointer is on the panel
-    panel.addEventListener('pointerenter', () => {
-      open(item);
-      cancelCloseTimer(item);
-    });
-
-    // Leaving panel: if going back to trigger, do nothing; else close
-    panel.addEventListener('pointerleave', (e) => {
+    };
+    const onLeaveFromPanel = (e) => {
       const to = e.relatedTarget;
       if (to && btn.contains(to)) return; // back to trigger
       scheduleClose(item);
-    });
+    };
+
+    // Pointer events (modern)
+    btn.addEventListener('pointerenter', onEnter);
+    panel.addEventListener('pointerenter', onEnter);
+
+    // Mouse fallback (makes Safari/older browsers happy)
+    btn.addEventListener('mouseleave', onLeaveFromBtn);
+    panel.addEventListener('mouseleave', onLeaveFromPanel);
+
+    // Optional: touch open (tap to peek)
+    btn.addEventListener('touchstart', (e) => {
+      open(item);
+      cancelCloseTimer(item);
+      e.preventDefault();
+    }, { passive: false });
   });
 
   // Keep aligned on resize/scroll/orientation (panel stays open)
