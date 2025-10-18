@@ -136,7 +136,7 @@ function setUniformMenuWidth() {
     });
 
     // clamp and set once for all menus
-    maxW = Math.min(Math.max(260, maxW), 420);
+    maxW = Math.min(Math.max(260, maxW), 300);
     document.documentElement.style.setProperty('--menuW', `${maxW}px`);
   });
 }
