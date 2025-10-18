@@ -1430,3 +1430,55 @@ header .user-info .logout-btn:hover{
   .pwd-toggle{ transform: translateY(.5px); }
 }
 */
+
+/* === Password field: 2-row grid so the eye centers to the input row === */
+.pwd-wrap{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;   /* row1: label, row2: input+button */
+  position: relative;
+}
+
+/* put label on row 1 */
+.pwd-wrap > label{
+  grid-row: 1;
+  align-self: end;
+  margin-bottom: 6px;             /* keep your rhythm */
+}
+
+/* input sits on row 2 and makes room for the button */
+.pwd-wrap > input{
+  grid-row: 2;
+  grid-column: 1;
+  padding-right: 56px !important; /* space for the toggle */
+}
+
+/* button shares row 2 with the input and is perfectly centered */
+.pwd-toggle{
+  grid-row: 2;
+  grid-column: 1;
+  justify-self: end;              /* flush right inside the input */
+  align-self: center;             /* true vertical middle of input row */
+  margin-inline-end: 12px;
+
+  width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 0; background: none; border-radius: 50%;
+  color: #274bb7; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+
+.pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+
+/* icon sizing */
+.pwd-toggle svg{
+  width: 18px; height: 18px;
+  stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* swap icons */
+.icon-eye-off{ display:none; }
+.pwd-toggle.visible .icon-eye{ display:none; }
+.pwd-toggle.visible .icon-eye-off{ display:block; }
