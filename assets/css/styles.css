@@ -1,3 +1,8 @@
+/* =========================================================
+   UTAR Portal — Full CSS (Two-row Header Layout)
+   ========================================================= */
+
+/* ---------- Design Tokens ---------- */
 :root {
   --utar-navy: #0a2a66;
   --utar-navy-2: #041a44;
@@ -20,7 +25,10 @@
   --radius-md: 12px;
   --shadow: 0 16px 40px rgba(0,0,0,.16);
 
-  /* Fluid scaling helpers */
+  /* Dropdown width (JS may adjust, but this is the single source) */
+  --menuW: 300px;
+
+  /* Fluid scaling helper (used occasionally) */
   --scale-factor: clamp(0.8, 1.2vw + 0.6, 1.1);
 }
 
@@ -45,14 +53,18 @@ body {
   padding: 24px;
 }
 
-/* Constrained containers for dashboards and general pages */
+/* Constrained page containers */
 header, .glass-panel, footer {
   width: 92%;
   max-width: 1100px;
   align-self: center;
 }
 
-/* ---------- Header (Glass) ---------- */
+/* =========================================================
+   HEADER — Two-row Layout
+   Row 1: logo (left) • utilities (right)
+   Row 2: full-width nav
+   ========================================================= */
 header {
   margin-top: 40px;
   background: rgba(255,255,255,.10);
@@ -67,22 +79,79 @@ header {
 
   display: grid;
   grid-template-columns: auto 1fr auto;
-  align-items: center;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "logo . utils"
+    "nav  nav nav";
+  row-gap: 10px;
   column-gap: 16px;
   overflow: visible;
 }
-.logo-section { display:flex; align-items:center; gap:12px; }
-.logo-section img { height:56px; width:auto; object-fit:contain; border-radius:12px; }
-.logo-text { color:#fff; font-weight:700; line-height:1.15; font-size:16px; }
-.logo-text small { display:block; color:rgba(255,255,255,.85); font-size:13px; font-weight:500; }
 
-/* ---------- Top Nav ---------- */
+/* Logo chunk */
+.logo-section {
+  grid-area: logo;
+  display:flex; align-items:center; gap:12px;
+}
+.logo-section img { height:56px; width:auto; object-fit:contain; border-radius:12px; }
+.logo-text { color:#fff; font-weight:800; line-height:1.1; font-size:16px; letter-spacing:.2px; }
+.logo-text small { display:block; color:rgba(255,255,255,.85); font-size:13px; font-weight:600; }
+
+/* Utilities (search, bell, id chip, avatar) */
+.user-info.top-utils {
+  grid-area: utils;
+  justify-self: end;
+  display:flex; align-items:center; gap:12px; color:rgba(255,255,255,.92);
+}
+
+.portal-search input[type="search"]{
+  width:220px; padding:8px 12px; border-radius:12px;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.12); color:#fff; outline:none;
+  backdrop-filter: blur(8px) saturate(120%);
+}
+.portal-search input::placeholder{ color:rgba(255,255,255,.75); }
+
+.icon-btn{
+  position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:34px; border-radius:10px; cursor:pointer;
+  border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.10); color:#fff;
+  transition: transform .15s, box-shadow .2s, background .2s; backdrop-filter: blur(8px) saturate(120%);
+}
+.icon-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.25); }
+.icon-btn .badge{
+  position:absolute; top:-6px; right:-6px; min-width:18px; height:18px; padding:0 5px;
+  border-radius:999px; background:#ff3b30; color:#fff; font-size:11px; font-weight:800;
+  display:inline-flex; align-items:center; justify-content:center; border:2px solid #1a2b6b;
+}
+
+header .id-chip{
+  background: rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.28);
+  border-radius:999px; padding:6px 12px; font-weight:800; letter-spacing:.2px;
+  backdrop-filter: blur(10px) saturate(130%); -webkit-backdrop-filter: blur(10px) saturate(130%);
+  box-shadow: 0 2px 8px rgba(0,0,0,.22);
+}
+
+.avatar-trigger{ padding:0 !important; border:0 !important; background:transparent !important; }
+.avatar{ width:34px; height:34px; border-radius:50%; display:block; border:1px solid rgba(255,255,255,.35); }
+
+/* =========================================================
+   NAV (Row 2)
+   ========================================================= */
 .menu-bar {
-  display:flex; align-items:center; gap:10px; justify-self:center; min-width:0;
+  grid-area: nav;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;   /* spread across width */
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.25);
+  min-width: 0;
 }
 .menu-item { position:relative; }
 .menu-item > .menu-trigger {
-  color:#fff; text-decoration:none; font-weight:600; font-size:14px;
+  color:#fff; text-decoration:none; font-weight:700; font-size:14px;
   padding:8px 14px; border-radius:10px;
   background:rgba(255,255,255,0.08);
   border:1px solid rgba(255,255,255,0.25);
@@ -96,136 +165,91 @@ header {
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
 }
 
-/* ---------- Frosted Dropdown (Apple-style, depth lighting, no ghosting) ---------- */
+/* =========================================================
+   Dropdown (portal + frosted)
+   ========================================================= */
 .dropdown {
-  position: fixed;                 /* viewport coordinates set by JS */
+  position: fixed;                 /* JS positions with viewport coords */
   min-width: 260px;
+  width: var(--menuW);
   box-sizing: border-box;
 
-  /* Realistic frosted glass */
+  /* Frosted glass look */
   background:
     linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.35) 100%);
   -webkit-backdrop-filter: blur(22px) saturate(140%) contrast(105%);
           backdrop-filter: blur(22px) saturate(140%) contrast(105%);
 
-  /* Soft glass edges */
+  /* Soft glass edges + subtle inner glow */
   border: 1px solid rgba(255,255,255,0.55);
   border-radius: 14px;
-
-  /* Light from above (inner glow illusion) */
   box-shadow:
     0 1px 0 rgba(255,255,255,0.65) inset,
     0 -1px 0 rgba(0,0,0,0.05) inset,
-    0 18px 44px rgba(0,0,0,0.28); /* soft ambient shadow */
+    0 18px 44px rgba(0,0,0,0.28);
 
-  overflow: hidden;
   z-index: 2147483647;
 
-  /* hidden state (no Safari blur ghosts) */
+  /* hidden state to avoid Safari blur ghosting */
   display: none;
   opacity: 0;
   transform: translateY(6px) scale(.98);
   pointer-events: none;
   transition: opacity .16s ease, transform .16s ease;
-}
 
+  /* long menu handling */
+  max-height: 70vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;           /* Firefox */
+}
 .dropdown.is-open {
-  display: block;                  /* now visible */
+  display: block;
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
-/* ---------- Uniform dropdown sizing ---------- */
-:root {
-  --menuW: 340px;   /* fallback width before JS recalculates */
-}
-
-.dropdown {
-  width: var(--menuW);             /* unified width for all menus */
-  max-height: 70vh;                /* cap height if too tall */
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;           /* Firefox */
-}
-
-/* ---------- Dropdown items ---------- */
-.dropdown a {
-  display: flex;
-  align-items: center;
-  min-height: 52px;                /* uniform row height */
-  padding: 12px 18px;
-  line-height: 1.25;
-  color: #1d1d1f;
-  text-decoration: none;
-  font-weight: 700;
+/* Menu rows — unified + compact */
+.dropdown a{
+  display:flex; align-items:center;
+  min-height:46px;                 /* compact height */
+  padding:10px 16px;
+  line-height:1.2;
+  color:#1d1d1f; text-decoration:none; font-weight:800;
+  white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
   transition: background .12s ease, color .12s ease;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  backdrop-filter: blur(0px);
 }
-
-/* Divider lines between rows */
-.dropdown a + a {
-  border-top: 1px solid rgba(0,0,0,.06);
-}
-
-/* Hover glow (subtle, frosted-light response) */
+.dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
 .dropdown a:hover {
   background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45));
   color: var(--utar-navy);
 }
 
-/* ---------- Fallback if no backdrop-filter support ---------- */
+/* WebKit scrollbar styling inside dropdown */
+.dropdown::-webkit-scrollbar { width: 10px; }
+.dropdown::-webkit-scrollbar-track { background: transparent; }
+.dropdown::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.12);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.dropdown:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); }
+
+/* Fallback if no backdrop-filter support */
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .dropdown {
-    background: rgba(255,255,255,.95);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.3);
-  }
+  .dropdown { background: rgba(255,255,255,.95); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
 }
 
-/* ---------- Reduced motion accessibility ---------- */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .dropdown {
-    transition: none;
-    transform: none;
-  }
+  .dropdown { transition: none; transform: none; }
 }
 
-/* ---------- User Area (Header, optional) ---------- */
-header .user-info { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,.92); justify-self:end; }
-header .user-info .id-chip{
-  background: rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.28);
-  border-radius:999px; padding:6px 12px; font-weight:700; letter-spacing:.2px;
-  backdrop-filter: blur(10px) saturate(130%); -webkit-backdrop-filter: blur(10px) saturate(130%);
-  box-shadow: 0 2px 8px rgba(0,0,0,.22);
-}
-header .user-info .logout-btn{
-  appearance:none; -webkit-appearance:none; white-space:nowrap; cursor:pointer;
-  background: linear-gradient(180deg,#ffffff,#e9edf9);
-  color:#0a2a66; border:1px solid rgba(255,255,255,.6);
-  border-radius:12px; padding:6px 12px; font-weight:700;
-  box-shadow:0 4px 12px rgba(0,0,0,.18);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-header .user-info .logout-btn:hover{ transform: translateY(-1px); box-shadow:0 8px 22px rgba(0,0,0,.25); }
-
-/* Compact header on tighter screens */
-header { padding: 10px 16px; }
-.menu-bar .menu-trigger { font-size: 13px; padding: 6px 12px; border-radius: 9px; }
-@media (max-width: 720px) {
-  header { grid-template-columns: 1fr; row-gap: 10px; justify-items: center; }
-  .logo-section, .user-info { justify-self: center; }
-  .menu-bar { flex-wrap: wrap; justify-content: center; }
-}
-@media (max-width: 1100px){
-  .menu-bar .menu-trigger{ font-size:12.5px; padding:6px 10px; }
-  header .user-info .id-chip{ font-size:12.5px; padding:3px 9px; }
-  header .user-info .logout-btn{ font-size:12.5px; padding:6px 9px; }
-}
-
-/* ---------- Glass Panel / Dashboard ---------- */
+/* =========================================================
+   Main “Glass” Panel (Dashboard)
+   ========================================================= */
 .glass-panel {
   margin-top: 32px;
   background: var(--glass);
@@ -238,39 +262,49 @@ header { padding: 10px 16px; }
   position: relative;
   z-index: 1;
 }
-.greeting { text-align:center; font-size:28px; font-weight:700; color:#1d1d1f; margin:0 0 6px; }
+.greeting { text-align:center; font-size:28px; font-weight:800; color:#1d1d1f; margin:0 0 6px; }
 .desc { text-align:center; color:#555; margin:0 0 28px; }
 
+/* Dashboard cards */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   align-items: start;
 }
-.dashboard-grid .card {
+.card {
   background: var(--surface);
   border: 1px solid var(--stroke);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
   padding: 20px;
   height: 100%;
 }
-.dashboard-grid .card h3 {
-  margin: 0 0 12px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ink);
-  text-align: left;
-}
+.card h3 { margin: 0 0 12px; font-size: 16px; font-weight: 800; color: #111; }
+
+/* Quick links */
 .quick-links { display:block; margin-top:12px; }
 .quick-links a {
-  display:block; padding:12px 0; text-align:left; color:#0a2a66; font-weight:600; text-decoration:none;
+  display:block; padding:12px 0; text-align:left; color:#0a2a66; font-weight:700; text-decoration:none;
   border-bottom:1px solid #efeff2;
 }
 .quick-links a:last-child { border-bottom: 0; }
 .quick-links a:hover { background: rgba(0,0,0,0.03); }
 
-/* ---------- Footer (generic on dashboard pages) ---------- */
+/* Tables / snapshot */
+.table-compact{ width:100%; border-collapse:collapse; }
+.table-compact th,.table-compact td{ padding:8px 10px; border-bottom:1px solid #efeff2; text-align:left; font-size:14px; }
+.table-compact thead th{ font-weight:800; color:#2a2a2a; }
+
+.snapshot{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px; }
+.snapshot span{ display:block; color:#6e6e73; font-size:12px; }
+.snapshot strong{ font-size:15px; }
+.link-more{ display:inline-block; margin-top:10px; font-weight:800; color:#0a4bd3; text-decoration:none; }
+.link-more:hover{ text-decoration:underline; }
+
+/* =========================================================
+   Footer
+   ========================================================= */
 footer {
   margin-top: 28px;
   padding: 16px 24px;
@@ -282,14 +316,15 @@ footer {
   box-shadow: 0 4px 20px rgba(0,0,0,.25);
 }
 
-/* ---------- Animations ---------- */
+/* =========================================================
+   Animations
+   ========================================================= */
 @keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:none;} }
 @keyframes rise   { from { opacity:0; transform:translateY(12px);} to { opacity:1; transform:translateY(0);} }
 @keyframes floatIn{ from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:none;} }
 
 /* =========================================================
-   LOGIN PAGE OVERRIDES
-   - Applies when the login form exists on the page
+   Login Page Overrides (kept for index.html)
    ========================================================= */
 body.login,
 body:has(#login-form) {
@@ -301,10 +336,8 @@ body:has(#login-form) {
   margin: 0; padding: 0;
 }
 
-/* Center card wrapper used in your HTML */
 main.card { width: 100%; max-width: 1100px; }
 
-/* Logo “glass chip” */
 .logo-well{ display:flex; justify-content:center; margin: 0 0 16px; }
 .logo-well img{
   max-width: clamp(150px, 21vw, 260px);
@@ -328,7 +361,6 @@ main.card { width: 100%; max-width: 1100px; }
     0 0 0 6px rgba(255,255,255,.05) inset;
 }
 
-/* Headings */
 .card h1{
   letter-spacing:.02em; font-weight:800;
   background: linear-gradient(180deg, #fff 0%, #cfe0ff 100%);
@@ -343,7 +375,6 @@ main.card { width: 100%; max-width: 1100px; }
   animation: floatIn .32s ease both .06s;
 }
 
-/* Login card */
 #login-form{
   margin: 0 auto;
   width: clamp(320px, 55vw, 440px);
@@ -351,7 +382,6 @@ main.card { width: 100%; max-width: 1100px; }
   border-radius: 20px;
   text-align: left;
 
-  /* glass border trick */
   background:
     linear-gradient(#ffffff, #ffffff) padding-box,
     linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.15)) border-box;
@@ -373,7 +403,6 @@ main.card { width: 100%; max-width: 1100px; }
   filter: blur(20px); pointer-events:none;
 }
 
-/* Fields */
 #login-form .field { display:grid; row-gap:6px; }
 #login-form label { font-size:13px; color:#4d4d50; }
 #login-form input[type="text"],
@@ -398,7 +427,6 @@ main.card { width: 100%; max-width: 1100px; }
   transform: translateY(-1px);
 }
 
-/* Actions */
 #login-form .actions { display:grid; }
 #login-form .btn,
 #login-form button[type="submit"]{
@@ -431,7 +459,7 @@ main.card { width: 100%; max-width: 1100px; }
 #status { font-size:13px; min-height:1.2em; text-align:center; }
 #status:empty { display:none; }
 
-/* Login footer bubble (centered glass chip) */
+/* Login footer chip */
 footer.footer, #copyright {
   display:flex; align-items:center; justify-content:center; gap:4px;
   width: fit-content; max-width:92%;
@@ -449,36 +477,23 @@ footer.footer, #copyright {
 }
 footer.footer:hover, #copyright:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(0,0,0,.35); }
 
-/* Keep only the glass bubble on login page if other footers exist */
 body.login footer:not(#copyright),
 body:has(#login-form) footer:not(#copyright) { display: none; }
 
-/* Mobile polish */
 @media (max-width: 480px){
   .logo-well img { max-width: 200px; width: 70vw; padding: 9px 12px; }
   #login-form { width: 92%; padding: 18px 14px; }
 }
 
 /* =========================================================
-   PASSWORD TOGGLE — Minimal SVG Eye (pixel-perfect)
-   Works with this HTML chunk in the password field:
-   <div class="field pwd-wrap">
-     <label for="pwd">Password</label>
-     <input id="pwd" ...>
-     <button type="button" class="pwd-toggle"> [two SVGs] </button>
-   </div>
+   Password Toggle (eye icon)
    ========================================================= */
-
 .pwd-wrap { position: relative; }
-
-/* Give the caret/text room so it never hits the icon */
 .pwd-wrap > input[type="password"],
 .pwd-wrap > input[type="text"]{
   padding-right: 56px !important;
   line-height: 1.25;
 }
-
-/* Button centered vertically, flush to the right inside the input */
 .pwd-toggle{
   position: absolute;
   right: 14px; top: 50%;
@@ -492,44 +507,36 @@ body:has(#login-form) footer:not(#copyright) { display: none; }
 }
 .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
 .pwd-toggle:active{ transform: translateY(calc(-50% + 1px)); }
-
 .pwd-toggle svg{
   width: 18px; height: 18px;
   stroke: currentColor; stroke-width: 1.8;
   stroke-linecap: round; stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
-
-/* Swap glyphs when “visible” class is toggled in JS */
 .icon-eye-off{ display:none; }
 .pwd-toggle.visible .icon-eye{ display:none; }
 .pwd-toggle.visible .icon-eye-off{ display:block; }
-
-/* Safari/iOS half-pixel optical balance */
 @supports (-webkit-touch-callout: none) {
   .pwd-toggle{ top: calc(50% - .5px); }
 }
 
-/* WebKit scrollbar styling inside dropdown */
-.dropdown::-webkit-scrollbar { width: 10px; }
-.dropdown::-webkit-scrollbar-track { background: transparent; }
-.dropdown::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,.12);
-  border-radius: 10px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
+/* =========================================================
+   Responsive tweaks for header layout
+   ========================================================= */
+@media (max-width: 900px){
+  .dashboard-grid{ grid-template-columns: 1fr; }
+  .portal-search input[type="search"]{ width:160px; }
 }
-.dropdown:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); }
-
-/* === Dropdown size overrides (paste at end) === */
-
-/* 1) Narrower, fixed-ish width */
-:root { --menuW: 300px; }           /* was 340px; tweak to taste */
-
-/* 2) Tighter row height + padding */
-.dropdown a{
-  min-height: 46px;                 /* was 52px */
-  padding: 10px 16px;               /* was 12px 18px */
-  font-weight: 700;                 /* keep your weight */
-  line-height: 1.2;
+@media (max-width: 720px) {
+  header {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "logo"
+      "utils"
+      "nav";
+    justify-items: center;
+  }
+  .user-info.top-utils { justify-self: center; }
+  .menu-bar { justify-content: center; }
 }
