@@ -109,130 +109,150 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =======================================================
-   NAVBAR DROPDOWN — fixed + smart alignment + flip logic
+   NAVBAR DROPDOWN — portal + true blur + perfect alignment
    ======================================================= */
 (() => {
-  const items = document.querySelectorAll(".menu-item");
+  const items = document.querySelectorAll('.menu-item');
   if (!items.length) return;
 
-  let openItem = null;
+  // Create a portal container once
+  let portal = document.getElementById('menu-portal');
+  if (!portal) {
+    portal = document.createElement('div');
+    portal.id = 'menu-portal';
+    document.body.appendChild(portal);
+  }
 
-  // Measure at real size (temporarily show invisibly if needed)
-  function measureMenu(panel) {
-    const wasOpen = panel.classList.contains("is-open");
-    if (!wasOpen) {
-      panel.classList.add("is-open");
-      panel.style.visibility = "hidden";
+  let openItem = null;
+  let openPanel = null;
+  let restore = null; // {parent, next}
+
+  function moveToPortal(panel) {
+    // remember original spot to restore later
+    const parent = panel.parentNode;
+    const next = panel.nextSibling;
+    restore = { parent, next };
+    portal.appendChild(panel);
+  }
+
+  function restorePanel(panel) {
+    if (!restore) return;
+    const { parent, next } = restore;
+    next ? parent.insertBefore(panel, next) : parent.appendChild(panel);
+    restore = null;
+  }
+
+  // Measure size at real display size
+  function measure(panel) {
+    const prevOpen = panel.classList.contains('is-open');
+    if (!prevOpen) {
+      panel.style.visibility = 'hidden';
+      panel.classList.add('is-open');
+      document.body.offsetHeight; // force reflow
     }
-    const w = Math.max(panel.offsetWidth || 0, 260); // keep minimum feel
-    const h = panel.offsetHeight || 0;
-    if (!wasOpen) {
-      panel.classList.remove("is-open");
-      panel.style.visibility = "";
+    const w = Math.max(panel.offsetWidth, 260);
+    const h = panel.offsetHeight;
+    if (!prevOpen) {
+      panel.classList.remove('is-open');
+      panel.style.visibility = '';
     }
     return { w, h };
   }
 
   function placeDropdown(item) {
-    const btn   = item.querySelector(".menu-trigger");
-    const panel = item.querySelector(".dropdown");
+    const btn = item.querySelector('.menu-trigger');
+    const panel = openPanel || item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
-    const r   = btn.getBoundingClientRect(); // trigger in viewport
+    const r   = btn.getBoundingClientRect(); // viewport rect
     const vw  = document.documentElement.clientWidth;
     const vh  = document.documentElement.clientHeight;
-    const GAP = 8;   // spacing from trigger
-    const EDGE = 12; // viewport padding
+    const EDGE = 12;
+    const GAP  = 8;
 
-    const { w: panelW, h: panelH } = measureMenu(panel);
+    // ensure it lives in the portal (body)
+    if (panel.parentNode !== portal) moveToPortal(panel);
 
-    // Prefer end-alignment when trigger is near the right side
+    const { w: pw, h: ph } = measure(panel);
+
+    // prefer end alignment near right side
     const preferEnd = r.left > vw * 0.6;
-    let left = preferEnd ? (r.right - panelW) : r.left;
+    let left = preferEnd ? (r.right - pw) : r.left;
 
-    // Clamp horizontally to viewport
-    left = Math.min(Math.max(EDGE, left), vw - panelW - EDGE);
+    // clamp horizontally
+    left = Math.min(Math.max(EDGE, left), vw - pw - EDGE);
 
-    // Place below; if not enough room, flip above
+    // place below, flip above if needed
     let top = r.bottom + GAP;
-    if (top + panelH + EDGE > vh) {
-      top = Math.max(EDGE, r.top - panelH - GAP);
-    }
+    if (top + ph + EDGE > vh) top = Math.max(EDGE, r.top - ph - GAP);
 
-    panel.style.left = `${Math.round(left)}px`;
-    panel.style.top  = `${Math.round(top)}px`;
+    panel.style.left = Math.round(left) + 'px';
+    panel.style.top  = Math.round(top)  + 'px';
   }
 
   function closeAll() {
-    items.forEach((i) => {
-      i.classList.remove("open");
-      i.querySelector(".menu-trigger")?.setAttribute("aria-expanded", "false");
-      const p = i.querySelector(".dropdown");
+    items.forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded','false');
+      const p = i.querySelector('.dropdown');
       if (p) {
-        p.classList.remove("is-open");
-        p.style.left = "";
-        p.style.top  = "";
+        p.classList.remove('is-open');
+        p.style.left = '';
+        p.style.top  = '';
       }
     });
+    if (openPanel) {
+      restorePanel(openPanel);
+      openPanel = null;
+    }
     openItem = null;
   }
 
   function open(item) {
-    const btn   = item.querySelector(".menu-trigger");
-    const panel = item.querySelector(".dropdown");
+    const btn   = item.querySelector('.menu-trigger');
+    const panel = item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
     closeAll();
-    item.classList.add("open");
-    btn.setAttribute("aria-expanded", "true");
+    item.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
 
-    // Position first using real size, then reveal
+    openItem  = item;
+    openPanel = panel;
+
+    // position using viewport coords, then reveal
     placeDropdown(item);
-    panel.classList.add("is-open");
-    openItem = item;
+    panel.classList.add('is-open');
 
-    // a11y: focus first control inside the menu
-    const first = panel.querySelector("a,button,[tabindex]:not([tabindex='-1'])");
+    const first = panel.querySelector('a,button,[tabindex]:not([tabindex="-1"])');
     first?.focus({ preventScroll: true });
   }
 
   // Toggle on click
-  items.forEach((i) => {
-    const btn = i.querySelector(".menu-trigger");
+  items.forEach(i => {
+    const btn = i.querySelector('.menu-trigger');
     if (!btn) return;
-    btn.setAttribute("aria-haspopup", "true");
-    btn.setAttribute("aria-expanded", "false");
-    btn.addEventListener("click", (e) => {
+    btn.setAttribute('aria-haspopup','true');
+    btn.setAttribute('aria-expanded','false');
+    btn.addEventListener('click', (e) => {
       e.preventDefault();
       if (openItem === i) closeAll();
       else open(i);
     });
   });
 
-  // Keep aligned while resizing/scrolling/orienting
-  ["resize", "scroll", "orientationchange"].forEach((ev) => {
-    window.addEventListener(
-      ev,
-      () => {
-        if (openItem) placeDropdown(openItem);
-      },
-      { passive: true }
-    );
+  // Keep aligned on resize/scroll/orientation
+  ['resize','scroll','orientationchange'].forEach(ev => {
+    window.addEventListener(ev, () => { if (openItem) placeDropdown(openItem); }, { passive:true });
   });
 
   // Click/touch outside to close
-  ["click", "touchstart"].forEach((ev) => {
-    window.addEventListener(
-      ev,
-      (e) => {
-        if (!e.target.closest(".menu-item")) closeAll();
-      },
-      { passive: true }
-    );
+  ['click','touchstart'].forEach(ev => {
+    window.addEventListener(ev, (e) => {
+      if (!e.target.closest('.menu-item') && !e.target.closest('.dropdown')) closeAll();
+    }, { passive:true });
   });
 
   // Esc to close
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeAll();
-  });
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
 })();
