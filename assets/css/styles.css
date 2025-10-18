@@ -145,6 +145,22 @@ header {
 @media (prefers-reduced-motion: reduce) {
   .dropdown { transition: none; transform: none; }
 }
+/* Uniform dropdown sizing */
+:root { --menuW: 340px; }               /* tweak once to taste */
+
+.dropdown {
+  box-sizing: border-box;
+  width: var(--menuW);                   /* same width for every menu */
+}
+
+/* Consistent item height + alignment */
+.dropdown a{
+  display: flex;
+  align-items: center;
+  min-height: 52px;                      /* uniform rows */
+  padding: 12px 18px;
+  line-height: 1.25;
+}
 
 /* ---------- User Area (Header, optional) ---------- */
 header .user-info { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,.92); justify-self:end; }
