@@ -76,6 +76,60 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// -------------------------------------------------------
+// Find the widest dropdown once, set CSS variable --menuW
+// -------------------------------------------------------
+(function setUniformMenuWidth() {
+  const panels = Array.from(document.querySelectorAll('.dropdown'));
+  if (!panels.length) return;
+
+  // Make sure layout is ready before we measure
+  requestAnimationFrame(() => {
+    let maxW = 260;
+
+    panels.forEach(p => {
+      // remember original DOM position
+      const parent = p.parentNode;
+      const next = p.nextSibling;
+
+      // stash current inline styles we’re about to change
+      const prev = {
+        pos: p.style.position,
+        vis: p.style.visibility,
+        disp: p.style.display,
+        left: p.style.left,
+        top: p.style.top,
+      };
+
+      // move to body and make measurable without flashing
+      document.body.appendChild(p);
+      p.style.position = 'absolute';
+      p.style.visibility = 'hidden';
+      p.style.display = 'block';
+      p.style.left = '-9999px';
+      p.style.top = '-9999px';
+
+      // measure
+      maxW = Math.max(maxW, Math.ceil(p.scrollWidth) + 1);
+
+      // restore inline styles
+      p.style.position = prev.pos;
+      p.style.visibility = prev.vis;
+      p.style.display = prev.disp;
+      p.style.left = prev.left;
+      p.style.top = prev.top;
+
+      // restore original DOM position
+      if (next) parent.insertBefore(p, next);
+      else parent.appendChild(p);
+    });
+
+    // clamp and set once for all menus
+    maxW = Math.min(Math.max(260, maxW), 420);
+    document.documentElement.style.setProperty('--menuW', `${maxW}px`);
+  });
+})();
+
 // =======================================================
 // NAVBAR DROPDOWN — portal + true blur + hover hold logic
 // =======================================================
