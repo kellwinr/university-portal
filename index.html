@@ -24,22 +24,30 @@
                placeholder="e.g. 22XXXXXX" autocomplete="username" required>
       </div>
 
-      <!-- Add the password toggle wrapper here -->
-      <div class="field pwd-wrap">
-        <label for="pwd">Password</label>
-        <input id="pwd" name="pwd" type="password"
-               placeholder="Enter your password"
-               autocomplete="current-password" required>
-        <button type="button" class="pwd-toggle" aria-label="Show password" 
-          onclick="
-            const i=document.getElementById('pwd');
-            const t=this;
-            const show=i.type==='password';
-            i.type = show ? 'text' : 'password';
-            t.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
-            t.textContent = show ? '🙈' : '👁️';
-          ">👁️</button>
-      </div>
+<div class="field pwd-wrap">
+  <label for="pwd">Password</label>
+  <input id="pwd" name="pwd" type="password"
+         placeholder="Enter your password"
+         autocomplete="current-password" required>
+  <button type="button" class="pwd-toggle" aria-label="Show password"
+    onclick="
+      const i=document.getElementById('pwd');
+      const btn=this;
+      const show=i.type==='password';
+      i.type = show ? 'text' : 'password';
+      btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      btn.classList.toggle('visible', show);
+    ">
+    <svg class="icon-eye" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+    <svg class="icon-eye-off" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.73 21.73 0 0 1 5.06-6.06M1 1l22 22"/>
+      <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88"/>
+    </svg>
+  </button>
+</div>
 
       <div class="actions">
         <button class="btn" type="submit" aria-label="Log in">Login</button>
