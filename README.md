@@ -12,7 +12,8 @@ university-portal/
    ├─ js/
    │  └─ main.js
    └─ img/
-      └─ logo-placeholder.svg
+      ├─ logo-placeholder.svg
+      └─ Actual Logo.jpg
 ```
 
 ## Customising
