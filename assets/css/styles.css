@@ -60,6 +60,7 @@ header {
   align-items: center;
   column-gap: 16px;
 }
+header { overflow: visible; }
 
 .logo-section {
   justify-self: start;
@@ -114,14 +115,11 @@ header {
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
 }
 
-/* ===== Frosted Dropdown (fixed position for real blur) ===== */
-header { overflow: visible; }
-
+/* ===== Frosted Dropdown (fixed position for true blur) ===== */
 .dropdown {
-  position: fixed;            /* ensures blur shows page background */
-  left: 0; top: 0;            /* JS positions it precisely */
-  width: auto;
-  min-width: 240px;
+  position: fixed;
+  left: 0; top: 0;                 /* JS sets exact coordinates */
+  width: auto; min-width: 240px;
 
   background: rgba(255,255,255,0.38);
   backdrop-filter: blur(22px) saturate(140%) contrast(105%);
@@ -139,13 +137,13 @@ header { overflow: visible; }
   transition: opacity .16s ease, transform .16s ease, visibility 0s .16s;
 
   will-change: left, top, opacity, transform;
+  pointer-events: none;             /* prevent accidental clicks while hidden */
+  -webkit-font-smoothing: antialiased;
+  transform-origin: top left;
+  background-clip: padding-box;
+  contain: layout style;            /* reduce reflow on show */
 }
-.dropdown.is-open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  transition-delay: 0s;
-}
+.dropdown.is-open { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
 .dropdown a {
   display: block;
   padding: 12px 18px;
@@ -156,34 +154,14 @@ header { overflow: visible; }
 }
 .dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
 .dropdown a:hover { background: rgba(255,255,255,0.55); }
+.dropdown a:focus-visible { outline: 2px solid rgba(10,75,211,.35); outline-offset: -2px; }
 
-/* ===== User Info Section ===== */
-.user-info {
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* Fallback if backdrop-filter is unsupported */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .dropdown { background: rgba(255,255,255,0.90); }
+  header { background: rgba(255,255,255,0.12); }
+  .glass-panel { background: rgba(255,255,255,0.70); }
 }
-.id-chip {
-  background: #fff;
-  color: #0a2a66;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 999px;
-}
-.logout-btn {
-  background: linear-gradient(180deg,#1b50c9,#0e2f86);
-  border: none;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
-  transition: transform .25s ease;
-}
-.logout-btn:hover { transform: translateY(-2px); }
 
 /* ===== Glass Panel ===== */
 .glass-panel {
@@ -235,10 +213,9 @@ header { overflow: visible; }
   color: var(--ink);
   text-align: left;
 }
-.quick-links {
-  display: block;
-  margin-top: 12px;
-}
+
+/* Quick Access links */
+.quick-links { display: block; margin-top: 12px; }
 .quick-links a {
   display: block;
   padding: 12px 0;
@@ -266,7 +243,7 @@ footer {
 /* ===== Responsive ===== */
 .logo-section a { color: inherit; text-decoration: none; }
 .logo-section a:hover { text-decoration: none; }
-header { grid-auto-columns: 1fr; overflow: visible; }
+header { grid-auto-columns: 1fr; }
 .menu-bar { justify-self: center; min-width: 0; }
 
 @media (max-width: 720px) {
@@ -280,84 +257,97 @@ header { grid-auto-columns: 1fr; overflow: visible; }
 }
 
 /* ===== Animations ===== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
-}
-@keyframes rise {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-/* =========================
-   LOGIN PAGE — CLEAN & STABLE
-   ========================= */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes rise   { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-/* If you can, add <body class="login"> in index.html for fast matching.
-   :has() is kept as a fallback for pages where you can't add the class. */
+/* =================================================================
+   LOGIN PAGE — SINGLE, CONSOLIDATED OVERRIDE (keep only this section)
+   ================================================================= */
+
 body.login,
 body:has(#login-form) {
-  /* Center the whole stack horizontally, slightly higher on the page */
-  display: grid;
-  place-items: start center;
-  padding: 28px 24px 24px;
+  display: flex !important;           /* force over base layout */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;            /* true vertical centering */
+  min-height: 100svh;                 /* safer on mobile than 100vh */
+  margin: 0;
+  padding: 0;
   background: linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
 }
 
-/* UTAR logo (even if there's no wrapper) */
-body.login img[alt*="UTAR"],
-body:has(#login-form) img[alt*="UTAR"] {
-  display: block;
-  margin: 0 auto 12px;
-  max-width: 420px;
-  width: 70vw;
-  height: auto;
-}
-
 /* Headings above the form */
-body.login h1, body:has(#login-form) h1 {
+body.login h1,
+body:has(#login-form) h1,
+body.login h2,
+body:has(#login-form) h2 {
   text-align: center;
-  margin: 10px auto 6px;
+  margin: 8px 0;
   color: #fff;
   max-width: 900px;
 }
-body.login h2, body:has(#login-form) h2 {
-  text-align: center;
-  margin: 0 auto 16px;
-  color: #dfe6ff;
-  font-weight: 600;
-  max-width: 900px;
+
+/* UTAR logo — smaller Apple-glass card */
+body.login img[alt*="UTAR"],
+body:has(#login-form) img[alt*="UTAR"] {
+  display: block;
+  margin: 0 auto 20px;
+  max-width: 220px;
+  width: 60vw;
+  height: auto;
+
+  background: rgba(255,255,255,0.10);
+  border-radius: 16px;
+  padding: 10px 14px;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+body.login img[alt*="UTAR"]:hover,
+body:has(#login-form) img[alt*="UTAR"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.35);
 }
 
 /* Login card */
 #login-form {
-  margin: 12px auto 0;          /* keeps it close to headings & centered */
-  width: min(560px, 100%);
+  margin: 0 auto;
+  width: min(440px, 90%);
   background: var(--surface);
   border: 1px solid rgba(0,0,0,.06);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   padding: 24px 22px;
+  text-align: left;
+
   backdrop-filter: blur(var(--glass-blur)) saturate(120%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
 }
 
 /* Labels & inputs */
-#login-form label { display:block; font-size:13px; color:#4d4d50; margin:8px 0 6px; }
+#login-form label {
+  display: block;
+  font-size: 13px;
+  color: #4d4d50;
+  margin: 8px 0 6px;
+}
 #login-form input[type="text"],
-#login-form input[type="password"]{
-  width:100%;
-  padding:12px 14px;
+#login-form input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
   border-radius: var(--radius-md);
-  border:1px solid #d1d1d6;
+  border: 1px solid #d1d1d6;
   background: rgba(255,255,255,0.98);
   color: var(--ink);
-  font-size:15px;
-  outline:none;
+  font-size: 15px;
+  outline: none;
   transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
-#login-form input::placeholder{ color:#888; }
-#login-form input:focus{
+#login-form input::placeholder { color: #888; }
+#login-form input:focus {
   border-color: var(--utar-navy);
   box-shadow: 0 0 0 3px rgba(10,42,102,.20);
   transform: translateY(-1px);
@@ -365,125 +355,41 @@ body.login h2, body:has(#login-form) h2 {
 
 /* Submit button */
 #login-form button[type="submit"],
-#login-form .btn{
-  width:100%;
-  -webkit-appearance: none; /* iOS */
-  padding:12px 14px;
-  border:none;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:700;
-  color:#fff;
-  cursor:pointer;
+#login-form .btn {
+  width: 100%;
+  -webkit-appearance: none;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
   background: linear-gradient(180deg,#1b50c9,#0e2f86);
-  box-shadow:0 8px 20px rgba(9,41,102,.3);
+  box-shadow: 0 8px 20px rgba(9,41,102,.3);
   transition: transform .16s ease, box-shadow .16s ease;
-  margin-top:14px;
+  margin-top: 14px;
 }
 #login-form button[type="submit"]:hover,
-#login-form .btn:hover{ transform:translateY(-1px); box-shadow:0 12px 26px rgba(9,41,102,.4); }
+#login-form .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(9,41,102,.4); }
 
 /* Status + link */
-#status{ margin-top:10px; font-size:13px; min-height:1.2em; text-align:center; }
-#login-form a{ color:#2a66ff; font-weight:600; text-decoration:none; }
-#login-form a:hover{ text-decoration:underline; }
+#status { margin-top: 10px; font-size: 13px; min-height: 1.2em; text-align: center; }
+#login-form a { color: #2a66ff; font-weight: 600; text-decoration: none; }
+#login-form a:hover { text-decoration: underline; }
 
-/* Small screens */
-@media (max-width: 480px){
-  body.login, body:has(#login-form){ padding:16px; }
-  #login-form{ padding:18px 14px; width:100%; }
+/* Small-screen polish */
+@media (max-width: 480px) {
   body.login img[alt*="UTAR"],
-  body:has(#login-form) img[alt*="UTAR"]{ width:82vw; max-width:360px; }
-}
-
-/* Tall screens: lift the stack slightly */
-@media (min-height: 900px){
-  body.login, body:has(#login-form){ padding-top: 48px; }
-}
-/* 1) Dropdown: avoid accidental clicks when hidden, crisper glass edge */
-.dropdown{
-  /* ...your existing props... */
-  pointer-events: none;                 /* no hit-test while hidden */
-  -webkit-font-smoothing: antialiased;  /* crisper text on glass */
-  transform-origin: top left;
-  background-clip: padding-box;         /* keep border glow clean */
-}
-.dropdown.is-open{
-  pointer-events: auto;                 /* re-enable interaction */
-}
-
-/* 2) Safer backdrop-filter fallback for older/disabled browsers */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .dropdown{
-    background: rgba(255,255,255,0.90); /* readable without blur */
+  body:has(#login-form) img[alt*="UTAR"] {
+    max-width: 200px;
+    width: 70vw;
+    margin-bottom: 16px;
   }
-  header{
-    background: rgba(255,255,255,0.12);
-  }
-  .glass-panel{
-    background: rgba(255,255,255,0.70);
-  }
+  #login-form { width: 92%; padding: 18px 14px; }
 }
 
-/* 3) Body baseline: make sure login override wins cleanly */
-body{ display:flex; }                  /* (already there) */
-body.login, body:has(#login-form){
-  display:grid !important;             /* ensure it overrides flex */
-}
-
-/* 4) Small polish: consistent focus ring for links in dropdown */
-.dropdown a:focus-visible{
-  outline: 2px solid rgba(10,75,211,.35);
-  outline-offset: -2px;
-  text-decoration: none;
-}
-
-/* 5) Reduce “jump” when the panel first opens (width is JS-set) */
-.dropdown{
-  contain: layout style;               /* fewer reflows on show */
-}
-
-/* ===== FINAL LOGIN TWEAKS (append at end) ===== */
-
-/* Center the whole login stack perfectly */
-body.login,
-body:has(#login-form) {
-  place-items: center;     /* vertical + horizontal centering */
-  min-height: 100vh;       /* needed for true vertical center */
-  padding-top: 0;          /* remove extra top gap */
-}
-
-/* Logo rhythm above the card */
-body.login img[alt*="UTAR"],
-body:has(#login-form) img[alt*="UTAR"] {
-  margin-bottom: 24px;     /* more breathing room before the form */
-  max-width: 360px;        /* keeps logo from overpowering on desktop */
-  width: 70vw;             /* still scales nicely on small screens */
-}
-
-/* ===== UTAR LOGO — SMALLER APPLE-GLASS CARD STYLE ===== */
-body.login img[alt*="UTAR"],
-body:has(#login-form) img[alt*="UTAR"] {
-  display: block;
-  margin: 0 auto 24px;
-  max-width: 260px;               /* 👈 smaller for better proportion */
-  width: 60vw;
-  height: auto;
-
-  /* Apple-glass floating look */
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 10px 14px;             /* reduced padding to match smaller size */
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-/* Hover animation for a soft lift */
-body.login img[alt*="UTAR"]:hover,
-body:has(#login-form) img[alt*="UTAR"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+/* Tall screens: lift slightly if desired */
+@media (min-height: 900px) {
+  body.login, body:has(#login-form) { padding-top: 0; }
 }
