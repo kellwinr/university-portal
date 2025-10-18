@@ -115,74 +115,77 @@ document.addEventListener("DOMContentLoaded", () => {
   const items = document.querySelectorAll('.menu-item');
   if (!items.length) return;
 
-  // Create a portal container once
+  // ----- Portal (once) -----
   let portal = document.getElementById('menu-portal');
   if (!portal) {
     portal = document.createElement('div');
     portal.id = 'menu-portal';
+    portal.setAttribute('aria-hidden', 'true');
     document.body.appendChild(portal);
+  }
+
+  // Track original parent/position so we can restore safely
+  const origin = new WeakMap(); // panel -> {parent, next}
+
+  // Off-screen, non-interactive measurement (no flicker)
+  function measure(panel) {
+    const ghost = panel.cloneNode(true);
+    ghost.classList.add('is-open');            // ensure display:block from CSS
+    Object.assign(ghost.style, {
+      position: 'fixed',
+      left: '-10000px',
+      top: '0',
+      visibility: 'hidden',
+      pointerEvents: 'none',
+    });
+    portal.appendChild(ghost);
+    const w = Math.max(ghost.offsetWidth, 260);
+    const h = ghost.offsetHeight;
+    ghost.remove();
+    return { w, h };
+  }
+
+  function moveToPortal(panel) {
+    if (!origin.has(panel)) {
+      origin.set(panel, { parent: panel.parentNode, next: panel.nextSibling });
+    }
+    if (panel.parentNode !== portal) portal.appendChild(panel);
+  }
+
+  function restorePanel(panel) {
+    const info = origin.get(panel);
+    if (!info) return;
+    const { parent, next } = info;
+    next ? parent.insertBefore(panel, next) : parent.appendChild(panel);
+    origin.delete(panel);
   }
 
   let openItem = null;
   let openPanel = null;
-  let restore = null; // {parent, next}
-
-  function moveToPortal(panel) {
-    // remember original spot to restore later
-    const parent = panel.parentNode;
-    const next = panel.nextSibling;
-    restore = { parent, next };
-    portal.appendChild(panel);
-  }
-
-  function restorePanel(panel) {
-    if (!restore) return;
-    const { parent, next } = restore;
-    next ? parent.insertBefore(panel, next) : parent.appendChild(panel);
-    restore = null;
-  }
-
-  // Measure size at real display size
-  function measure(panel) {
-    const prevOpen = panel.classList.contains('is-open');
-    if (!prevOpen) {
-      panel.style.visibility = 'hidden';
-      panel.classList.add('is-open');
-      document.body.offsetHeight; // force reflow
-    }
-    const w = Math.max(panel.offsetWidth, 260);
-    const h = panel.offsetHeight;
-    if (!prevOpen) {
-      panel.classList.remove('is-open');
-      panel.style.visibility = '';
-    }
-    return { w, h };
-  }
 
   function placeDropdown(item) {
-    const btn = item.querySelector('.menu-trigger');
+    const btn   = item.querySelector('.menu-trigger');
     const panel = openPanel || item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
-    const r   = btn.getBoundingClientRect(); // viewport rect
-    const vw  = document.documentElement.clientWidth;
-    const vh  = document.documentElement.clientHeight;
+    moveToPortal(panel);
+
+    const r  = btn.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
     const EDGE = 12;
     const GAP  = 8;
 
-    // ensure it lives in the portal (body)
-    if (panel.parentNode !== portal) moveToPortal(panel);
-
     const { w: pw, h: ph } = measure(panel);
 
-    // prefer end alignment near right side
+    // Prefer end alignment if the button is right-weighted
     const preferEnd = r.left > vw * 0.6;
     let left = preferEnd ? (r.right - pw) : r.left;
 
     // clamp horizontally
-    left = Math.min(Math.max(EDGE, left), vw - pw - EDGE);
+    left = Math.max(EDGE, Math.min(left, vw - pw - EDGE));
 
-    // place below, flip above if needed
+    // below by default; flip up if needed
     let top = r.bottom + GAP;
     if (top + ph + EDGE > vh) top = Math.max(EDGE, r.top - ph - GAP);
 
@@ -193,19 +196,17 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeAll() {
     items.forEach(i => {
       i.classList.remove('open');
-      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded','false');
+      i.querySelector('.menu-trigger')?.setAttribute('aria-expanded', 'false');
       const p = i.querySelector('.dropdown');
       if (p) {
-        p.classList.remove('is-open');
+        p.classList.remove('is-open');     // CSS sets display:none immediately
         p.style.left = '';
         p.style.top  = '';
+        restorePanel(p);
       }
     });
-    if (openPanel) {
-      restorePanel(openPanel);
-      openPanel = null;
-    }
     openItem = null;
+    openPanel = null;
   }
 
   function open(item) {
@@ -213,45 +214,54 @@ document.addEventListener("DOMContentLoaded", () => {
     const panel = item.querySelector('.dropdown');
     if (!btn || !panel) return;
 
+    // If clicking the already-open item, just close
+    if (openItem === item) { closeAll(); return; }
+
     closeAll();
-    item.classList.add('open');
-    btn.setAttribute('aria-expanded','true');
 
     openItem  = item;
     openPanel = panel;
 
-    // position using viewport coords, then reveal
-    placeDropdown(item);
-    panel.classList.add('is-open');
+    item.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
 
-    const first = panel.querySelector('a,button,[tabindex]:not([tabindex="-1"])');
-    first?.focus({ preventScroll: true });
+    // Position first, then reveal (prevents jump)
+    placeDropdown(item);
+    // Let styles apply before we toggle open for smoother animation
+    requestAnimationFrame(() => {
+      panel.classList.add('is-open');
+      const first = panel.querySelector('a,button,[tabindex]:not([tabindex="-1"])');
+      first?.focus({ preventScroll: true });
+    });
   }
 
   // Toggle on click
   items.forEach(i => {
     const btn = i.querySelector('.menu-trigger');
     if (!btn) return;
-    btn.setAttribute('aria-haspopup','true');
-    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-haspopup', 'true');
+    btn.setAttribute('aria-expanded', 'false');
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      if (openItem === i) closeAll();
-      else open(i);
+      open(i);
     });
   });
 
   // Keep aligned on resize/scroll/orientation
-  ['resize','scroll','orientationchange'].forEach(ev => {
-    window.addEventListener(ev, () => { if (openItem) placeDropdown(openItem); }, { passive:true });
+  ['resize', 'scroll', 'orientationchange'].forEach(ev => {
+    window.addEventListener(ev, () => {
+      if (openItem) requestAnimationFrame(() => placeDropdown(openItem));
+    }, { passive: true });
   });
 
-  // Click/touch outside to close
-  ['click','touchstart'].forEach(ev => {
-    window.addEventListener(ev, (e) => {
-      if (!e.target.closest('.menu-item') && !e.target.closest('.dropdown')) closeAll();
-    }, { passive:true });
-  });
+  // Close on outside pointerdown (fires before click, avoids “bounce open”)
+  window.addEventListener('pointerdown', (e) => {
+    if (openItem) {
+      const insideTrigger = e.target.closest('.menu-item');
+      const insidePanel   = e.target.closest('.dropdown');
+      if (!insideTrigger && !insidePanel) closeAll();
+    }
+  }, { passive: true });
 
   // Esc to close
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
