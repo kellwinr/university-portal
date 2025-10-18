@@ -1,1548 +1,231 @@
-:root {
-  --utar-navy: #0a2a66;
-  --utar-navy-2: #041a44;
-  --utar-gold: #f0b400;
-
-  /* Neutral Apple-inspired palette */
-  --ink: #1d1d1f;
-  --muted: #6e6e73;
-  --stroke: #e6e6ea;
-  --stroke-strong: #d8d8de;
-  --surface: #ffffff;
-  --glass: rgba(255, 255, 255, 0.60);
-  --link: #0a4bd3;
-
-  --glass-blur: 18px;
-  --radius-lg: 20px;
-  --radius-md: 12px;
-  --shadow: 0 16px 40px rgba(0,0,0,.16);
-}
-
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-
-/* ===== Layout & Background ===== */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-  color: var(--ink);
-  background: linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 100vh;
-  padding: 24px;
-}
-
-header, .glass-panel, footer {
-  width: 92%;
-  max-width: 1100px;
-  align-self: center;
-  box-sizing: border-box;
-}
-
-/* ===== Header (Apple Glass Style) ===== */
-header {
-  margin-top: 40px;
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.22);
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.16);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  padding: 12px 24px;
-  position: relative;
-  z-index: 3;
-
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  column-gap: 16px;
-}
-header { overflow: visible; }
-
-.logo-section {
-  justify-self: start;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.logo-section img {
-  height: 56px;
-  width: auto;
-  object-fit: contain;
-  border-radius: 12px;
-}
-.logo-text {
-  color: #fff;
-  font-weight: 700;
-  line-height: 1.15;
-  font-size: 16px;
-}
-.logo-text small {
-  display: block;
-  color: rgba(255,255,255,.85);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* ===== Nav Bar ===== */
-.menu-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-self: center;
-}
-.menu-item { position: relative; }
-
-.menu-item > .menu-trigger {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 8px 14px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.25);
-  transition: all .25s ease;
-  backdrop-filter: blur(10px) saturate(130%);
-}
-.menu-item > .menu-trigger:hover,
-.menu-item.open > .menu-trigger {
-  background: rgba(255,255,255,0.22);
-  color: #0a2a66;
-  box-shadow: 0 6px 16px rgba(0,0,0,.25);
-}
-
-/* ===== Frosted Dropdown (fixed position for true blur) ===== */
-.dropdown {
-  position: fixed;
-  left: 0; top: 0;                 /* JS sets exact coordinates */
-  width: auto; min-width: 240px;
-
-  background: rgba(255,255,255,0.38);
-  backdrop-filter: blur(22px) saturate(140%) contrast(105%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%) contrast(105%);
-
-  border: 1px solid rgba(255,255,255,0.55);
-  border-radius: 14px;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.28);
-  overflow: hidden;
-  z-index: 1000;
-
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(6px);
-  transition: opacity .16s ease, transform .16s ease, visibility 0s .16s;
-
-  will-change: left, top, opacity, transform;
-  pointer-events: none;             /* prevent accidental clicks while hidden */
-  -webkit-font-smoothing: antialiased;
-  transform-origin: top left;
-  background-clip: padding-box;
-  contain: layout style;            /* reduce reflow on show */
-}
-.dropdown.is-open { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
-.dropdown a {
-  display: block;
-  padding: 12px 18px;
-  color: #1d1d1f;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background .12s ease;
-}
-.dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
-.dropdown a:hover { background: rgba(255,255,255,0.55); }
-.dropdown a:focus-visible { outline: 2px solid rgba(10,75,211,.35); outline-offset: -2px; }
-
-/* Fallback if backdrop-filter is unsupported */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .dropdown { background: rgba(255,255,255,0.90); }
-  header { background: rgba(255,255,255,0.12); }
-  .glass-panel { background: rgba(255,255,255,0.70); }
-}
-
-/* ===== Glass Panel ===== */
-.glass-panel {
-  margin-top: 32px;
-  background: var(--glass);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.12);
-  backdrop-filter: blur(14px) saturate(115%);
-  -webkit-backdrop-filter: blur(14px) saturate(115%);
-  padding: 32px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Greeting + description */
-.greeting {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 700;
-  color: #1d1d1f;
-  margin: 0 0 6px;
-}
-.desc {
-  text-align: center;
-  color: #555;
-  margin: 0 0 28px;
-}
-
-/* ===== Dashboard Layout ===== */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: start;
-}
-.dashboard-grid .card {
-  background: var(--surface);
-  border: 1px solid var(--stroke);
-  border-radius: 10px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
-  padding: 20px;
-  height: 100%;
-}
-.dashboard-grid .card h3 {
-  margin: 0 0 12px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ink);
-  text-align: left;
-}
-
-/* Quick Access links */
-.quick-links { display: block; margin-top: 12px; }
-.quick-links a {
-  display: block;
-  padding: 12px 0;
-  text-align: left;
-  color: #0a2a66;
-  font-weight: 600;
-  text-decoration: none;
-  border-bottom: 1px solid #efeff2;
-}
-.quick-links a:last-child { border-bottom: 0; }
-.quick-links a:hover { background: rgba(0,0,0,0.03); }
-
-/* ===== Footer ===== */
-footer {
-  margin-top: 28px;
-  padding: 16px 24px;
-  background: rgba(255,255,255,.08);
-  border-radius: 20px;
-  color: #e6e6e6;
-  font-size: 13px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,.25);
-}
-
-/* ===== Responsive ===== */
-.logo-section a { color: inherit; text-decoration: none; }
-.logo-section a:hover { text-decoration: none; }
-header { grid-auto-columns: 1fr; }
-.menu-bar { justify-self: center; min-width: 0; }
-
-@media (max-width: 720px) {
-  header {
-    grid-template-columns: 1fr;
-    row-gap: 10px;
-    justify-items: center;
-  }
-  .logo-section, .user-info { justify-self: center; }
-  .menu-bar { flex-wrap: wrap; justify-content: center; }
-}
-
-/* ===== Animations ===== */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@keyframes rise   { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-/* =================================================================
-   LOGIN PAGE — SINGLE, CONSOLIDATED OVERRIDE (keep only this section)
-   ================================================================= */
-
-body.login,
-body:has(#login-form) {
-  display: flex !important;           /* force over base layout */
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;            /* true vertical centering */
-  min-height: 100svh;                 /* safer on mobile than 100vh */
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
-}
-
-/* Headings above the form */
-body.login h1,
-body:has(#login-form) h1,
-body.login h2,
-body:has(#login-form) h2 {
-  text-align: center;
-  margin: 8px 0;
-  color: #fff;
-  max-width: 900px;
-}
-
-/* UTAR logo — smaller Apple-glass card */
-body.login img[alt*="UTAR"],
-body:has(#login-form) img[alt*="UTAR"] {
-  display: block;
-  margin: 0 auto 20px;
-  max-width: 220px;
-  width: 60vw;
-  height: auto;
-
-  background: rgba(255,255,255,0.10);
-  border-radius: 16px;
-  padding: 10px 14px;
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-body.login img[alt*="UTAR"]:hover,
-body:has(#login-form) img[alt*="UTAR"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(0,0,0,0.35);
-}
-
-/* Login card */
-#login-form {
-  margin: 0 auto;
-  width: min(440px, 90%);
-  background: var(--surface);
-  border: 1px solid rgba(0,0,0,.06);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  padding: 24px 22px;
-  text-align: left;
-
-  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
-}
-
-/* Labels & inputs */
-#login-form label {
-  display: block;
-  font-size: 13px;
-  color: #4d4d50;
-  margin: 8px 0 6px;
-}
-#login-form input[type="text"],
-#login-form input[type="password"] {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid #d1d1d6;
-  background: rgba(255,255,255,0.98);
-  color: var(--ink);
-  font-size: 15px;
-  outline: none;
-  transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
-  margin-bottom: 10px;
-}
-#login-form input::placeholder { color: #888; }
-#login-form input:focus {
-  border-color: var(--utar-navy);
-  box-shadow: 0 0 0 3px rgba(10,42,102,.20);
-  transform: translateY(-1px);
-}
-
-/* Submit button */
-#login-form button[type="submit"],
-#login-form .btn {
-  width: 100%;
-  -webkit-appearance: none;
-  padding: 12px 14px;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
-  background: linear-gradient(180deg,#1b50c9,#0e2f86);
-  box-shadow: 0 8px 20px rgba(9,41,102,.3);
-  transition: transform .16s ease, box-shadow .16s ease;
-  margin-top: 14px;
-}
-#login-form button[type="submit"]:hover,
-#login-form .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(9,41,102,.4); }
-
-/* Status + link */
-#status { margin-top: 10px; font-size: 13px; min-height: 1.2em; text-align: center; }
-#login-form a { color: #2a66ff; font-weight: 600; text-decoration: none; }
-#login-form a:hover { text-decoration: underline; }
-
-/* Small-screen polish */
-@media (max-width: 480px) {
-  body.login img[alt*="UTAR"],
-  body:has(#login-form) img[alt*="UTAR"] {
-    max-width: 200px;
-    width: 70vw;
-    margin-bottom: 16px;
-  }
-  #login-form { width: 92%; padding: 18px 14px; }
-}
-
-/* Tall screens: lift slightly if desired */
-@media (min-height: 900px) {
-  body.login, body:has(#login-form) { padding-top: 0; }
-}
-
-/* === Login page spacing polish === */
-
-/* Title + subtitle rhythm */
-body.login h1,
-body:has(#login-form) h1 {
-  margin-top: 6px;
-  margin-bottom: 4px;   /* tighter gap above subtitle */
-}
-body.login h2,
-body:has(#login-form) h2 {
-  margin-top: 0;
-  margin-bottom: 18px;  /* cleaner gap above the card */
-}
-
-/* Make vertical spacing inside the form consistent */
-#login-form {
-  display: grid;
-  row-gap: 12px;        /* uniform gaps between label/input/button */
-}
-#login-form label { margin: 0; }
-#login-form input { margin: 0; }
-
-/* Button + "Forgot password?" spacing */
-#login-form .btn,
-#login-form button[type="submit"] {
-  margin-top: 4px;      /* a touch closer to the password field */
-}
-#login-form .btn + a,
-#login-form button[type="submit"] + a {
-  display: inline-block;
-  margin-top: 12px;     /* clear, comfortable gap from the button */
-}
-/* === Apple-Glass Footer Bubble (Final Clean Version) === */
-body.login footer,
-body:has(#login-form) footer,
-body.login .copyright,
-body:has(#login-form) .copyright,
-body.login #copyright,
-body:has(#login-form) #copyright,
-body.login .site-footer,
-body:has(#login-form) .site-footer {
-  width: fit-content;
-  max-width: 90%;
-  margin: 24px auto 0;                    /* nice spacing under the login card */
-  padding: 10px 18px;
-
-  /* Apple-glass style */
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
-  backdrop-filter: blur(14px) saturate(130%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-
-  color: rgba(255,255,255,0.85);
-  font-size: 13px;
-  text-align: center;
-  line-height: 1.4;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-/* Gentle hover lift */
-body.login footer:hover,
-body:has(#login-form) footer:hover,
-body.login .copyright:hover,
-body:has(#login-form) .copyright:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
-}
-
-/* --- 1) Title & subtitle spacing (clean, consistent) --- */
-body.login h1,
-body:has(#login-form) h1 { margin: 6px 0 2px; }
-body.login h2,
-body:has(#login-form) h2 { margin: 0 0 16px; }
-
-/* --- 2) Form internals & button/link spacing --- */
-#login-form { display: grid; row-gap: 12px; }
-#login-form label { margin: 0; }
-#login-form input { margin: 0; }
-#login-form .btn,
-#login-form button[type="submit"] { margin-top: 6px; }      /* closer to password */
-#login-form .btn + a,
-#login-form button[type="submit"] + a {
-  display: inline-block;
-  margin-top: 12px;                                         /* neat gap to link */
-}
-
-/* Align the “Forgot password?” to the left edge of inputs */
-#login-form a[href*="forgot"] { align-self: start; }
-
-/* --- 3) Apple-glass copyright bubble (works with footer or plain <p>) --- */
-/* Preferred: wrap your copy in <footer id="copyright">…</footer> */
-/* Fallback: this also styles a plain last paragraph on the page */
-body.login :is(footer, .copyright, #copyright, .site-footer,
-               p:last-of-type),
-body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer,
-                          p:last-of-type) {
-  width: fit-content;
-  max-width: 92%;
-  margin: 22px auto 0;                                      /* space under card */
-  padding: 10px 16px;
-  text-align: center;
-  font-size: 13px;
-  color: rgba(255,255,255,.88);
-
-  /* frosted card */
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
-  backdrop-filter: blur(14px) saturate(130%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-
-  /* override any earlier wide footer rules */
-  inline-size: auto;
-  block-size: auto;
-}
-body.login :is(footer, .copyright, #copyright, .site-footer,
-               p:last-of-type):hover,
-body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer,
-                          p:last-of-type):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-
-/* === Footer Fine-Tuning === */
-#copyright {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px; /* space between lines */
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-#copyright small {
-  font-size: 12px;
-  opacity: 0.75;
-}
-
-/* === Login page spacing polish (FINAL) === */
-
-/* Title + subtitle rhythm */
-body.login h1,
-body:has(#login-form) h1 { margin: 6px 0 2px; line-height: 1.15; }
-body.login h2,
-body:has(#login-form) h2 { margin: 0 0 16px; line-height: 1.2; }
-
-/* Form internals: consistent vertical spacing */
-#login-form { display: grid; row-gap: 12px; }
-#login-form label { margin: 0; }
-#login-form input { margin: 0; }
-
-/* Button + “Forgot password?” spacing (tight but breathable) */
-#login-form button[type="submit"],
-#login-form .btn { margin-top: 6px; }
-#login-form button[type="submit"] + a,
-#login-form .btn + a {
-  display: inline-block;
-  margin-top: 12px;        /* gap below the button */
-  align-self: start;       /* left-align with inputs */
-}
-
-/* Hide empty status rows */
-#status:empty { display: none; }
-
-/* --- Apple-glass footer bubble --- */
-/* Hide any legacy/wide footer, keep only the glass one */
-body.login footer:not(#copyright),
-body:has(#login-form) footer:not(#copyright) { display: none !important; }
-
-/* Bubble styles */
-#copyright {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  width: fit-content;
-  max-width: 92%;
-  margin: 22px auto 0;
-  padding: 10px 16px;
-  color: rgba(255,255,255,.88);
-  font-size: 13px;
-  text-align: center;
-
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
-  backdrop-filter: blur(14px) saturate(130%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-#copyright:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(0,0,0,0.35); }
-#copyright small { font-size: 12px; opacity: .75; }
-
-/* ===== HARD OVERRIDES FOR LOGIN PAGE ===== */
-
-/* 1) Tighter title → subtitle spacing */
-h1 + h2 {               /* the subtitle directly under the title */
-  margin-top: 2px !important;
-  margin-bottom: 16px !important;
-  line-height: 1.2 !important;
-}
-
-/* 2) Button vs “Forgot password?” spacing + alignment */
-#login-form button[type="submit"],
-#login-form .btn {
-  margin-top: 6px !important;
-}
-#login-form button[type="submit"] + a[href*="forgot"],
-#login-form .btn + a[href*="forgot"] {
-  display: inline-block !important;
-  margin-top: 12px !important;
-  align-self: start !important;    /* left edge with inputs */
-}
-#status:empty { display: none !important; }
-
-/* 3) Make sure the GLASS copyright bubble shows… */
-#copyright {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-
-  width: fit-content !important;
-  max-width: 92% !important;
-  margin: 22px auto 0 !important;
-  padding: 10px 16px !important;
-
-  color: rgba(255,255,255,.88) !important;
-  font-size: 13px !important;
-  text-align: center !important;
-
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(255,255,255,0.18) !important;
-  border-radius: 14px !important;
-  backdrop-filter: blur(14px) saturate(130%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(130%) !important;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.25) !important;
-}
-#copyright:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
-}
-#copyright small { font-size: 12px !important; opacity: .75 !important; }
-
-/* …and the old full-width footer disappears on this page */
-footer:not(#copyright) { display: none !important; }
-
-footer:not(#copyright), 
-.site-footer:not(#copyright), 
-.copyright:not(#copyright) { display: none !important; }
-
-/* ===== Login page spacing polish ===== */
-
-/* Title → subtitle rhythm */
-h1 { margin: 6px 0 2px; line-height: 1.15; }
-h1 + h2 { margin: 0 0 16px; line-height: 1.2; }
-
-/* Button / Forgot password spacing (your .actions block) */
-#login-form .actions { display: grid; }
-#login-form .actions .btn { margin-top: 6px; }   /* closer to password field */
-#login-form .actions .aux {
-  margin-top: 12px;                               /* clean gap below the button */
-  justify-self: start;                            /* align with inputs (left) */
-}
-
-/* Hide empty status row */
-#status:empty { display: none; }
-
-/* ===== Apple-glass copyright bubble (centered & tidy) ===== */
-/* Works on your <footer id="copyright" class="footer"> */
-.footer, #copyright {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-
-  width: fit-content;
-  max-width: 92%;
-  margin: 22px auto 0;            /* space under the card */
-  padding: 10px 16px;
-
-  color: rgba(255,255,255,.88);
-  font-size: 13px;
-  text-align: center;
-
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
-  backdrop-filter: blur(14px) saturate(130%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-.footer:hover, #copyright:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(0,0,0,0.35);
-}
-
-/* If any other wide footers exist, hide them on this page */
-footer:not(#copyright):not(.footer) { display: none; }
-
-/* ===== Final, minimal overrides for THIS HTML ===== */
-
-/* 0) Center the whole page vertically on screens that show the login */
-body:has(#login-form) {
-  justify-content: center;
-  min-height: 100svh;             /* safe viewport unit */
-  padding-top: 0;
-}
-
-/* 1) Logo bubble (Apple-glass) + spacing */
-.logo-well {
-  display: flex;
-  justify-content: center;
-  margin: 0 0 16px;
-}
-.logo-well img {
-  max-width: 220px;               /* tidy size */
-  width: 60vw;
-  height: auto;
-
-  background: rgba(255,255,255,0.10);
-  border-radius: 16px;
-  padding: 10px 14px;
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: 0 8px 24px rgba(0,0,0,.25);
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-.logo-well img:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(0,0,0,.35);
-}
-
-/* 2) Title → subtitle rhythm (centered, compact) */
-.card h1 {
-  margin: 6px 0 2px;
-  line-height: 1.15;
-  text-align: center;
-  color: #fff;
-}
-.card h2 {
-  margin: 0 0 16px;
-  line-height: 1.2;
-  text-align: center;
-  color: #dfe6ff;
-}
-
-/* 3) Form layout + internal spacing */
-#login-form {
-  display: grid;
-  row-gap: 12px;                  /* uniform vertical rhythm */
-  margin: 0 auto;
-  width: min(440px, 90%);
-}
-#login-form .field { display: grid; row-gap: 6px; }
-#login-form input { margin: 0; }  /* kill stray margins */
-
-/* 4) Button + "Forgot password?" spacing & alignment */
-#login-form .actions { display: grid; }
-#login-form .actions .btn { margin-top: 6px; }
-#login-form .actions .aux {
-  margin-top: 12px;               /* clean gap below the button */
-  justify-self: start;            /* left-align with inputs */
-}
-#status:empty { display: none; }  /* no ghost line when empty */
-
-/* 5) Apple-glass copyright bubble (centered, not full-width) */
-footer.footer, #copyright {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-
-  width: fit-content;
-  max-width: 92%;
-  margin: 22px auto 0;
-  padding: 10px 16px;
-
-  color: rgba(255,255,255,.88);
-  font-size: 13px;
-  text-align: center;
-
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
-  backdrop-filter: blur(14px) saturate(130%);
-  -webkit-backdrop-filter: blur(14px) saturate(130%);
-  box-shadow: 0 4px 18px rgba(0,0,0,.25);
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-footer.footer:hover, #copyright:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(0,0,0,.35);
-}
-
-/* 6) Small screens: gently scale logo + form */
-@media (max-width: 480px) {
-  .logo-well img { max-width: 200px; width: 70vw; margin-bottom: 12px; }
-  #login-form { width: 92%; }
-}
-
-/* === Logo → title spacing fix (no margin collapse) === */
-.logo-well {
-  margin-block-end: 8px;         /* was ~16px; reduce the gap */
-}
-.card h1 {
-  margin-block-start: 0;         /* prevent added top space */
-}
-
-/* Optional: slightly slimmer logo bubble padding to reduce visual gap */
-.logo-well img {
-  padding: 8px 12px;             /* was 10px 14px */
-}
-
-/* Keep subtitle rhythm tidy under the title */
-.card h2 {
-  margin: 4px 0 16px;            /* small breath below the title */
-}
-
-/* Mobile: add a hair more air so it doesn't feel cramped */
-@media (max-width: 480px) {
-  .logo-well { margin-block-end: 10px; }
-  .logo-well img { padding: 9px 12px; }
-}
-
-/* ===== Dynamic Responsive Scaling (for fluid layout) ===== */
-
-/* Scale logo and heading sizes relative to viewport width */
-:root {
-  --scale-factor: clamp(0.8, 1.2vw + 0.6, 1.1); /* responsive scaling multiplier */
-}
-
-.logo-well img {
-  max-width: clamp(140px, 22vw, 260px);
-  padding: calc(8px * var(--scale-factor)) calc(12px * var(--scale-factor));
-  border-radius: calc(16px * var(--scale-factor));
-}
-
-/* Headings scale smoothly */
-.card h1 {
-  font-size: clamp(1.3rem, 1vw + 1rem, 2rem);
-}
-.card h2 {
-  font-size: clamp(0.9rem, 0.6vw + 0.8rem, 1.3rem);
-}
-
-/* Form width adjusts to viewport */
-#login-form {
-  width: clamp(320px, 55vw, 440px);
-  padding: clamp(16px, 3vw, 24px);
-  border-radius: clamp(14px, 2vw, 20px);
-}
-
-/* Inputs and buttons scale consistently */
-#login-form input,
-#login-form .btn {
-  font-size: clamp(14px, 1vw + 0.4rem, 16px);
-  border-radius: clamp(10px, 1vw, 14px);
-  padding: clamp(10px, 2vw, 14px);
-}
-
-/* Footer bubble scales subtly */
-#copyright {
-  font-size: clamp(12px, 0.5vw + 0.6rem, 14px);
-  padding: clamp(8px, 2vw, 12px) clamp(14px, 3vw, 18px);
-  border-radius: clamp(10px, 1vw, 14px);
-}
-
-/* Maintain vertical centering for various screen heights */
-body:has(#login-form) {
-  justify-content: center;
-  padding-block: clamp(16px, 4vh, 48px);
-}
-
-/* =========================
-   PREMIUM POLISH PACK
-   ========================= */
-
-/* 0) Tokens */
 :root{
-  --accent: #2a66ff;
-  --accent-2: #00b1ff;
-  --ink-soft: rgba(255,255,255,.85);
+  --bg-start:#0a1e55;
+  --bg-end:#0f2a7a;
+
+  --ink:#1d1d1f;
+  --muted:#6e6e73;
+
+  --surface:#ffffff;
+  --border:#d1d1d6;
+
+  --accent:#2a66ff;           /* UTAR-ish blue for focus & button */
+  --accent-deep:#0e2f86;
+
+  --radius-lg:20px;
+  --radius-md:12px;
+
+  --shadow-lg:0 18px 50px rgba(0,0,0,.28);
+  --shadow-md:0 8px 24px rgba(0,0,0,.18);
+  --shadow-sm:0 4px 12px rgba(0,0,0,.12);
 }
 
-/* 1) Background: soft vignette + spotlight */
+/* ---- Base -------------------------------------------------- */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+  color:var(--ink);
   background:
-    radial-gradient(1200px 600px at 50% 22%, rgba(255,255,255,.10), transparent 60%),
-    radial-gradient(800px 400px at 50% 85%, rgba(255,255,255,.08), transparent 60%),
-    linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%) !important;
+    radial-gradient(1200px 600px at 50% 22%, rgba(255,255,255,.08), transparent 60%),
+    radial-gradient(900px 420px at 50% 85%, rgba(255,255,255,.06), transparent 60%),
+    linear-gradient(180deg,var(--bg-start),var(--bg-end));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100svh;
+  padding:clamp(16px,4vh,48px);
 }
 
-/* 2) Logo well: cleaner glass + glow ring */
+/* ---- Card wrapper (your <main class="card">) --------------- */
+.card{
+  width:min(720px,92vw);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* ---- Logo bubble ------------------------------------------- */
 .logo-well{
   display:flex; justify-content:center;
-  margin-block: clamp(8px, 2.2vh, 18px) clamp(10px, 2.6vh, 22px);
+  margin-block: clamp(6px,1.5vh,12px) clamp(8px,2vh,16px);
 }
 .logo-well img{
   max-width: clamp(150px, 21vw, 260px);
-  border-radius: 18px;
-  padding: 10px 14px;
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.22);
+  height:auto;
+  padding:10px 14px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:18px;
   backdrop-filter: blur(14px) saturate(135%);
   -webkit-backdrop-filter: blur(14px) saturate(135%);
-  box-shadow:
-    0 20px 50px rgba(0,0,0,.35),
-    0 0 0 6px rgba(255,255,255,.03) inset;
-  transition: transform .25s ease, box-shadow .25s ease;
+  box-shadow: var(--shadow-md);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 .logo-well img:hover{
   transform: translateY(-2px);
-  box-shadow:
-    0 28px 60px rgba(0,0,0,.42),
-    0 0 0 6px rgba(255,255,255,.05) inset;
+  box-shadow: 0 28px 60px rgba(0,0,0,.42);
 }
 
-/* 3) Headings: gradient ink + subtle glow */
-h1{
-  letter-spacing: .02em;
-  font-weight: 800;
-  background: linear-gradient(180deg, #fff 0%, #cfe0ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 2px 12px rgba(0,0,0,.25);
-  margin-block: 6px 2px !important;
+/* ---- Headings ---------------------------------------------- */
+.card h1{
+  margin:6px 0 2px;
+  font-weight:800;
+  letter-spacing:.02em;
+  background:linear-gradient(180deg,#fff 0%, #cfe0ff 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-align:center;
+  text-shadow:0 2px 12px rgba(0,0,0,.25);
+  font-size: clamp(1.4rem, 1vw + 1rem, 2rem);
+  line-height:1.15;
 }
-h2{
-  color: var(--ink-soft);
-  font-weight: 700;
-  margin-block: 0 16px !important;
+.card h2{
+  margin:0 0 16px;
+  color:rgba(255,255,255,.88);
+  font-weight:700;
+  text-align:center;
+  font-size: clamp(0.95rem, 0.7vw + .85rem, 1.25rem);
+  line-height:1.2;
 }
 
-/* 4) Login card: glass border with light edge (no HTML change) */
+/* ---- Login form container ---------------------------------- */
 #login-form{
-  /* double-background trick: solid for content + gradient for border */
-  background:
-    linear-gradient(#ffffff, #ffffff) padding-box,
-    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.15)) border-box;
-  border: 1px solid transparent;
+  width: clamp(320px, 55vw, 440px);
+  margin:0 auto;
+  padding: clamp(16px, 3vw, 24px);
   border-radius: 20px;
-  box-shadow:
-    0 18px 50px rgba(0,0,0,.28),
-    0 1px 0 rgba(255,255,255,.5) inset;
-}
-
-/* 5) Inputs: softer fill + active glow ring */
-#login-form input{
-  background: linear-gradient(180deg,#fff,#f7f8fc);
-  border: 1px solid #d9dbe7;
-  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
-}
-#login-form input:focus{
-  border-color: #9bb4ff;
-  box-shadow:
-    0 0 0 3px rgba(42,102,255,.18),
-    0 1px 0 rgba(255,255,255,.9) inset;
-}
-
-/* 6) Button: deep gradient + sheen on hover */
-#login-form .btn{
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(180deg, #2a66ff, #0e2f86);
-  box-shadow:
-    0 12px 28px rgba(14,47,134,.45),
-    0 1px 0 rgba(255,255,255,.25) inset;
-  border-radius: 14px;
-  transition: transform .15s ease, box-shadow .2s ease;
-}
-#login-form .btn::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.22) 35%, transparent 70%);
-  transform: translateX(-120%);
-  transition: transform .6s ease;
-}
-#login-form .btn:hover{
-  transform: translateY(-1px);
-  box-shadow:
-    0 16px 36px rgba(14,47,134,.55),
-    0 1px 0 rgba(255,255,255,.25) inset;
-}
-#login-form .btn:hover::before{ transform: translateX(120%); }
-
-/* 7) Forgot password: nicer state */
-#login-form .actions .aux a{
-  color: var(--accent);
-  text-decoration: none;
-}
-#login-form .actions .aux a:hover{ text-decoration: underline; }
-
-/* 8) Footer bubble: crisper edge + slight gradient */
-.footer, #copyright{
   background:
-    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-  border: 1px solid rgba(255,255,255,.22);
-  box-shadow: 0 10px 24px rgba(0,0,0,.28);
-  color: rgba(255,255,255,.90);
+    linear-gradient(#ffffff,#ffffff) padding-box,
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.15)) border-box;
+  border:1px solid transparent;
+  box-shadow: var(--shadow-lg), 0 1px 0 rgba(255,255,255,.5) inset;
+  display:grid;
+  row-gap:14px;
+  position:relative;
+  isolation:isolate;
 }
-
-/* 9) Micro-layout rhythm */
-#login-form{ row-gap: 14px; }
-#login-form .actions .btn{ margin-top: 6px; }
-#login-form .actions .aux{ margin-top: 12px; justify-self: start; }
-
-/* 10) Subtle entrance */
-@keyframes floatIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: none; }
-}
-.logo-well img, h1, h2, #login-form, .footer, #copyright{
-  animation: floatIn .32s ease both;
-}
-
-/* Dashboard top-right user area */
-header .user-info,
-.topbar .user-info{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: rgba(255,255,255,.92);      /* make the plain text readable */
-}
-
-/* Try to style the ID text even if it's plain */
-header .user-info :where(span, strong, b, em){
-  color: rgba(255,255,255,.92);
-}
-
-/* Glass “chip” look if an element already has id-chip or looks like the ID */
-header .user-info :is(.id-chip, .user-id){
-  background: rgba(255,255,255,.14);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-weight: 700;
-  letter-spacing: .2px;
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
-  box-shadow: 0 2px 8px rgba(0,0,0,.22);
-}
-
-/* Sign out button beside it */
-header .user-info .logout-btn{
-  background: linear-gradient(180deg,#ffffff,#e9edf9);
-  color: #0a2a66;
-  border: 1px solid rgba(255,255,255,.6);
-  border-radius: 12px;
-  padding: 6px 12px;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0,0,0,.18);
-}
-header .user-info .logout-btn:hover{ transform: translateY(-1px); }
-
-/* Dashboard top-right user area */
-header .user-info,
-.topbar .user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: rgba(255,255,255,.92);
-  justify-self: end;
-}
-
-/* Style for ID chip */
-header .user-info .id-chip {
-  background: rgba(255,255,255,.14);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-weight: 700;
-  letter-spacing: .2px;
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
-  box-shadow: 0 2px 8px rgba(0,0,0,.22);
-}
-
-/* Sign out button beside it */
-header .user-info .logout-btn {
-  background: linear-gradient(180deg,#ffffff,#e9edf9);
-  color: #0a2a66;
-  border: 1px solid rgba(255,255,255,.6);
-  border-radius: 12px;
-  padding: 6px 12px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-header .user-info .logout-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 22px rgba(0,0,0,.25);
-}
-/* =========================
-   COMPACT USER AREA (Header)
-   ========================= */
-
-/* keep header tidy and prevent children from forcing width */
-header { padding: 10px 16px !important; }
-header > * { min-width: 0; }
-header .user-info { justify-self: end; display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
-
-/* shrink nav pills slightly so everything fits */
-.menu-bar .menu-trigger {
-  font-size: 13px !important;
-  padding: 6px 12px !important;
-  border-radius: 9px !important;
-}
-
-/* ID chip — compact */
-#chipId,
-header .user-info .id-chip{
-  display:inline-flex !important;
-  align-items:center;
-  white-space:nowrap;                /* never wrap; avoids header grow */
-  font-size: 13px !important;
-  font-weight: 700;
-  padding: 4px 10px !important;      /* ↓ smaller */
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.12) !important;
-  color:#fff !important;
-  border:1px solid rgba(255,255,255,.24) !important;
-  backdrop-filter: blur(8px) saturate(125%) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(125%) !important;
-  box-shadow: 0 1px 5px rgba(0,0,0,.18) !important;
-}
-
-/* Sign out — compact & Safari reset */
-#logout.logout-btn,
-header .user-info .logout-btn{
-  appearance:none !important;
-  -webkit-appearance:none !important;
-  white-space:nowrap;
-  font-size: 13px !important;
-  font-weight: 700;
-  padding: 6px 10px !important;      /* ↓ smaller */
-  line-height: 1.1;
-  border-radius: 10px !important;
-  background: linear-gradient(180deg,#ffffff,#e9edf9) !important;
-  color:#0a2a66 !important;
-  border:1px solid rgba(255,255,255,.6) !important;
-  box-shadow: 0 3px 10px rgba(0,0,0,.16);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-#logout.logout-btn:hover,
-header .user-info .logout-btn:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0,0,0,.22);
-}
-
-/* extra safety on tighter screens */
-@media (max-width: 1100px){
-  .menu-bar .menu-trigger{ font-size:12.5px !important; padding:6px 10px !important; }
-  #chipId, header .user-info .id-chip{ font-size:12.5px !important; padding:3px 9px !important; }
-  #logout.logout-btn, header .user-info .logout-btn{ font-size:12.5px !important; padding:6px 9px !important; }
-}
-
-/* 1) Ambient spotlight behind the form */
-#login-form {
-  position: relative;
-  isolation: isolate;
-}
-#login-form::before {
-  content: "";
-  position: absolute;
-  inset: -60px -80px;
-  z-index: -1;
+#login-form::before{
+  content:"";
+  position:absolute; inset:-60px -80px; z-index:-1;
   background: radial-gradient(420px 280px at 50% 20%, rgba(255,255,255,.16), transparent 60%);
-  filter: blur(20px);
-  pointer-events: none;
+  filter: blur(20px); pointer-events:none;
 }
 
-/* 2) Button micro-sheen + press state */
-#login-form .btn {
-  position: relative;
-  overflow: hidden;
+/* ---- Fields ------------------------------------------------- */
+#login-form .field{ display:grid; row-gap:6px; }
+#login-form label{
+  font-size:13px; color:#4d4d50; font-weight:600;
+}
+#login-form input[type="text"],
+#login-form input[type="password"]{
+  width:100%;
+  padding:12px 14px;
+  border-radius: var(--radius-md);
+  border:1px solid var(--border);
+  background:linear-gradient(180deg,#fff,#f7f8fc);
+  color:var(--ink);
+  font-size:15px;
+  outline:none;
+  transition:border-color .16s ease, box-shadow .16s ease;
+}
+#login-form input::placeholder{ color:#8a8a8f; }
+#login-form input:focus{
+  border-color:#9bb4ff;
+  box-shadow:0 0 0 3px rgba(42,102,255,.18), 0 1px 0 rgba(255,255,255,.9) inset;
+}
+
+/* ---- Password field: label on row 1, input + eye on row 2 --- */
+#login-form .pwd-wrap{
+  display:grid;
+  grid-template-rows:auto 1fr;    /* row1: label, row2: input+button */
+}
+#login-form .pwd-wrap > label{
+  grid-row:1; align-self:end; margin-bottom:6px;
+}
+#login-form .pwd-wrap > input{
+  grid-row:2; grid-column:1;
+  padding-right:56px !important;  /* space for eye button */
+}
+
+/* Eye button — perfectly centered to the INPUT row */
+#login-form .pwd-wrap .pwd-toggle{
+  grid-row:2; grid-column:1;
+  justify-self:end; align-self:center;
+  margin-inline-end:12px;
+
+  width:32px; height:32px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:0; background:none; border-radius:50%;
+  color:#274bb7; cursor:pointer; -webkit-appearance:none; appearance:none;
+  transition: background .2s ease, transform .1s ease;
+}
+#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+#login-form .pwd-wrap .pwd-toggle:active{ transform: translateY(1px); }
+
+#login-form .pwd-wrap .pwd-toggle svg{
+  width:18px; height:18px;
+  stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+  vector-effect: non-scaling-stroke;
+}
+#login-form .pwd-wrap .icon-eye-off{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display:block; }
+
+/* ---- Actions ------------------------------------------------ */
+#login-form .actions{ display:grid; }
+#login-form .actions .btn{
+  -webkit-appearance:none; appearance:none; cursor:pointer;
+  width:100%;
+  padding:12px 14px;
+  border:none; border-radius:14px;
+  color:#fff; font-size:16px; font-weight:700;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  box-shadow: 0 12px 28px rgba(14,47,134,.45), 0 1px 0 rgba(255,255,255,.25) inset;
   transition: transform .12s ease, box-shadow .18s ease;
 }
-#login-form .btn::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.22) 40%, transparent 80%);
-  transform: translateX(-120%);
-  transition: transform .6s ease;
-}
-#login-form .btn:hover::after { transform: translateX(120%); }
-#login-form .btn:active { transform: translateY(1px) scale(.995); }
-
-/* 3) Input focus ring + subtle lift */
-#login-form input:focus {
-  border-color: #8fb1ff;
-  box-shadow:
-    0 0 0 3px rgba(41,102,255,.18),
-    0 1px 0 rgba(255,255,255,.9) inset;
+#login-form .actions .btn:hover{
   transform: translateY(-1px);
+  box-shadow: 0 16px 36px rgba(14,47,134,.55), 0 1px 0 rgba(255,255,255,.25) inset;
+}
+#login-form .actions .aux{
+  margin-top:12px; justify-self:start;
+  font-weight:600;
+}
+#login-form .actions .aux a{
+  color:var(--accent); text-decoration:none;
+}
+#login-form .actions .aux a:hover{ text-decoration:underline; }
+
+#status{ min-height:1.2em; font-size:13px; text-align:center; }
+#status:empty{ display:none; }
+
+/* ---- Footer bubble ----------------------------------------- */
+.footer, #copyright{
+  display:flex; align-items:center; justify-content:center; gap:4px;
+  width:fit-content; max-width:92%;
+  margin:22px auto 0; padding:10px 16px;
+  font-size:13px; color:rgba(255,255,255,.90); text-align:center;
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: 0 10px 24px rgba(0,0,0,.28);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.footer:hover, #copyright:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(0,0,0,.35);
 }
 
-/* 4) Logo micro-tilt on hover */
-.logo-well img {
-  transform-origin: center 70%;
-  transition: transform .18s ease, box-shadow .18s ease;
-}
-.logo-well img:hover { transform: translateY(-2px) rotate(-1.2deg); }
-
-/* 5) Copyright shimmer (very faint) */
-#copyright {
-  position: relative;
-  overflow: hidden;
-}
-#copyright::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,.12) 35%, transparent 70%);
-  transform: translateX(-120%);
-  animation: sweep 3.2s linear infinite;
-  pointer-events: none;
-}
-@keyframes sweep { to { transform: translateX(120%); } }
-
-/* 6) Validation states (ready to use) */
-.input-error { border-color:#e24d4d !important; box-shadow: 0 0 0 3px rgba(226,77,77,.18); }
-.input-success { border-color:#3fb17a !important; box-shadow: 0 0 0 3px rgba(63,177,122,.18); }
-
-/* 7) Password toggle icon/button */
-.pwd-wrap { position: relative; }
-.pwd-toggle {
-  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-  padding: 6px 8px; border: none; background: transparent; cursor: pointer;
-  color: #4a63a8;
-}
-.pwd-toggle:hover { color: #2a66ff; }
-
-/* 8) Respect user motion preference */
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
+/* ---- Responsiveness ---------------------------------------- */
+@media (max-width:480px){
+  #login-form{ width:92%; padding:18px 14px; }
+  .logo-well img{ max-width:200px; }
 }
 
-/* === Minimal SVG Eye Toggle === */
-.pwd-wrap { position: relative; }
-.pwd-toggle {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: #4a63a8;
-  border-radius: 50%;
-  transition: color .2s ease, background .2s ease, transform .15s ease;
+/* ---- Motion safety ----------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  *{ transition:none !important; animation:none !important; }
 }
-.pwd-toggle:hover {
-  color: #1c3fd9;
-  background: rgba(42,102,255,0.08);
-}
-.pwd-toggle:active {
-  transform: scale(0.94);
-}
-.icon-eye-off { display: none; }
-.pwd-toggle.visible .icon-eye { display: none; }
-.pwd-toggle.visible .icon-eye-off { display: block; }
-
-/* Adjust the SVG stroke to match your aesthetic */
-.pwd-toggle svg {
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* === Password eye alignment fix === */
-.pwd-wrap { position: relative; }
-
-.pwd-wrap input[type="password"],
-.pwd-wrap input[type="text"] {
-  /* leave space for the button so text/caret never collide */
-  padding-right: 48px !important;
-}
-
-/* place the icon precisely inside the right-end pill corner */
-.pwd-toggle {
-  position: absolute;
-  inset-inline-end: 12px;       /* right: 12px (RTL-safe) */
-  inset-block-start: 50%;       /* vertical center anchor */
-  transform: translateY(-52%);  /* nudge up a hair for optical centering */
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: none;
-  border-radius: 50%;
-  cursor: pointer;
-  color: #2a4fb2;               /* matches your blue */
-}
-
-/* hover/active remain subtle */
-.pwd-toggle:hover { background: rgba(42,102,255,0.08); }
-.pwd-toggle:active { transform: translateY(calc(-52% + 1px)); }
-
-/* crisp strokes */
-.pwd-toggle svg {
-  width: 20px; height: 20px;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* show/hide correct icon */
-.icon-eye-off { display: none; }
-.pwd-toggle.visible .icon-eye { display: none; }
-.pwd-toggle.visible .icon-eye-off { display: block; }
-
-/* === Password toggle: pixel-perfect size & alignment === */
-.pwd-wrap { position: relative; }
-
-/* Give the text/caret room so it never hits the icon */
-.pwd-wrap input[type="password"],
-.pwd-wrap input[type="text"] {
-  padding-right: 56px !important;          /* room for 32px button + gap */
-  line-height: 1.25;                        /* predictable vertical center */
-}
-
-/* Button capsule that sits inside the input’s right corner */
-.pwd-toggle {
-  position: absolute;
-  inset-inline-end: 12px;                   /* right: 12px (RTL-safe) */
-  inset-block-start: 50%;                   /* top: 50% */
-  transform: translateY(-50%);              /* exact vertical center */
-  width: 32px;                              /* consistent hit area */
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: none;
-  border-radius: 50%;
-  cursor: pointer;
-  color: #274bb7;                           /* your blue */
-}
-
-/* Subtle hover/active states (keeps the “Apple” feel) */
-.pwd-toggle:hover { background: rgba(39,75,183,.08); }
-.pwd-toggle:active { transform: translateY(calc(-50% + 1px)); }
-
-/* Icon itself — optically crisp at small sizes */
-.pwd-toggle svg {
-  width: 18px;                              /* fixed, not auto-scaling */
-  height: 18px;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;        /* keeps stroke crisp when scaled */
-}
-
-/* Show/hide correct glyph */
-.icon-eye-off { display: none; }
-.pwd-toggle.visible .icon-eye { display: none; }
-.pwd-toggle.visible .icon-eye-off { display: block; }
-
-/* Safari/iOS tiny optical nudge (their form borders look thicker) */
-@supports (-webkit-touch-callout: none) {
-  .pwd-toggle { transform: translateY(calc(-50% - .5px)); }
-}
-
-/* === Password toggle: grid-centering (bulletproof) === */
-.pwd-wrap{
-  display: grid;                 /* input + button share same grid cell */
-  position: relative;
-}
-
-.pwd-wrap > input{
-  grid-area: 1 / 1;              /* same cell as the button */
-  padding-right: 56px !important;/* room for 32px button + gaps */
-}
-
-.pwd-toggle{
-  grid-area: 1 / 1;              /* sits on top of the input */
-  justify-self: end;             /* stick to the right edge */
-  align-self: center;            /* true vertical center */
-  margin-inline-end: 12px;       /* right gutter inside the pill */
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: none;
-  border-radius: 50%;
-  cursor: pointer;
-  color: #274bb7;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.pwd-toggle:hover{ background: rgba(39,75,183,.08); }
-
-/* Crisp, consistent icon size */
-.pwd-toggle svg{
-  width: 18px; height: 18px;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round; stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-/* Swap glyphs on show/hide */
-.icon-eye-off{ display:none; }
-.pwd-toggle.visible .icon-eye{ display:none; }
-.pwd-toggle.visible .icon-eye-off{ display:block; }
-
-/* Optional: Safari 1px optical nudge (uncomment if still see it high/low) */
-/*
-@supports (-webkit-touch-callout: none){
-  .pwd-toggle{ transform: translateY(.5px); }
-}
-*/
-
-/* === Password field: 2-row grid so the eye centers to the input row === */
-.pwd-wrap{
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr;   /* row1: label, row2: input+button */
-  position: relative;
-}
-
-/* put label on row 1 */
-.pwd-wrap > label{
-  grid-row: 1;
-  align-self: end;
-  margin-bottom: 6px;             /* keep your rhythm */
-}
-
-/* input sits on row 2 and makes room for the button */
-.pwd-wrap > input{
-  grid-row: 2;
-  grid-column: 1;
-  padding-right: 56px !important; /* space for the toggle */
-}
-
-/* button shares row 2 with the input and is perfectly centered */
-.pwd-toggle{
-  grid-row: 2;
-  grid-column: 1;
-  justify-self: end;              /* flush right inside the input */
-  align-self: center;             /* true vertical middle of input row */
-  margin-inline-end: 12px;
-
-  width: 32px; height: 32px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: 0; background: none; border-radius: 50%;
-  color: #274bb7; cursor: pointer;
-  -webkit-appearance: none; appearance: none;
-}
-
-.pwd-toggle:hover{ background: rgba(39,75,183,.08); }
-
-/* icon sizing */
-.pwd-toggle svg{
-  width: 18px; height: 18px;
-  stroke: currentColor; stroke-width: 1.8;
-  stroke-linecap: round; stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-/* swap icons */
-.icon-eye-off{ display:none; }
-.pwd-toggle.visible .icon-eye{ display:none; }
-.pwd-toggle.visible .icon-eye-off{ display:block; }
-
-/* === FINAL OVERRIDE: Password eye — lock size & centering === */
-#login-form .pwd-wrap{
-  position: relative !important;
-  display: block !important;           /* kill any grid from earlier */
-}
-
-#login-form .pwd-wrap > label{
-  display: block;
-  margin-bottom: 6px !important;
-}
-
-#login-form .pwd-wrap > input{
-  display: block;
-  width: 100%;
-  padding-right: 56px !important;      /* space for 32px button + gutter */
-  line-height: 1.25;                    /* stable vertical centering */
-}
-
-/* The button is always centered vertically and flush to the right */
-#login-form .pwd-wrap .pwd-toggle{
-  position: absolute !important;
-  right: 14px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-
-  width: 32px !important;
-  height: 32px !important;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-
-  border: 0;
-  background: none;
-  border-radius: 50%;
-  color: #274bb7;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
-#login-form .pwd-wrap .pwd-toggle:active{ transform: translateY(calc(-50% + 1px)) !important; }
-
-/* Icon size (kept crisp) */
-#login-form .pwd-wrap .pwd-toggle svg{
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-/* Swap glyphs */
-#login-form .pwd-wrap .icon-eye-off{ display: none; }
-#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display: none; }
-#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display: block; }
-
-/* iOS/Safari 0.5px optical nudge (optional) */
-@supports (-webkit-touch-callout: none) {
-  #login-form .pwd-wrap .pwd-toggle{ top: calc(50% - .5px) !important; }
-}
-
