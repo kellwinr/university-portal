@@ -1019,3 +1019,43 @@ h2{
 .logo-well img, h1, h2, #login-form, .footer, #copyright{
   animation: floatIn .32s ease both;
 }
+
+/* Dashboard top-right user area */
+header .user-info,
+.topbar .user-info{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,.92);      /* make the plain text readable */
+}
+
+/* Try to style the ID text even if it's plain */
+header .user-info :where(span, strong, b, em){
+  color: rgba(255,255,255,.92);
+}
+
+/* Glass “chip” look if an element already has id-chip or looks like the ID */
+header .user-info :is(.id-chip, .user-id){
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  box-shadow: 0 2px 8px rgba(0,0,0,.22);
+}
+
+/* Sign out button beside it */
+header .user-info .logout-btn{
+  background: linear-gradient(180deg,#ffffff,#e9edf9);
+  color: #0a2a66;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+}
+header .user-info .logout-btn:hover{ transform: translateY(-1px); }
