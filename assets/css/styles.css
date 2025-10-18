@@ -393,3 +393,51 @@ body:has(#login-form) img[alt*="UTAR"]:hover {
 @media (min-height: 900px) {
   body.login, body:has(#login-form) { padding-top: 0; }
 }
+
+/* === Login page spacing polish === */
+
+/* Title + subtitle rhythm */
+body.login h1,
+body:has(#login-form) h1 {
+  margin-top: 6px;
+  margin-bottom: 4px;   /* tighter gap above subtitle */
+}
+body.login h2,
+body:has(#login-form) h2 {
+  margin-top: 0;
+  margin-bottom: 18px;  /* cleaner gap above the card */
+}
+
+/* Make vertical spacing inside the form consistent */
+#login-form {
+  display: grid;
+  row-gap: 12px;        /* uniform gaps between label/input/button */
+}
+#login-form label { margin: 0; }
+#login-form input { margin: 0; }
+
+/* Button + "Forgot password?" spacing */
+#login-form .btn,
+#login-form button[type="submit"] {
+  margin-top: 4px;      /* a touch closer to the password field */
+}
+#login-form .btn + a,
+#login-form button[type="submit"] + a {
+  display: inline-block;
+  margin-top: 12px;     /* clear, comfortable gap from the button */
+}
+
+/* Copyright/footer line: center, subtle, aligned */
+body.login :is(footer, .copyright, #copyright, .site-footer),
+body:has(#login-form) :is(footer, .copyright, #copyright, .site-footer) {
+  width: 100%;
+  max-width: 900px;
+  margin: 16px auto 0;            /* nice space under the card */
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  color: rgba(255,255,255,.72);
+  font-size: 12.5px;
+  text-align: center;
+}
