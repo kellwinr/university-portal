@@ -162,6 +162,21 @@ header {
   line-height: 1.25;
 }
 
+/* Prevent text wrap so every row stays the same height */
+.dropdown a {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Optional: cap height & scroll if a menu gets long */
+.dropdown {
+  max-height: 70vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;                 /* Firefox */
+}
+
 /* ---------- User Area (Header, optional) ---------- */
 header .user-info { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,.92); justify-self:end; }
 header .user-info .id-chip{
