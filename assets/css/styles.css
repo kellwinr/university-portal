@@ -1377,3 +1377,56 @@ header .user-info .logout-btn:hover{
 @supports (-webkit-touch-callout: none) {
   .pwd-toggle { transform: translateY(calc(-50% - .5px)); }
 }
+
+/* === Password toggle: grid-centering (bulletproof) === */
+.pwd-wrap{
+  display: grid;                 /* input + button share same grid cell */
+  position: relative;
+}
+
+.pwd-wrap > input{
+  grid-area: 1 / 1;              /* same cell as the button */
+  padding-right: 56px !important;/* room for 32px button + gaps */
+}
+
+.pwd-toggle{
+  grid-area: 1 / 1;              /* sits on top of the input */
+  justify-self: end;             /* stick to the right edge */
+  align-self: center;            /* true vertical center */
+  margin-inline-end: 12px;       /* right gutter inside the pill */
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #274bb7;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+
+/* Crisp, consistent icon size */
+.pwd-toggle svg{
+  width: 18px; height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Swap glyphs on show/hide */
+.icon-eye-off{ display:none; }
+.pwd-toggle.visible .icon-eye{ display:none; }
+.pwd-toggle.visible .icon-eye-off{ display:block; }
+
+/* Optional: Safari 1px optical nudge (uncomment if still see it high/low) */
+/*
+@supports (-webkit-touch-callout: none){
+  .pwd-toggle{ transform: translateY(.5px); }
+}
+*/
