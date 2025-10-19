@@ -666,3 +666,66 @@ main.card h2{
 #login-form .pwd-wrap .pwd-toggle svg{
   width: 18px; height: 18px; stroke-width: 1.8;
 }
+
+/* =========================
+   PASSWORD EYE – FINAL FIX
+   ========================= */
+
+/* 2-row grid: row 1 = label (full width), row 2 = input + eye */
+#login-form .pwd-wrap{
+  display: grid;
+  grid-template-areas:
+    "label label"
+    "input eye";
+  grid-template-columns: 1fr auto;
+  row-gap: 6px;
+  align-items: center;
+}
+
+#login-form .pwd-wrap label{ grid-area: label; margin: 0 0 2px; }
+#login-form .pwd-wrap input{ grid-area: input; }
+
+/* keep room for the eye inside the input */
+#login-form .pwd-wrap input{
+  padding-right: 48px !important;
+}
+
+/* eye lives in the same row as the input, visually inside the field */
+#login-form .pwd-wrap .pwd-toggle{
+  grid-area: eye;
+  position: relative;          /* no absolute math */
+  right: 0;
+  margin-left: -40px;           /* overlap into the input */
+  width: 32px; height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  border-radius: 50%;
+  color: #274bb7;
+  cursor: pointer;
+}
+#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+
+#login-form .pwd-wrap .pwd-toggle svg{
+  width: 18px; height: 18px; stroke-width: 1.8;
+}
+#login-form .pwd-wrap .pwd-toggle .icon-eye-off{ display: none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display: none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display: block; }
+
+/* =========================
+   TITLE SPACING TWEAKS
+   ========================= */
+main.card h1{
+  margin: 6px 0 8px;        /* tighter gap above subtitle */
+  line-height: 1.15;
+}
+main.card h2{
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+#login-form .field label{
+  margin-bottom: 6px;       /* consistent label -> input gap */
+}
