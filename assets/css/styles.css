@@ -813,3 +813,47 @@ header.tworow{ position:relative; z-index:10; }
 .card .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
 .card .kv span{ display:block; color:#6e6e73; font-size:12px; }
 .card .kv strong{ font-size:15px; }
+
+/* Background — force light gradient everywhere */
+html,
+body{
+  background:
+    radial-gradient(900px 450px at 50% 10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(700px 350px at 50% 90%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%) !important;
+  background-color: var(--navy-1) !important; /* fallback */
+  color: var(--ink);
+}
+
+body.login{
+  /* Keep the same light background even in OS dark mode */
+  background:
+    radial-gradient(900px 450px at 50% 10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(700px 350px at 50% 90%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%) !important;
+  background-color: var(--navy-1) !important;
+}
+
+/* Make sure input text is dark */
+.input,
+input[type="text"],
+input[type="password"],
+input[type="search"]{
+  color: #111 !important;
+  background-color: #fff;
+}
+
+/* Autofill override (WebKit) */
+input:-webkit-autofill{
+  -webkit-text-fill-color:#111 !important;
+  caret-color:#111;
+  /* paint the filled background as white so it doesn’t go grey/blue */
+  box-shadow: 0 0 0 1000px #fff inset !important;
+}
+input:-webkit-autofill:focus{
+  -webkit-text-fill-color:#111 !important;
+  box-shadow: 0 0 0 1000px #fff inset, 0 0 0 3px rgba(42,102,255,.18) !important;
+}
+
+/* Edge case: iOS password UI icons sitting on a tinted chip */
+.pwd-toggle{ color:#274bb7; }
