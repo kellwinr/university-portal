@@ -20,34 +20,35 @@
       </div>
     </div>
 
-    <!-- Row 1: Utilities -->
-    <div class="top-utils">
-      <form class="portal-search" role="search" onsubmit="return false;" aria-label="Search">
-        <input type="search" placeholder="Search subjects, lecturers, announcements…" />
-      </form>
+<!-- Row 1: Utilities -->
+<div class="top-utils">
+  <form class="portal-search" role="search" onsubmit="return false;">
+    <input type="search" placeholder="Search subjects, lecturers, announcements…" />
+  </form>
 
-      <button class="icon-btn bell" aria-label="Notifications">
-        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="1.8" aria-hidden="true">
-          <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"/>
-          <path d="M9 17a3 3 0 0 0 6 0"/>
-        </svg>
-        <span class="badge" id="notifBadge">3</span>
-      </button>
+  <button class="icon-btn bell" aria-label="Notifications">
+    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="1.8">
+      <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"/>
+      <path d="M9 17a3 3 0 0 0 6 0"/>
+    </svg>
+    <span class="badge" id="notifBadge">3</span>
+  </button>
 
-      <span class="id-chip" id="chipId" aria-label="Student ID">ID: —</span>
+  <span class="id-chip" id="chipId">ID: —</span>
 
-      <div class="menu-item">
-        <a href="#" class="avatar-trigger pill" aria-haspopup="true" aria-expanded="false" style="padding:0;border:none;background:transparent;">
-          <img class="avatar" src="assets/img/avatar-student.png" alt="Profile" />
-        </a>
-        <div class="dropdown" id="dropdownProfile">
-          <a href="#">Profile &amp; Settings</a>
-          <a href="#">My Documents</a>
-          <a href="#">Security</a>
-          <a href="#" id="logout">Sign out</a>
-        </div>
-      </div>
+  <!-- simple, click-to-open menu -->
+  <div class="menu-item simple-menu">
+    <button class="menu-trigger pill" id="acctBtn" aria-expanded="false">
+      Account
+    </button>
+    <div class="dropdown" id="acctMenu">
+      <a href="#">Profile &amp; Settings</a>
+      <a href="#">My Documents</a>
+      <a href="#">Security</a>
+      <a href="#" id="logout">Sign out</a>
     </div>
+  </div>
+</div>
 
     <!-- Row 2: Nav -->
     <nav class="menu-bar" aria-label="Primary">
