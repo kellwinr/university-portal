@@ -800,3 +800,25 @@ main.card h2{ margin: 0 0 16px; line-height: 1.2; }
 
 /* Label spacing */
 #login-form .field label{ margin-bottom: 6px; }
+
+/* Grid & card rhythm so nothing collapses */
+.grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.card{ background:var(--surface); border:1px solid var(--line);
+  border-radius:12px; box-shadow:0 1px 2px rgba(0,0,0,.04); padding:16px; min-height:140px; }
+.card .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+.card .kv span{ display:block; color:#6e6e73; font-size:12px; }
+.card .kv strong{ font-size:15px; }
+
+/* super simple dropdown (click) */
+.menu-item.simple-menu{ position:relative; }
+.menu-item.simple-menu .dropdown{ position:absolute; right:0; top:calc(100% + 8px); z-index:9999; }
+.menu-item.simple-menu .dropdown:not(.is-open){ display:none; }
+
+/* make sure nothing overlays the header buttons */
+header.tworow{ position:relative; z-index:10; }
+
+/* tables don’t look empty */
+.table td, .table th { white-space:nowrap; }
+
+/* small safety: prevent unknown overlay from blocking clicks */
+* { pointer-events: auto; }
