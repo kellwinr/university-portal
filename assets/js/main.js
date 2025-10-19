@@ -551,3 +551,165 @@ document.addEventListener('DOMContentLoaded', () => {
     mailLink.href = '#';
   }
 });
+
+// =============================
+// Dashboard mock content (no-ID version)
+// Fills cards by matching their <h2> title text.
+// =============================
+document.addEventListener('DOMContentLoaded', () => {
+  const findCard = (titleStartsWith) =>
+    [...document.querySelectorAll('.card')].find(c =>
+      c.querySelector('h2')?.textContent.trim().toLowerCase()
+        .startsWith(titleStartsWith.toLowerCase())
+    );
+
+  // --- Demo data ---
+  const SUBJECTS = [
+    { code: 'UCCD2513', name: 'Data Structures',       units: 3, wble: '#' },
+    { code: 'UCCD2223', name: 'Web Engineering',       units: 3, wble: '#' },
+    { code: 'UCCD2123', name: 'Discrete Mathematics',  units: 3, wble: '#' },
+  ];
+
+  const EXAMS = [
+    { when: '2025-10-28T09:00:00', course: 'UCCD2513 Data Structures', venue: 'KB A-201' },
+    { when: '2025-10-31T14:00:00', course: 'UCCD2223 Web Engineering', venue: 'KB C-105' },
+    { when: '2025-11-04T09:00:00', course: 'UCCD2123 Discrete Math',   venue: 'KB Hall'  },
+  ];
+
+  const ANNOUNCEMENTS = [
+    { date: '2025-10-21', text: 'Add/Drop closes this Friday (5pm). Please confirm your subjects.' },
+    { date: '2025-10-25', text: 'Career Fair next week at KB Hall. Register via Student Affairs.' },
+    { date: '2025-10-28', text: 'WBLE maintenance Tue 1–2am — short downtime expected.' },
+  ];
+
+  const NEXT_CLASS = {
+    name: 'UCCD2223 Web Engineering (Lab)',
+    start: (() => { const d=new Date(); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; })(),
+    location: 'KB Lab 3-12',
+    lecturer: 'Dr. Lee Wei Jun',
+    semester: 'Y2 • S1',
+    weekNow: 7,
+    weekTotal: 14,
+  };
+
+  const FEES = { balance: 0.00, lastInvoice: '2025-09-10' };
+
+  const fmtRM = (n) => `RM ${n.toFixed(2)}`;
+  const fmtDate = (isoOrDate) => {
+    const d = typeof isoOrDate === 'string' ? new Date(isoOrDate) : isoOrDate;
+    return d.toLocaleString(undefined, { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+  };
+  const fmtDateShort = (iso) => (new Date(iso)).toLocaleDateString(undefined, { month:'short', day:'2-digit' });
+
+  // ---------- Current Subjects ----------
+  (() => {
+    const card = findCard('Current Subjects');
+    if (!card) return;
+
+    let table = card.querySelector('table');
+    if (!table) {
+      table = document.createElement('table');
+      table.className = 'table';
+      table.innerHTML = `
+        <thead><tr><th>Code</th><th>Subject</th><th>Units</th><th>WBLE</th></tr></thead>
+        <tbody></tbody>`;
+      card.appendChild(table);
+    }
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = SUBJECTS.map(s => `
+      <tr>
+        <td>${s.code}</td>
+        <td>${s.name}</td>
+        <td>${s.units}</td>
+        <td><a href="${s.wble}" target="_blank" rel="noopener">Open</a></td>
+      </tr>
+    `).join('');
+  })();
+
+  // ---------- University Announcements ----------
+  (() => {
+    const card = findCard('University Announcements');
+    if (!card) return;
+
+    let list = card.querySelector('ul');
+    if (!list) { list = document.createElement('ul'); list.style.paddingLeft='0'; list.style.margin='0'; card.appendChild(list); }
+    list.innerHTML = ANNOUNCEMENTS.map(a => `
+      <li style="list-style:none; padding:8px 0; border-bottom:1px solid #efeff2">
+        <span style="color:#6e6e73; font-size:12px">${a.date}</span><br>
+        <strong style="font-weight:600">${a.text}</strong>
+      </li>
+    `).join('');
+  })();
+
+  // ---------- Next Class & Semester ----------
+  (() => {
+    const card = findCard('Next Class & Semester');
+    if (!card) return;
+
+    let kv = card.querySelector('.kv');
+    if (!kv) { kv = document.createElement('div'); kv.className = 'kv'; card.appendChild(kv); }
+
+    const now = new Date();
+    const diffMs = NEXT_CLASS.start - now;
+    const startsIn = diffMs <= 0
+      ? 'now'
+      : (() => {
+          const mins = Math.round(diffMs / 60000);
+          if (mins < 60) return `${mins} min`;
+          const hrs = Math.round(mins / 60);
+          if (hrs < 24) return `${hrs} hr`;
+          const days = Math.round(hrs / 24);
+          return `${days} day${days>1?'s':''}`;
+        })();
+
+    kv.innerHTML = `
+      <div><span>Next class</span><strong>${NEXT_CLASS.name} — ${fmtDate(NEXT_CLASS.start)}</strong></div>
+      <div><span>Starts in</span><strong>${startsIn}</strong></div>
+      <div><span>Location</span><strong>${NEXT_CLASS.location}</strong></div>
+      <div><span>Lecturer</span><strong>${NEXT_CLASS.lecturer}</strong></div>
+      <div><span>Semester</span><strong>${NEXT_CLASS.semester}</strong></div>
+      <div><span>Progress</span><strong>${NEXT_CLASS.weekNow} / ${NEXT_CLASS.weekTotal} weeks</strong></div>
+    `;
+  })();
+
+  // ---------- Upcoming Exams ----------
+  (() => {
+    const card = findCard('Upcoming Exams');
+    if (!card) return;
+
+    let table = card.querySelector('table');
+    if (!table) {
+      table = document.createElement('table');
+      table.className = 'table';
+      table.innerHTML = `
+        <thead><tr><th>Date</th><th>Course</th><th>Venue</th></tr></thead>
+        <tbody></tbody>`;
+      card.appendChild(table);
+    }
+    const tbody = table.querySelector('tbody');
+    const upcoming = EXAMS
+      .filter(e => new Date(e.when) >= new Date())
+      .sort((a,b) => new Date(a.when) - new Date(b.when))
+      .slice(0,3);
+    tbody.innerHTML = upcoming.map(e => `
+      <tr>
+        <td>${fmtDateShort(e.when)}</td>
+        <td>${e.course}</td>
+        <td>${e.venue}</td>
+      </tr>
+    `).join('');
+  })();
+
+  // ---------- Fees & Payments ----------
+  (() => {
+    const card = findCard('Fees & Payments');
+    if (!card) return;
+
+    let kv = card.querySelector('.kv');
+    if (!kv) { kv = document.createElement('div'); kv.className = 'kv'; card.appendChild(kv); }
+    kv.innerHTML = `
+      <div><span>Outstanding Balance</span><strong>${fmtRM(FEES.balance)}</strong></div>
+      <div><span>Last Invoice</span><strong>${FEES.lastInvoice}</strong></div>
+    `;
+  })();
+});
