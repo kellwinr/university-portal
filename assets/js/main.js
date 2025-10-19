@@ -327,3 +327,20 @@ window.addEventListener('resize', () => {
   // Optional: Esc to close
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
 })();
+
+<script>
+  // Password eye toggle – works even if you add more fields later.
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.pwd-toggle');
+    if (!btn) return;
+
+    const wrap  = btn.closest('.pwd-wrap');
+    const input = wrap && wrap.querySelector('input');
+    if (!input) return;
+
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.classList.toggle('visible', show);
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  }, { passive: true });
+</script>
