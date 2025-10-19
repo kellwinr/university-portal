@@ -308,3 +308,53 @@ window.addEventListener(
   window.addEventListener("orientationchange", realign, { passive: true });
   window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
 })();
+
+// ---------- Simple account dropdown ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const btn   = document.getElementById('acctBtn');
+  const menu  = document.getElementById('acctMenu');
+  if (!btn || !menu) return;
+
+  const toggle = (open) => {
+    const o = (open ?? !menu.classList.contains('is-open'));
+    menu.classList.toggle('is-open', o);
+    btn.setAttribute('aria-expanded', String(o));
+  };
+
+  btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
+  document.addEventListener('click', (e) => {
+    if (e.target === btn || btn.contains(e.target) || menu.contains(e.target)) return;
+    toggle(false);
+  });
+});
+
+// ---------- Demo content population ----------
+document.addEventListener('DOMContentLoaded', () => {
+  // Subjects
+  const st = document.querySelector('#subjectsTable tbody');
+  if (st){
+    const subjects = [
+      { code:'UCCD2513', name:'Data Structures', units:3, wble:'Open' },
+      { code:'UCCD2223', name:'Web Engineering', units:3, wble:'Open' },
+      { code:'UCCD2123', name:'Discrete Math',  units:3, wble:'Open' },
+    ];
+    st.innerHTML = subjects.map(s => `<tr><td>${s.code}</td><td>${s.name}</td><td>${s.units}</td><td>${s.wble}</td></tr>`).join('');
+  }
+
+  // Next class (fake)
+  const nc = { name:'UCCD2513 Tutorial', startsIn:'1h 40m', week: '7' };
+  const byId = id => document.getElementById(id);
+  byId('nc-name') && (byId('nc-name').textContent = nc.name);
+  byId('nc-in')   && (byId('nc-in').textContent   = nc.startsIn);
+  byId('wk')      && (byId('wk').textContent      = `${nc.week} / 14 weeks`);
+
+  // Fees/messages (fake)
+  byId('bal') && (byId('bal').textContent = 'RM 0.00');
+  byId('inv') && (byId('inv').textContent = '—');
+  byId('msg-count') && (byId('msg-count').textContent = '2');
+
+  // Notification badge clear
+  document.querySelector('.icon-btn.bell')?.addEventListener('click', () => {
+    const b = document.getElementById('notifBadge'); if (b) b.textContent = '';
+  });
+});
