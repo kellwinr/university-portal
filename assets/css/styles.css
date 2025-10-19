@@ -729,3 +729,32 @@ main.card h2{
 #login-form .field label{
   margin-bottom: 6px;       /* consistent label -> input gap */
 }
+
+/* === PASSWORD EYE: force correct centering & override previous rules === */
+#login-form .pwd-wrap{ position: relative; }
+
+#login-form .pwd-wrap input{
+  padding-right: 48px !important;           /* leave room for the eye */
+}
+
+#login-form .pwd-wrap .pwd-toggle{
+  position: absolute !important;            /* override any earlier grid/absolute */
+  inset-inline-end: 12px !important;        /* right:12px in LTR / left in RTL */
+  inset-block-start: 50% !important;        /* top:50% in a logical way */
+  transform: translateY(-50%) !important;   /* perfect vertical centering */
+  width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 0; background: transparent; border-radius: 50%;
+  color: #274bb7; cursor: pointer;
+}
+
+#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+#login-form .pwd-wrap .pwd-toggle svg{ width: 18px; height: 18px; stroke-width: 1.8; }
+#login-form .pwd-wrap .pwd-toggle .icon-eye-off{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display:block; }
+
+/* Minor spacing polish so text rhythm matches the mock */
+#login-form .field label{ margin-bottom: 6px; }
+main.card h1{ margin: 6px 0 8px; line-height: 1.15; }
+main.card h2{ margin: 0 0 16px; line-height: 1.2; }
