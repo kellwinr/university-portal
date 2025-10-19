@@ -772,3 +772,31 @@ main.card h2{ margin: 0 0 16px; line-height: 1.2; }
     </svg>
   </button>
 </div>
+
+/* === Password eye — final, forceful overrides === */
+#login-form .pwd-wrap{ position: relative; }
+#login-form .pwd-wrap .input{ padding-right: 52px !important; }
+
+#login-form .pwd-wrap .pwd-toggle{
+  position: absolute !important;
+  inset-inline-end: 12px !important;   /* right:12px */
+  inset-block-start: 50% !important;    /* top:50% */
+  transform: translateY(-50%) !important;
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 0; border-radius: 50%;
+  color: #274bb7; cursor: pointer;
+  z-index: 2; pointer-events: auto;
+}
+#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+#login-form .pwd-wrap .pwd-toggle svg{ width: 18px; height: 18px; stroke-width: 1.8; }
+#login-form .pwd-wrap .pwd-toggle .icon-eye-off{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display:block; }
+
+/* Title spacing polish */
+.login-card h1{ margin: 8px 0 6px; line-height: 1.15; }
+.login-card h2{ margin: 0 0 18px; line-height: 1.2; }
+
+/* Label spacing */
+#login-form .field label{ margin-bottom: 6px; }
