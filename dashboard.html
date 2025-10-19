@@ -1,595 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>UTAR Portal — Dashboard (Demo)</title>
-
-<style>
-:root {
-  --utar-navy: #0a2a66;
-  --ink: #1d1d1f;
-  --ink-soft: rgba(255,255,255,.85);
-  --glass: rgba(255,255,255,0.60);
-  --accent: #2a66ff;
-
-  --glass-blur: 18px;
-  --shadow: 0 16px 40px rgba(0,0,0,.16);
-
-  --menuW: 340px; /* JS will recalibrate this once on load */
-}
-
-/* ---------- Reset ---------- */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-img { max-width: 100%; height: auto; display: block; }
-
-/* ---------- Base Layout & Background ---------- */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-  color: var(--ink);
-  background:
-    radial-gradient(1200px 600px at 50% 22%, rgba(255,255,255,.10), transparent 60%),
-    radial-gradient(800px 400px at 50% 85%, rgba(255,255,255,.08), transparent 60%),
-    linear-gradient(180deg, #0a1e55 0%, #0f2a7a 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 24px;
-}
-
-/* Constrained containers */
-header, .glass-panel, footer {
-  width: 92%;
-  max-width: 1100px;
-  align-self: center;
-}
-
-/* ---------- Header (Glass) ---------- */
-header {
-  margin-top: 40px;
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.22);
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.16);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  padding: 12px 24px;
-  position: relative;
-  z-index: 3;
-
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  column-gap: 16px;
-  overflow: visible;
-}
-.logo-section { display:flex; align-items:center; gap:12px; }
-.logo-section img { height:56px; width:auto; object-fit:contain; border-radius:12px; }
-.logo-text { color:#fff; font-weight:800; line-height:1.1; font-size:16px; letter-spacing:.2px; }
-.logo-text small { display:block; color:rgba(255,255,255,.85); font-size:13px; font-weight:600; }
-
-/* ---------- Top Nav ---------- */
-.menu-bar {
-  display:flex; align-items:center; gap:10px; justify-self:center; min-width:0;
-}
-.menu-item { position:relative; }
-.menu-item > .menu-trigger {
-  color:#fff; text-decoration:none; font-weight:700; font-size:14px;
-  padding:8px 14px; border-radius:10px;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.25);
-  transition: all .25s ease;
-  backdrop-filter: blur(10px) saturate(130%);
-}
-.menu-item > .menu-trigger:hover,
-.menu-item.open > .menu-trigger {
-  background: rgba(255,255,255,0.22);
-  color: var(--utar-navy);
-  box-shadow: 0 6px 16px rgba(0,0,0,.25);
-}
-
-/* ---------- Utility bar (search + bell + avatar + id chip) ---------- */
-.top-utils { display:flex; align-items:center; gap:12px; }
-.portal-search input[type="search"]{
-  width:220px; padding:8px 12px; border-radius:12px;
-  border:1px solid rgba(255,255,255,.35);
-  background:rgba(255,255,255,.12); color:#fff; outline:none;
-  backdrop-filter: blur(8px) saturate(120%);
-}
-.portal-search input::placeholder{ color:rgba(255,255,255,.75); }
-
-.icon-btn{
-  position:relative; display:inline-flex; align-items:center; justify-content:center;
-  width:38px; height:34px; border-radius:10px; cursor:pointer;
-  border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.10); color:#fff;
-  transition: transform .15s, box-shadow .2s, background .2s; backdrop-filter: blur(8px) saturate(120%);
-}
-.icon-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.25); }
-.icon-btn .badge{
-  position:absolute; top:-6px; right:-6px; min-width:18px; height:18px; padding:0 5px;
-  border-radius:999px; background:#ff3b30; color:#fff; font-size:11px; font-weight:800;
-  display:inline-flex; align-items:center; justify-content:center; border:2px solid #1a2b6b;
-}
-
-header .user-info { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,.92); justify-self:end; }
-header .user-info .id-chip{
-  background: rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.28);
-  border-radius:999px; padding:6px 12px; font-weight:800; letter-spacing:.2px;
-  backdrop-filter: blur(10px) saturate(130%); -webkit-backdrop-filter: blur(10px) saturate(130%);
-  box-shadow: 0 2px 8px rgba(0,0,0,.22);
-}
-
-.avatar-trigger{ padding:0 !important; border:0 !important; background:transparent !important; }
-.avatar{ width:34px; height:34px; border-radius:50%; display:block; border:1px solid rgba(255,255,255,.35); }
-
-/* ---------- Frosted Dropdown (Apple-style, portal, no ghosting) ---------- */
-.dropdown {
-  position: fixed;                 /* JS sets left/top in viewport coords */
-  min-width: 260px;
-  box-sizing: border-box;
-
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.35) 100%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%) contrast(105%);
-          backdrop-filter: blur(22px) saturate(140%) contrast(105%);
-
-  border: 1px solid rgba(255,255,255,0.55);
-  border-radius: 14px;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.65) inset,
-    0 -1px 0 rgba(0,0,0,0.05) inset,
-    0 18px 44px rgba(0,0,0,0.28);
-
-  overflow: hidden;
-  z-index: 2147483647;
-
-  display: none;        /* hidden state */
-  opacity: 0;
-  transform: translateY(6px) scale(.98);
-  pointer-events: none;
-  transition: opacity .16s ease, transform .16s ease;
-}
-.dropdown.is-open {
-  display: block;
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-/* Uniform width + long menu handling */
-.dropdown {
-  width: var(--menuW);
-  max-height: 70vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin; /* Firefox */
-}
-.dropdown a {
-  display:flex; align-items:center;
-  min-height:52px; padding:12px 18px; line-height:1.25;
-  color:#1d1d1f; text-decoration:none; font-weight:800;
-  white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-  transition: background .12s ease, color .12s ease;
-}
-.dropdown a + a { border-top: 1px solid rgba(0,0,0,.06); }
-.dropdown a:hover { background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45)); color: var(--utar-navy); }
-
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .dropdown { background: rgba(255,255,255,.95); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
-}
-
-/* ---------- Content Panel ---------- */
-.glass-panel {
-  margin-top: 32px;
-  background: var(--glass);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.12);
-  backdrop-filter: blur(14px) saturate(115%);
-  -webkit-backdrop-filter: blur(14px) saturate(115%);
-  padding: 32px;
-  position: relative;
-  z-index: 1;
-}
-.greeting { text-align:center; font-size:28px; font-weight:800; color:#1d1d1f; margin:0 0 6px; }
-.desc { text-align:center; color:#555; margin:0 0 28px; }
-
-/* Dashboard grid */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: start;
-}
-.card {
-  background: #fff;
-  border: 1px solid #e6e6ea;
-  border-radius: 12px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
-  padding: 20px;
-  height: 100%;
-}
-.card h3 { margin: 0 0 12px; font-size: 16px; font-weight: 800; color: #111; }
-
-/* Quick links */
-.quick-links a { display:block; padding:12px 0; text-align:left; color:#0a2a66; font-weight:700; text-decoration:none; border-bottom:1px solid #efeff2; }
-.quick-links a:last-child { border-bottom: 0; }
-.quick-links a:hover { background: rgba(0,0,0,0.03); }
-
-/* Compact table + snapshot + “more” link */
-.table-compact{ width:100%; border-collapse:collapse; }
-.table-compact th,.table-compact td{ padding:8px 10px; border-bottom:1px solid #efeff2; text-align:left; font-size:14px; }
-.table-compact thead th{ font-weight:800; color:#2a2a2a; }
-
-.snapshot{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px; }
-.snapshot span{ display:block; color:#6e6e73; font-size:12px; }
-.snapshot strong{ font-size:15px; }
-.link-more{ display:inline-block; margin-top:10px; font-weight:800; color:#0a4bd3; text-decoration:none; }
-.link-more:hover{ text-decoration:underline; }
-
-/* ---------- Footer ---------- */
-footer {
-  margin-top: 28px;
-  padding: 16px 24px;
-  background: rgba(255,255,255,.08);
-  border-radius: 20px;
-  color: #e6e6e6;
-  font-size: 13px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,.25);
-}
-
-/* ---------- Responsive ---------- */
-header { padding: 10px 16px; }
-.menu-bar .menu-trigger { font-size: 13px; padding: 6px 12px; border-radius: 9px; }
-
-@media (max-width: 900px){
-  .dashboard-grid{ grid-template-columns: 1fr; }
-  .portal-search input[type="search"]{ width:160px; }
-}
-@media (max-width: 720px) {
-  header { grid-template-columns: 1fr; row-gap: 10px; justify-items: center; }
-  .logo-section, .user-info { justify-self: center; }
-  .menu-bar { flex-wrap: wrap; justify-content: center; }
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UTAR Portal — Dashboard (Demo)</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
 
-<!-- ===== HEADER (Two-row layout) ===== -->
-<header class="tworow">
-  <!-- ===== Row 1: Logo + Utility Bar ===== -->
-  <div class="logo-section">
-    <img src="assets/img/Universiti_Tunku_Abdul_Rahman_Logo.jpg" alt="UTAR Logo">
-    <div class="logo-text">
-      UNIVERSITI TUNKU ABDUL RAHMAN
-      <small>University Portal (Demo)</small>
-    </div>
-  </div>
-
-  <div class="user-info top-utils">
-    <form class="portal-search" role="search" onsubmit="return false;">
-      <input type="search" placeholder="Search courses, codes, people…" />
-    </form>
-
-    <button class="icon-btn bell" aria-label="Notifications">
-      <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="1.8">
-        <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" />
-        <path d="M9 17a3 3 0 0 0 6 0" />
-      </svg>
-      <span class="badge" id="notifBadge">3</span>
-    </button>
-
-    <span class="id-chip" id="chipId">ID: —</span>
-
-    <div class="menu-item">
-      <a href="#" class="menu-trigger avatar-trigger" aria-haspopup="true" aria-expanded="false">
-        <img class="avatar" src="assets/img/avatar-student.png" alt="Profile" />
-      </a>
-      <div class="dropdown">
-        <a href="#">Profile &amp; Settings</a>
-        <a href="#">My Documents</a>
-        <a href="#">Security</a>
-        <a href="#" id="logout">Sign out</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== Row 2: Navigation Bar ===== -->
-  <nav class="menu-bar">
-    <div class="menu-item">
-      <a href="#" class="menu-trigger">Home</a>
-      <div class="dropdown">
-        <a href="#">Announcement</a>
-        <a href="#">Vehicle Sticker Registration</a>
-        <a href="#">UTAR Library</a>
-        <a href="#">UTAR Staff Directory</a>
-        <a href="#">Feedback</a>
-        <a href="#">CHMWB</a>
+  <!-- HEADER (glass, two-row) -->
+  <header class="tworow">
+    <!-- Row 1: brand (left)  •  utilities (right) -->
+    <div class="brand">
+      <img class="brand-logo" src="assets/img/Universiti_Tunku_Abdul_Rahman_Logo.jpg" alt="UTAR Logo" />
+      <div class="brand-text">
+        <strong>UNIVERSITI TUNKU ABDUL RAHMAN</strong>
+        <small>University Portal (Demo)</small>
       </div>
     </div>
 
-    <div class="menu-item">
-      <a href="#" class="menu-trigger">Timetable</a>
-      <div class="dropdown">
-        <a href="#">UTAR Course Registration</a>
-      </div>
+    <div class="utils">
+      <form class="search" role="search" onsubmit="return false;">
+        <input type="search" placeholder="Search courses, codes, people" />
+      </form>
+
+      <button class="icon-btn bell" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="1.8">
+          <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" />
+          <path d="M9 17a3 3 0 0 0 6 0" />
+        </svg>
+        <span class="badge" id="notifBadge">3</span>
+      </button>
+
+      <span class="id-chip" id="chipId">ID:</span>
     </div>
 
-    <div class="menu-item">
-      <a href="#" class="menu-trigger">Exam</a>
-      <div class="dropdown">
-        <a href="#">Exam Timetable</a>
-        <a href="#">Exam Results</a>
-        <a href="#">Exam Guidelines</a>
-        <a href="#">Performance Analytics</a>
-      </div>
-    </div>
+    <!-- Row 2: navigation pills -->
+    <nav class="menu-bar" aria-label="Primary">
+      <a class="pill is-active" href="#">Home</a>
+      <a class="pill" href="#">Timetable</a>
+      <a class="pill" href="#">Exam</a>
+      <a class="pill" href="#">Clubs &amp; Society</a>
+    </nav>
+  </header>
 
-    <div class="menu-item">
-      <a href="#" class="menu-trigger">Clubs &amp; Society</a>
-      <div class="dropdown">
-        <a href="#">USSDC / CPD</a>
-        <a href="#">UTAR CARE</a>
-        <a href="#">UTAR LEAD</a>
-        <a href="#">UTAR TALENT</a>
-        <a href="#">Club &amp; Society Announcements</a>
-      </div>
-    </div>
-  </nav>
-</header>
+  <!-- MAIN GLASS PANEL -->
+  <main class="glass">
+    <h1 class="greeting" id="welcome">Hello, Student</h1>
+    <p class="desc">This is a static demonstration dashboard. No real data is shown.</p>
 
-<!-- ===== MAIN CONTENT ===== -->
-<div class="glass-panel">
-  <div class="greeting" id="welcome">Hello</div>
-  <div class="desc">This is a static demonstration dashboard. No real data is shown.</div>
+    <section class="grid">
+      <!-- Quick Access -->
+      <article class="card">
+        <h2>Quick Access</h2>
+        <div class="links">
+          <a href="#">WBLE</a>
+          <a href="#">WBLE 2.0</a>
+          <a href="#">UTAR Official Page</a>
+          <a href="#">UTAR Mailmaster</a>
+          <a href="#">UTAR Library</a>
+        </div>
+      </article>
 
-  <div class="dashboard-grid">
-    <div class="card">
-      <h3>Quick Access</h3>
-      <div class="quick-links">
-        <a href="#">WBLE</a>
-        <a href="#">WBLE 2.0</a>
-        <a href="#">UTAR Official Page</a>
-        <a href="#">UTAR Mailmaster</a>
-        <a href="#">UTAR Library</a>
-      </div>
-    </div>
+      <!-- University Announcements -->
+      <article class="card">
+        <h2>University Announcements</h2>
+        <p>No announcements in this demo.</p>
+      </article>
 
-    <div class="card">
-      <h3>University Announcements</h3>
-      <p>No announcements in this demo.</p>
-    </div>
+      <!-- Upcoming Exams -->
+      <article class="card">
+        <h2>Upcoming Exams</h2>
+        <table class="table" id="examTable">
+          <thead>
+            <tr><th>Date</th><th>Course</th><th>Venue</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <a class="more" href="#">View full schedule →</a>
+      </article>
 
-    <!-- Upcoming Exams -->
-    <div class="card">
-      <h3>Upcoming Exams</h3>
-      <table class="table-compact" id="examTable">
-        <thead><tr><th>Date</th><th>Course</th><th>Venue</th></tr></thead>
-        <tbody></tbody>
-      </table>
-      <a class="link-more" href="#">View full schedule →</a>
-    </div>
+      <!-- Student Snapshot -->
+      <article class="card">
+        <h2>Student Snapshot</h2>
+        <div class="snapshot">
+          <div>
+            <span>Programme</span>
+            <strong>BSc (Hons) Computer Science</strong>
+          </div>
+          <div>
+            <span>Year / Sem</span>
+            <strong>Y2 • S1</strong>
+          </div>
+          <div>
+            <span>CGPA</span>
+            <strong>3.67</strong>
+          </div>
+          <div>
+            <span>Credits In Progress</span>
+            <strong>18</strong>
+          </div>
+        </div>
+        <a class="more" href="#">Open profile →</a>
+      </article>
+    </section>
+  </main>
 
-    <!-- Student Snapshot -->
-    <div class="card">
-      <h3>Student Snapshot</h3>
-      <div class="snapshot">
-        <div><span>Programme</span><strong>BSc (Hons) Computer Science</strong></div>
-        <div><span>Year / Sem</span><strong>Y2 • S1</strong></div>
-        <div><span>CGPA</span><strong>3.67</strong></div>
-        <div><span>Credits In Progress</span><strong>18</strong></div>
-      </div>
-      <a class="link-more" href="#">Open profile →</a>
-    </div>
-  </div>
-</div>
+  <!-- FOOTER CHIP -->
+  <footer class="chip">
+    © 2025 Universiti Tunku Abdul Rahman — Demo only<br />
+    <small>Demo only — Universiti Tunku Abdul Rahman is not affiliated with this personal project.</small>
+  </footer>
 
-<!-- ===== FOOTER ===== -->
-<footer id="copyright">
-  © 2025 Universiti Tunku Abdul Rahman — Demo only
-  <br>
-  <small>Demo only — Universiti Tunku Abdul Rahman is not affiliated with this personal project.</small>
-</footer>
+  <script>
+    // Demo: set name/ID from localStorage if present
+    (function () {
+      const welcome = document.getElementById('welcome');
+      const chipId  = document.getElementById('chipId');
+      let name = "Student", id = "—";
+      try {
+        const raw = localStorage.getItem('demo_user');
+        if (raw) {
+          const u = JSON.parse(raw);
+          if (u?.name) name = u.name;
+          if (u?.id)   id   = u.id;
+        }
+      } catch {}
+      welcome.textContent = `Hello, ${name}`;
+      chipId.textContent  = `ID: ${id}`;
+    })();
 
-<script>
-/* =============================
-   Demo login state → welcome/id
-   ============================= */
-document.addEventListener('DOMContentLoaded', () => {
-  const welcome = document.getElementById('welcome');
-  const chipId  = document.getElementById('chipId');
-  const logout  = document.getElementById('logout');
+    // Demo: fill exam rows
+    (function () {
+      const tbody = document.querySelector('#examTable tbody');
+      if (!tbody) return;
+      const exams = [
+        { date: '28 Oct, 9:00', course: 'UCCD2513 Data Structures', venue: 'KB A-201' },
+        { date: '31 Oct, 2:00', course: 'UCCD2223 Web Engineering', venue: 'KB C-105' },
+        { date: '04 Nov, 9:00', course: 'UCCD2123 Discrete Math', venue: 'KB Hall' },
+      ];
+      tbody.innerHTML = exams.map(e =>
+        `<tr><td>${e.date}</td><td>${e.course}</td><td>${e.venue}</td></tr>`
+      ).join('');
+    })();
 
-  const raw = localStorage.getItem('demo_user');
-  let name = 'Student', id = '';
-  try {
-    if (raw) { const d = JSON.parse(raw); name = d?.name || name; id = d?.id || id; }
-  } catch {}
-
-  welcome.textContent = `Hello, ${name}${id ? ` (${id})` : ''}`;
-  chipId.textContent  = id ? `ID: ${id}` : 'ID: —';
-
-  logout?.addEventListener('click', (e) => {
-    e.preventDefault();
-    localStorage.removeItem('demo_user');
-    window.location.href = 'index.html';
-  });
-});
-
-/* Mock exam rows (demo only) */
-document.addEventListener('DOMContentLoaded', () => {
-  const tbody = document.querySelector('#examTable tbody');
-  if (!tbody) return;
-  const exams = [
-    { date: '28 Oct, 9:00', course: 'UCCD2513 Data Structures', venue: 'KB A-201' },
-    { date: '31 Oct, 2:00', course: 'UCCD2223 Web Engineering', venue: 'KB C-105' },
-    { date: '04 Nov, 9:00', course: 'UCCD2123 Discrete Math', venue: 'KB Hall' }
-  ];
-  tbody.innerHTML = exams.map(e => `<tr><td>${e.date}</td><td>${e.course}</td><td>${e.venue}</td></tr>`).join('');
-});
-
-/* Clear the bell badge when clicked */
-document.addEventListener('click', (e) => {
-  const bell = e.target.closest('.icon-btn.bell');
-  if (!bell) return;
-  const b = document.getElementById('notifBadge');
-  if (b) b.textContent = '';
-});
-
-/* -------------------------------------------------------
-   Find the widest dropdown once, set CSS variable --menuW
-   ------------------------------------------------------- */
-(function setUniformMenuWidth() {
-  const panels = Array.from(document.querySelectorAll('.dropdown'));
-  if (!panels.length) return;
-
-  requestAnimationFrame(() => {
-    let maxW = 260;
-    panels.forEach(p => {
-      const parent = p.parentNode, next = p.nextSibling;
-      const prev = { pos:p.style.position, vis:p.style.visibility, disp:p.style.display, left:p.style.left, top:p.style.top };
-      document.body.appendChild(p);
-      p.style.position='absolute'; p.style.visibility='hidden'; p.style.display='block';
-      p.style.left='-9999px'; p.style.top='-9999px';
-      maxW = Math.max(maxW, Math.ceil(p.scrollWidth)+1);
-      p.style.position=prev.pos; p.style.visibility=prev.vis; p.style.display=prev.disp; p.style.left=prev.left; p.style.top=prev.top;
-      next ? parent.insertBefore(p,next) : parent.appendChild(p);
+    // Demo: clicking the bell clears the badge
+    document.addEventListener('click', (e) => {
+      const bell = e.target.closest('.icon-btn.bell');
+      if (!bell) return;
+      const b = document.getElementById('notifBadge');
+      if (b) b.textContent = '';
     });
-    maxW = Math.min(Math.max(260, maxW), 360); // cap at 360px so it never looks oversized
-    document.documentElement.style.setProperty('--menuW', `${maxW}px`);
-  });
-})();
-
-/* =======================================================
-   NAVBAR DROPDOWN — portal + true blur + hover hold logic
-   ======================================================= */
-(() => {
-  const items = document.querySelectorAll('.menu-item');
-  if (!items.length) return;
-
-  // Portal container (for backdrop-filter to blur page behind)
-  let portal = document.getElementById('menu-portal');
-  if (!portal) { portal = document.createElement('div'); portal.id = 'menu-portal'; document.body.appendChild(portal); }
-
-  let openItem = null, openPanel = null, restore = null;
-  const hoverTimers = new WeakMap();
-
-  function moveToPortal(panel) {
-    const parent = panel.parentNode, next = panel.nextSibling;
-    restore = { parent, next }; portal.appendChild(panel);
-  }
-  function restorePanel(panel) {
-    if (!restore) return; const { parent, next } = restore;
-    next ? parent.insertBefore(panel,next) : parent.appendChild(panel); restore = null;
-  }
-  function measure(panel) {
-    const wasOpen = panel.classList.contains('is-open');
-    if (!wasOpen) { panel.style.visibility='hidden'; panel.classList.add('is-open'); document.body.offsetHeight; }
-    const w = Math.max(panel.offsetWidth, 260), h = panel.offsetHeight;
-    if (!wasOpen) { panel.classList.remove('is-open'); panel.style.visibility=''; }
-    return { w, h };
-  }
-  function place(item) {
-    const btn = item.querySelector('.menu-trigger');
-    const panel = openPanel || item.querySelector('.dropdown');
-    if (!btn || !panel) return;
-
-    if (panel.parentNode !== portal) moveToPortal(panel);
-
-    const r  = btn.getBoundingClientRect();
-    const vw = document.documentElement.clientWidth;
-    const vh = document.documentElement.clientHeight;
-    const EDGE = 12, GAP = 8;
-
-    const { w: pw, h: ph } = measure(panel);
-
-    const preferEnd = r.left > vw * 0.6;
-    let left = preferEnd ? (r.right - pw) : r.left;
-    left = Math.min(Math.max(EDGE, left), vw - pw - EDGE);
-
-    let top = r.bottom + GAP;
-    if (top + ph + EDGE > vh) top = Math.max(EDGE, r.top - ph - GAP);
-
-    panel.style.left = Math.round(left) + 'px';
-    panel.style.top  = Math.round(top)  + 'px';
-  }
-  function cancelCloseTimer(item) {
-    const t = hoverTimers.get(item); if (t) { clearTimeout(t); hoverTimers.delete(item); }
-  }
-  function scheduleClose(item) {
-    cancelCloseTimer(item);
-    const t = setTimeout(() => { if (openItem === item) closeAll(); }, 120);
-    hoverTimers.set(item, t);
-  }
-  function open(item) {
-    if (openItem === item) return;
-    closeAll();
-    const btn = item.querySelector('.menu-trigger'), panel = item.querySelector('.dropdown');
-    if (!btn || !panel) return;
-    item.classList.add('open'); btn.setAttribute('aria-expanded','true');
-    openItem = item; openPanel = panel; place(item); panel.classList.add('is-open');
-  }
-  function closeAll() {
-    if (!openItem) return;
-    openItem.classList.remove('open');
-    openItem.querySelector('.menu-trigger')?.setAttribute('aria-expanded','false');
-    if (openPanel) {
-      openPanel.classList.remove('is-open'); openPanel.style.left=''; openPanel.style.top='';
-      restorePanel(openPanel); openPanel = null;
-    }
-    cancelCloseTimer(openItem); openItem = null;
-  }
-
-  // Hover logic (trigger + panel hold)
-  items.forEach(item => {
-    const btn = item.querySelector('.menu-trigger');
-    const panel = item.querySelector('.dropdown'); if (!btn || !panel) return;
-
-    btn.setAttribute('aria-haspopup','true'); btn.setAttribute('aria-expanded','false');
-    btn.addEventListener('click', e => e.preventDefault());
-
-    btn.addEventListener('pointerenter', () => { open(item); cancelCloseTimer(item); });
-    btn.addEventListener('pointerleave', (e) => { const to = e.relatedTarget; if (to && panel.contains(to)) return; scheduleClose(item); });
-
-    panel.addEventListener('pointerenter', () => { open(item); cancelCloseTimer(item); });
-    panel.addEventListener('pointerleave', (e) => { const to = e.relatedTarget; if (to && btn.contains(to)) return; scheduleClose(item); });
-  });
-
-  // Keep aligned on resize/scroll/orientation
-  const realign = () => { if (openItem) place(openItem); };
-  window.addEventListener('resize', realign, { passive:true });
-  window.addEventListener('scroll', realign, { passive:true });
-  window.addEventListener('orientationchange', realign, { passive:true });
-
-  // Esc to close
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
-})();
-
-// =======================================================
-// DASHBOARD EXTRAS — for demo visuals only
-// =======================================================
-  
-// --- Clear bell badge when clicked ---
-document.addEventListener('click', (e) => {
-  const bell = e.target.closest('.icon-btn.bell');
-  if (!bell) return;
-  const badge = document.getElementById('notifBadge');
-  if (badge) badge.textContent = '';
-});
-
-// --- Optional: quick search field behaviour ---
-document.addEventListener('input', (e) => {
-  const search = e.target.closest('.portal-search input[type="search"]');
-  if (!search) return;
-  // You could implement live search here (for now it's just cosmetic)
-  console.log('Search query:', search.value);
-});
-
-</script>
+  </script>
 </body>
 </html>
