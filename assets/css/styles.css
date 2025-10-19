@@ -822,3 +822,18 @@ header.tworow{ position:relative; z-index:10; }
 
 /* small safety: prevent unknown overlay from blocking clicks */
 * { pointer-events: auto; }
+
+/* ---- Dashboard alignment fixes ---- */
+.card{ text-align: left; }           /* left-align everything in cards */
+.card h2{ text-align: center; }      /* but keep the card titles centered */
+.card .kv, .card .kv div{ text-align:left; }  /* key/value blocks left */
+.more{ display:inline-block; }       /* ensure "more" links are not centered */
+
+/* make the Next Class/Fees blocks read nicely */
+.card .kv{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px 14px;
+}
+.card .kv span{ display:block; color:#6e6e73; font-size:12px; }
+.card .kv strong{ font-size:15px; }
