@@ -411,3 +411,143 @@ document.addEventListener('DOMContentLoaded', () => {
   const msgCount = document.getElementById('msg-count');
   if (msgCount) msgCount.textContent = '2';
 });
+
+// ---------- Demo content for the dashboard ----------
+document.addEventListener('DOMContentLoaded', () => {
+  // Only run on the dashboard page
+  const subjectsTbody = document.querySelector('#subjectsTable tbody');
+  const examsTbody    = document.querySelector('#examTable tbody');
+  const annList       = document.getElementById('annList');
+  const ncName        = document.getElementById('nc-name');
+  const ncWhen        = document.getElementById('nc-when');
+  const ncWhere       = document.getElementById('nc-where');
+  const ncLect        = document.getElementById('nc-lect');
+  const sem           = document.getElementById('sem');
+  const progressText  = document.getElementById('progressText');
+  const feeBal        = document.getElementById('fee-balance');
+  const feeLast       = document.getElementById('fee-last');
+  const mailLink      = document.getElementById('mailLink');
+
+  // If none of these exist, not on dashboard
+  if (
+    !subjectsTbody && !examsTbody && !annList &&
+    !ncName && !feeBal
+  ) return;
+
+  // --- Mock datasets (adjust freely) ---
+  const SUBJECTS = [
+    { code: 'UCCD2513', name: 'Data Structures', units: 3, wble: 'https://wble.utar.edu.my/course/uccd2513' },
+    { code: 'UCCD2223', name: 'Web Engineering', units: 3, wble: 'https://wble.utar.edu.my/course/uccd2223' },
+    { code: 'UCCD2123', name: 'Discrete Mathematics', units: 3, wble: 'https://wble.utar.edu.my/course/uccd2123' },
+  ];
+
+  const EXAMS = [
+    { when: '2025-10-28T09:00:00', course: 'UCCD2513 Data Structures', venue: 'KB A-201' },
+    { when: '2025-10-31T14:00:00', course: 'UCCD2223 Web Engineering', venue: 'KB C-105' },
+    { when: '2025-11-04T09:00:00', course: 'UCCD2123 Discrete Math',   venue: 'KB Hall'  },
+  ];
+
+  const ANNOUNCEMENTS = [
+    { date: '2025-10-21', text: 'Add/Drop closes this Friday (5pm). Please confirm your subjects.' },
+    { date: '2025-10-25', text: 'Career Fair next week at KB Hall. Register via Student Affairs.' },
+    { date: '2025-10-28', text: 'WBLE maintenance, Tue 1–2am — short downtime expected.' },
+  ];
+
+  const NEXT_CLASS = {
+    name: 'UCCD2223 Web Engineering (Lab)',
+    start: (function () { // next weekday 09:00
+      const d = new Date();
+      let day = d.getDay(); // 0 Sun … 6 Sat
+      // choose next Mon/Tue/Thu quickly:
+      const offsets = { 1:1, 2:1, 3:1, 4:1, 5:3, 6:2, 0:1 }; // rough progression
+      const add = offsets[day] ?? 1;
+      d.setDate(d.getDate() + add);
+      d.setHours(9,0,0,0);
+      return d.toISOString();
+    })(),
+    location: 'KB Lab 3-12',
+    lecturer: 'Dr. Lee Wei Jun',
+    semester: 'Y2 • S1',
+    weekNow: 7,
+    weekTotal: 14,
+  };
+
+  const FEES = { balance: 0.00, lastInvoice: '2025-09-10' };
+  const MAIL_COUNT = 3;
+
+  // --- Helpers ---
+  const fmtRM   = (n) => `RM ${n.toFixed(2)}`;
+  const fmtDate = (iso) => {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+  };
+  const fmtDateShort = (iso) => (new Date(iso)).toLocaleDateString(undefined, { month:'short', day:'2-digit' });
+
+  // --- Render: subjects ---
+  if (subjectsTbody) {
+    subjectsTbody.innerHTML = SUBJECTS.map(s => `
+      <tr>
+        <td>${s.code}</td>
+        <td>${s.name}</td>
+        <td>${s.units}</td>
+        <td><a href="${s.wble}" target="_blank" rel="noopener">Open</a></td>
+      </tr>
+    `).join('');
+  }
+
+  // --- Render: exams ---
+  if (examsTbody) {
+    const upcoming = EXAMS
+      .filter(e => new Date(e.when) >= new Date())
+      .sort((a,b) => new Date(a.when) - new Date(b.when));
+    examsTbody.innerHTML = upcoming.slice(0,3).map(e => `
+      <tr>
+        <td>${fmtDateShort(e.when)}</td>
+        <td>${e.course}</td>
+        <td>${e.venue}</td>
+      </tr>
+    `).join('');
+  }
+
+  // --- Render: announcements ---
+  if (annList) {
+    annList.innerHTML = ANNOUNCEMENTS.map(a => `
+      <li style="list-style:none; padding:8px 0; border-bottom:1px solid #efeff2">
+        <span style="color:#6e6e73; font-size:12px">${a.date}</span><br>
+        <strong style="font-weight:600">${a.text}</strong>
+      </li>
+    `).join('');
+  }
+
+  // --- Render: next class ---
+  if (ncName && ncWhen && ncWhere && ncLect && sem && progressText) {
+    ncName.textContent = NEXT_CLASS.name;
+    ncWhen.textContent = (() => {
+      const start = new Date(NEXT_CLASS.start);
+      const now = new Date();
+      const diffMs = start - now;
+      if (diffMs <= 0) return 'now';
+      const mins = Math.round(diffMs / 60000);
+      if (mins < 60) return `${mins} min`;
+      const hrs = Math.round(mins / 60);
+      const days = Math.floor(hrs / 24);
+      return days >= 1 ? `${days} day${days>1?'s':''}` : `${hrs} hr`;
+    })();
+    ncWhere.textContent = NEXT_CLASS.location;
+    ncLect.textContent  = NEXT_CLASS.lecturer;
+    sem.textContent     = NEXT_CLASS.semester;
+    progressText.textContent = `${NEXT_CLASS.weekNow} / ${NEXT_CLASS.weekTotal} weeks`;
+  }
+
+  // --- Render: fees ---
+  if (feeBal && feeLast) {
+    feeBal.textContent  = fmtRM(FEES.balance);
+    feeLast.textContent = FEES.lastInvoice;
+  }
+
+  // --- Mailmaster link count (optional) ---
+  if (mailLink) {
+    mailLink.textContent = `Open Mailmaster (${MAIL_COUNT} new) →`;
+    mailLink.href = '#';
+  }
+});
