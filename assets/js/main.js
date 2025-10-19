@@ -1,5 +1,5 @@
 /* =========================================
-   UTAR Portal Demo — main.js (clean build)
+   UTAR Portal Demo — main.js (stable build)
    ========================================= */
 
 /* tiny helper */
@@ -33,7 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const u = USERS[id];
     if (u && u.password === pwd) {
       setStatus("Login successful. Redirecting…", true);
-      localStorage.setItem("demo_user", JSON.stringify({ id, name: u.name || "Student", time: Date.now() }));
+      localStorage.setItem(
+        "demo_user",
+        JSON.stringify({ id, name: u.name || "Student", time: Date.now() })
+      );
       setTimeout(() => (location.href = "dashboard.html"), 600);
     } else {
       setStatus("Invalid credentials (try ID 22123456 / password123).");
@@ -65,17 +68,16 @@ document.addEventListener(
 );
 
 /* ---------------------------
-   DASHBOARD PAGE (all logic in one pass)
+   DASHBOARD PAGE
 ----------------------------*/
 document.addEventListener("DOMContentLoaded", () => {
-  /* If not on dashboard, bail early */
   const dashRoot = document.querySelector(".glass");
   if (!dashRoot) return;
 
   /* greet + id */
   const welcome = $("#welcome");
-  const chipId = $("#chipId");
-  const logout = $("#logout");
+  const chipId  = $("#chipId");
+  const logout  = $("#logout");
 
   const raw = localStorage.getItem("demo_user");
   if (!raw) return (location.href = "index.html");
@@ -83,9 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     const data = JSON.parse(raw);
     const name = data?.name || "Student";
-    const id = data?.id || "";
+    const id   = data?.id || "";
     if (welcome) welcome.textContent = `Hello, ${name}${id ? ` (${id})` : ""}`;
-    if (chipId) chipId.textContent = id ? `ID: ${id}` : "ID: —";
+    if (chipId)  chipId.textContent  = id ? `ID: ${id}` : "ID: —";
   } catch {
     localStorage.removeItem("demo_user");
     return (location.href = "index.html");
@@ -108,14 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.appendChild(portal);
     }
 
-    let openItem = null;
+    let openItem  = null;
     let openPanel = null;
-    let restore = null;
+    let restore   = null;
     const hoverTimers = new WeakMap();
 
     const moveToPortal = (panel) => {
       const parent = panel.parentNode;
-      const next = panel.nextSibling;
+      const next   = panel.nextSibling;
       restore = { parent, next };
       portal.appendChild(panel);
     };
@@ -141,17 +143,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return { w, h };
     };
     const place = (item) => {
-      const btn = item.querySelector(".menu-trigger");
+      const btn   = item.querySelector(".menu-trigger");
       const panel = openPanel || item.querySelector(".dropdown");
       if (!btn || !panel) return;
 
       if (panel.parentNode !== portal) moveToPortal(panel);
 
-      const r = btn.getBoundingClientRect();
+      const r  = btn.getBoundingClientRect();
       const vw = document.documentElement.clientWidth;
       const vh = document.documentElement.clientHeight;
-      const EDGE = 12,
-        GAP = 8;
+      const EDGE = 12, GAP = 8;
       const { w: pw, h: ph } = measure(panel);
 
       const preferEnd = r.left > vw * 0.6;
@@ -162,37 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (top + ph + EDGE > vh) top = Math.max(EDGE, r.top - ph - GAP);
 
       panel.style.left = Math.round(left) + "px";
-      panel.style.top = Math.round(top) + "px";
+      panel.style.top  = Math.round(top)  + "px";
     };
     const cancelCloseTimer = (item) => {
       const t = hoverTimers.get(item);
-      if (t) {
-        clearTimeout(t);
-        hoverTimers.delete(item);
-      }
-    };
-    const scheduleClose = (item) => {
-      cancelCloseTimer(item);
-      const t = setTimeout(() => {
-        if (openItem === item) closeAll();
-      }, 120);
-      hoverTimers.set(item, t);
-    };
-    const open = (item) => {
-      if (openItem === item) return;
-      closeAll();
-
-      const btn = item.querySelector(".menu-trigger");
-      const panel = item.querySelector(".dropdown");
-      if (!btn || !panel) return;
-
-      item.classList.add("open");
-      btn.setAttribute("aria-expanded", "true");
-      openItem = item;
-      openPanel = panel;
-
-      place(item);
-      panel.classList.add("is-open");
+      if (t) { clearTimeout(t); hoverTimers.delete(item); }
     };
     const closeAll = () => {
       if (!openItem) return;
@@ -204,16 +179,37 @@ document.addEventListener("DOMContentLoaded", () => {
       if (openPanel) {
         openPanel.classList.remove("is-open");
         openPanel.style.left = "";
-        openPanel.style.top = "";
+        openPanel.style.top  = "";
         restorePanel(openPanel);
         openPanel = null;
       }
       cancelCloseTimer(item);
       openItem = null;
     };
+    const scheduleClose = (item) => {
+      cancelCloseTimer(item);
+      const t = setTimeout(() => { if (openItem === item) closeAll(); }, 120);
+      hoverTimers.set(item, t);
+    };
+    const open = (item) => {
+      if (openItem === item) return;
+      closeAll();
+
+      const btn   = item.querySelector(".menu-trigger");
+      const panel = item.querySelector(".dropdown");
+      if (!btn || !panel) return;
+
+      item.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
+      openItem  = item;
+      openPanel = panel;
+
+      place(item);
+      panel.classList.add("is-open");
+    };
 
     items.forEach((item) => {
-      const btn = item.querySelector(".menu-trigger");
+      const btn   = item.querySelector(".menu-trigger");
       const panel = item.querySelector(".dropdown");
       if (!btn || !panel) return;
 
@@ -221,10 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.setAttribute("aria-expanded", "false");
       btn.addEventListener("click", (e) => e.preventDefault());
 
-      const onEnter = () => {
-        open(item);
-        cancelCloseTimer(item);
-      };
+      const onEnter = () => { open(item); cancelCloseTimer(item); };
       const onLeaveFromBtn = (e) => {
         const to = e.relatedTarget;
         if (to && panel.contains(to)) return;
@@ -240,74 +233,72 @@ document.addEventListener("DOMContentLoaded", () => {
       panel.addEventListener("pointerenter", onEnter);
       btn.addEventListener("mouseleave", onLeaveFromBtn);
       panel.addEventListener("mouseleave", onLeaveFromPanel);
-      btn.addEventListener(
-        "touchstart",
-        (e) => {
-          open(item);
-          cancelCloseTimer(item);
-          e.preventDefault();
-        },
-        { passive: false }
-      );
+      btn.addEventListener("touchstart", (e) => { open(item); cancelCloseTimer(item); e.preventDefault(); }, { passive:false });
     });
 
-    const realign = () => openItem && place(openItem);
-    window.addEventListener("resize", realign, { passive: true });
-    window.addEventListener("scroll", realign, { passive: true });
-    window.addEventListener("orientationchange", realign, { passive: true });
-    window.addEventListener("keydown", (e) => e.key === "Escape" && closeAll());
+    const realign = () => { if (openItem) place(openItem); };
+    window.addEventListener("resize", realign, { passive:true });
+    window.addEventListener("scroll", realign, { passive:true });
+    window.addEventListener("orientationchange", realign, { passive:true });
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   })();
 
-  /* Uniform dropdown width */
-  (function setUniformMenuWidth() {
+  /* ---------- Uniform dropdown width (listeners installed ONCE) ---------- */
+  const updateMenuWidth = () => {
     const panels = Array.from(document.querySelectorAll(".dropdown"));
     if (!panels.length) return;
+    let maxW = 260;
 
-    requestAnimationFrame(() => {
-      let maxW = 260;
-      panels.forEach((p) => {
-        const parent = p.parentNode;
-        const next = p.nextSibling;
-        const prev = {
-          pos: p.style.position,
-          vis: p.style.visibility,
-          disp: p.style.display,
-          left: p.style.left,
-          top: p.style.top,
-        };
-        document.body.appendChild(p);
-        p.style.position = "absolute";
-        p.style.visibility = "hidden";
-        p.style.display = "block";
-        p.style.left = "-9999px";
-        p.style.top = "-9999px";
-        maxW = Math.max(maxW, Math.ceil(p.scrollWidth) + 1);
-        p.style.position = prev.pos;
-        p.style.visibility = prev.vis;
-        p.style.display = prev.disp;
-        p.style.left = prev.left;
-        p.style.top = prev.top;
-        next ? parent.insertBefore(p, next) : parent.appendChild(p);
-      });
-      maxW = Math.min(Math.max(260, maxW), 300);
-      document.documentElement.style.setProperty("--menuW", `${maxW}px`);
+    // measure off-DOM without changing layout
+    panels.forEach((p) => {
+      const parent = p.parentNode;
+      const next   = p.nextSibling;
+      const prev   = { pos:p.style.position, vis:p.style.visibility, disp:p.style.display, left:p.style.left, top:p.style.top };
+
+      document.body.appendChild(p);
+      p.style.position = "absolute";
+      p.style.visibility = "hidden";
+      p.style.display = "block";
+      p.style.left = "-9999px";
+      p.style.top  = "-9999px";
+
+      maxW = Math.max(maxW, Math.ceil(p.scrollWidth) + 1);
+
+      // restore
+      p.style.position = prev.pos;
+      p.style.visibility = prev.vis;
+      p.style.display = prev.disp;
+      p.style.left = prev.left;
+      p.style.top  = prev.top;
+      next ? parent.insertBefore(p, next) : parent.appendChild(p);
     });
 
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setUniformMenuWidth());
-    let t;
-    window.addEventListener(
-      "resize",
-      () => {
-        clearTimeout(t);
-        t = setTimeout(setUniformMenuWidth, 150);
-      },
-      { passive: true }
-    );
-  })();
+    maxW = Math.min(Math.max(260, maxW), 300);
+    document.documentElement.style.setProperty("--menuW", `${maxW}px`);
+  };
+
+  // run once now
+  requestAnimationFrame(updateMenuWidth);
+
+  // run once when fonts are ready (if supported)
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => updateMenuWidth());
+  }
+
+  // debounced resize handler (single registration)
+  let _mwTimer;
+  window.addEventListener(
+    "resize",
+    () => {
+      clearTimeout(_mwTimer);
+      _mwTimer = setTimeout(updateMenuWidth, 150);
+    },
+    { passive: true }
+  );
 
   /* ---------- Account dropdown (click) ---------- */
   (function accountMenu() {
-    const btn = document.getElementById("acctBtn");
+    const btn  = document.getElementById("acctBtn");
     const menu = document.getElementById("acctMenu");
     if (!btn || !menu) return;
     const toggle = (open) => {
@@ -315,10 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
       menu.classList.toggle("is-open", o);
       btn.setAttribute("aria-expanded", String(o));
     };
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      toggle();
-    });
+    btn.addEventListener("click", (e) => { e.preventDefault(); toggle(); });
     document.addEventListener("click", (e) => {
       if (e.target === btn || btn.contains(e.target) || menu.contains(e.target)) return;
       toggle(false);
@@ -344,64 +332,54 @@ document.addEventListener("DOMContentLoaded", () => {
     ],
     nextClass: {
       name: "UCCD2223 Web Engineering (Lab)",
-      start: (() => {
-        const d = new Date();
-        d.setDate(d.getDate() + 1);
-        d.setHours(9, 0, 0, 0);
-        return d;
-      })(),
+      start: (() => { const d=new Date(); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; })(),
       location: "KB Lab 3-12",
       lecturer: "Dr. Lee Wei Jun",
       semester: "Y2 • S1",
-      weekNow: 7,
-      weekTotal: 14,
+      weekNow: 7, weekTotal: 14,
     },
     fees: { balance: 0.0, lastInvoice: "2025-09-10" },
   };
 
   const fmtRM = (n) => `RM ${n.toFixed(2)}`;
   const fmtDateShort = (iso) =>
-    new Date(iso).toLocaleDateString(undefined, { month: "short", day: "2-digit" });
+    new Date(iso).toLocaleDateString(undefined, { month:"short", day:"2-digit" });
   const startsIn = (date) => {
     const diff = date - new Date();
     if (diff <= 0) return "now";
-    const mins = Math.round(diff / 60000);
+    const mins = Math.round(diff/60000);
     if (mins < 60) return `${mins} min`;
-    const hrs = Math.round(mins / 60);
+    const hrs = Math.round(mins/60);
     if (hrs < 24) return `${hrs} hr`;
-    const days = Math.round(hrs / 24);
-    return `${days} day${days > 1 ? "s" : ""}`;
+    const days = Math.round(hrs/24);
+    return `${days} day${days>1?"s":""}`;
   };
 
-  /* helpers to target cards by title and clear placeholders */
   const findCard = (titleStartsWith) =>
-    [...document.querySelectorAll(".card")].find((c) =>
-      c.querySelector("h2")?.textContent.trim().toLowerCase().startsWith(titleStartsWith.toLowerCase())
+    [...document.querySelectorAll(".card")].find(c =>
+      c.querySelector("h2")?.textContent.trim().toLowerCase()
+        .startsWith(titleStartsWith.toLowerCase())
     );
   const resetCardKeepTitle = (card) => {
     const h2 = card.querySelector("h2");
     if (!h2) return;
     let n = h2.nextSibling;
-    while (n) {
-      const next = n.nextSibling;
-      card.removeChild(n);
-      n = next;
-    }
+    while (n) { const next = n.nextSibling; card.removeChild(n); n = next; }
   };
 
-  /* Quick Access: keep links and left-align them */
+  /* Quick Access */
   (() => {
     const card = findCard("Quick Access");
     if (!card) return;
-    const anchors = [...card.querySelectorAll("a")].map((a) => ({
+    const anchors = [...card.querySelectorAll("a")].map(a => ({
       href: a.getAttribute("href") || "#",
-      text: (a.textContent || "").trim() || "Link",
+      text: (a.textContent || "").trim() || "Link"
     }));
     resetCardKeepTitle(card);
     const wrap = document.createElement("div");
     wrap.className = "links";
     wrap.style.textAlign = "left";
-    wrap.innerHTML = anchors.map((a) => `<a href="${a.href}">${a.text}</a>`).join("");
+    wrap.innerHTML = anchors.map(a => `<a href="${a.href}">${a.text}</a>`).join("");
     card.appendChild(wrap);
   })();
 
@@ -414,12 +392,10 @@ document.addEventListener("DOMContentLoaded", () => {
     table.className = "table";
     table.innerHTML = `
       <thead><tr><th>Code</th><th>Subject</th><th>Units</th><th>WBLE</th></tr></thead>
-      <tbody>${DATA.subjects
-        .map(
-          (s) =>
-            `<tr><td>${s.code}</td><td>${s.name}</td><td>${s.units}</td><td><a href="${s.wble}" target="_blank" rel="noopener">Open</a></td></tr>`
-        )
-        .join("")}</tbody>`;
+      <tbody>${DATA.subjects.map(s =>
+        `<tr><td>${s.code}</td><td>${s.name}</td><td>${s.units}</td>
+             <td><a href="${s.wble}" target="_blank" rel="noopener">Open</a></td></tr>`
+      ).join("")}</tbody>`;
     card.appendChild(table);
   })();
 
@@ -431,19 +407,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const ul = document.createElement("ul");
     ul.style.margin = "0";
     ul.style.paddingLeft = "0";
-    ul.innerHTML = DATA.announcements
-      .map(
-        (a) =>
-          `<li style="list-style:none; padding:8px 0; border-bottom:1px solid #efeff2">
-             <span style="color:#6e6e73; font-size:12px">${a.date}</span><br>
-             <strong style="font-weight:600">${a.text}</strong>
-           </li>`
-      )
-      .join("");
+    ul.innerHTML = DATA.announcements.map(a => `
+      <li style="list-style:none; padding:8px 0; border-bottom:1px solid #efeff2">
+        <span style="color:#6e6e73; font-size:12px">${a.date}</span><br>
+        <strong style="font-weight:600">${a.text}</strong>
+      </li>`).join("");
     card.appendChild(ul);
   })();
 
-  /* Next Class & Semester (single, no duplicates) */
+  /* Next Class & Semester */
   (() => {
     const card = findCard("Next Class");
     if (!card) return;
@@ -467,17 +439,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = findCard("Upcoming Exams");
     if (!card) return;
     resetCardKeepTitle(card);
+    const upcoming = DATA.exams
+      .filter(e => new Date(e.when) >= new Date())
+      .sort((a,b) => new Date(a.when) - new Date(b.when))
+      .slice(0,3);
     const table = document.createElement("table");
     table.className = "table";
-    const upcoming = DATA.exams
-      .filter((e) => new Date(e.when) >= new Date())
-      .sort((a, b) => new Date(a.when) - new Date(b.when))
-      .slice(0, 3);
     table.innerHTML = `
       <thead><tr><th>Date</th><th>Course</th><th>Venue</th></tr></thead>
-      <tbody>${upcoming
-        .map((e) => `<tr><td>${fmtDateShort(e.when)}</td><td>${e.course}</td><td>${e.venue}</td></tr>`)
-        .join("")}</tbody>`;
+      <tbody>${upcoming.map(e =>
+        `<tr><td>${fmtDateShort(e.when)}</td><td>${e.course}</td><td>${e.venue}</td></tr>`
+      ).join("")}</tbody>`;
     card.appendChild(table);
   })();
 
