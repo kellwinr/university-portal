@@ -794,3 +794,11 @@ header.tworow{ position:relative; z-index:10; }
 .menu-item.simple-menu{ position:relative; }
 .menu-item.simple-menu .dropdown{ position:absolute; right:0; top:calc(100% + 8px); }
 .menu-item.simple-menu .dropdown:not(.is-open){ display:none; }
+
+.card { text-align:left; }
+.card h2 { text-align:center; }
+.card .kv { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+.card .kv span { display:block; color:#6e6e73; font-size:12px; }
+.card .kv strong { font-size:15px; }
+
+.links, .links * { text-align:left; }
