@@ -365,192 +365,269 @@ body:has(#login-form) footer:not(#copyright){ display:none; }
 .pwd-toggle.visible .icon-eye-off{ display:block; }
 @supports (-webkit-touch-callout:none){ .pwd-toggle{ top:calc(50% - .5px); } }
 
-/* =========================================================
-   Responsive
-   ========================================================= */
-@media (max-width:900px){
-  .dashboard-grid{ grid-template-columns:1fr; }
-}
-@media (max-width:880px){
-  .menu-item>.menu-trigger{ padding:6px 12px; font-size:13px; }
-  header.tworow .menu-bar{ gap:10px; }
-}
-@media (max-width:720px){
-  header.tworow{
-    grid-template-columns:1fr;
-    grid-template-rows:auto auto auto;
-    grid-template-areas:
-      "logo"
-      "utils"
-      "nav";
-    justify-items:center;
-  }
-  header.tworow .top-utils{ justify-self:center; }
-  header.tworow .menu-bar{ justify-content:center; }
+/* ============ Design Tokens ============ */
+:root {
+  --navy-1: #0a1e55;
+  --navy-2: #0f2a7a;
+  --utar-navy: #0a2a66;
+
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+
+  --surface: #ffffff;
+  --line: #e6e6ea;
+
+  --glass: rgba(255,255,255,.60);
+  --fg-soft: rgba(255,255,255,.90);
+  --pill: rgba(255,255,255,.10);
+
+  --accent: #2a66ff;
+
+  --radius-lg: 16px;
+  --radius-md: 12px;
+
+  --shadow-1: 0 6px 18px rgba(0,0,0,.16);
+  --shadow-2: 0 8px 24px rgba(0,0,0,.12);
 }
 
-/* === Force the header into two rows when class="tworow" === */
+/* ============ Reset ============ */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+img { max-width: 100%; display: block; }
+
+/* ============ Page base ============ */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(900px 450px at 50% 10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(700px 350px at 50% 90%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Limit width of major blocks */
+header, .glass, .chip { width: 92%; max-width: 1100px; }
+
+/* ============ Header (two-row glass) ============ */
 header.tworow {
-  /* make a 2-row grid */
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  padding: 10px 16px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-    "logo . utils"
-    "nav  nav nav";
-  row-gap: 10px;
-  column-gap: 16px;
+  grid: "brand . utils" auto
+        "nav   nav nav" auto
+        / auto 1fr auto;
+  gap: 10px 16px;
 }
 
-/* place children into those areas */
-header.tworow .logo-section { grid-area: logo; }
-header.tworow .top-utils    { grid-area: utils; justify-self: end; }
-header.tworow .menu-bar     {
-  grid-area: nav;            /* this makes it the full second row */
-  justify-self: stretch;
-  width: 100%;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255,255,255,.25);
-  justify-content: flex-start;   /* instead of center */
+/* Row 1: brand + utils */
+.brand {
+  grid-area: brand;
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
+.brand-logo {
+  height: 40px;
+  width: auto;
+  border-radius: 10px;
+}
+.brand-text {
+  color: #fff;
+  line-height: 1.1;
+}
+.brand-text strong { font-weight: 800; letter-spacing: .2px; font-size: 16px; display: block; }
+.brand-text small  { color: var(--fg-soft); font-weight: 600; font-size: 12px; }
 
-/* kill the centering from the base rule for this header only */
-header.tworow .menu-bar { justify-self: stretch; }
+.utils {
+  grid-area: utils;
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 10px;
+}
+.search input[type="search"]{
+  width: clamp(220px, 26vw, 360px);
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  outline: none;
+  backdrop-filter: blur(8px) saturate(120%);
+}
+.search input::placeholder { color: rgba(255,255,255,.75); }
 
-/* small screens: stack logo / utils / nav */
+.icon-btn{
+  position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:32px; border-radius:10px; cursor:pointer;
+  border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.10); color:#fff;
+  transition: transform .15s, box-shadow .2s, background .2s; backdrop-filter: blur(8px) saturate(120%);
+}
+.icon-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.25); }
+.badge{
+  position:absolute; top:-6px; right:-6px; min-width:16px; height:16px; padding:0 4px;
+  border-radius:999px; background:#ff3b30; color:#fff; font-size:10px; font-weight:800;
+  display:inline-flex; align-items:center; justify-content:center; border:2px solid #1a2b6b;
+}
+.id-chip{
+  background: rgba(255,255,255,.14);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-weight: 800;
+}
+
+/* Row 2: nav pills */
+.menu-bar{
+  grid-area: nav;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.22);
+}
+.pill{
+  color:#fff;
+  text-decoration:none;
+  font-weight:700;
+  font-size:13px;
+  padding:6px 12px;
+  border-radius: 10px;
+  background: var(--pill);
+  border: 1px solid rgba(255,255,255,.25);
+  backdrop-filter: blur(10px) saturate(130%);
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.pill:hover, .pill.is-active{
+  background: rgba(255,255,255,.22);
+  color: var(--utar-navy);
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+
+/* ============ Main glass panel ============ */
+.glass{
+  margin-top: 16px;
+  background: var(--glass);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(14px) saturate(115%);
+  -webkit-backdrop-filter: blur(14px) saturate(115%);
+  padding: 22px;
+}
+.greeting{
+  margin: 6px 0 4px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+}
+.desc{
+  text-align: center;
+  color: #5b5b60;
+  margin: 0 0 20px;
+}
+
+/* Cards grid */
+.grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  padding: 16px;
+}
+.card h2{
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+}
+
+/* Quick links */
+.links a{
+  display: block;
+  padding: 10px 0;
+  text-decoration: none;
+  color: #0a2a66;
+  font-weight: 700;
+  border-bottom: 1px solid #efeff2;
+}
+.links a:last-child{ border-bottom: 0; }
+.links a:hover{ background: rgba(0,0,0,0.03); }
+
+/* Table */
+.table{ width: 100%; border-collapse: collapse; }
+.table th, .table td{
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #efeff2;
+  font-size: 14px;
+}
+.table thead th{ font-weight: 800; color: #2a2a2a; }
+.more{
+  display: inline-block;
+  margin-top: 10px;
+  font-weight: 800;
+  color: #0a4bd3;
+  text-decoration: none;
+}
+.more:hover{ text-decoration: underline; }
+
+/* Snapshot */
+.snapshot{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  margin: 6px 0 2px;
+}
+.snapshot span{
+  display: block;
+  color: #6e6e73;
+  font-size: 12px;
+}
+.snapshot strong{ font-size: 15px; }
+
+/* Footer chip */
+.chip{
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 14px;
+  color: var(--fg-soft);
+  font-size: 13px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,.22);
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 900px){
+  .grid{ grid-template-columns: 1fr; }
+}
 @media (max-width: 720px){
   header.tworow{
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    grid-template-areas:
-      "logo"
-      "utils"
-      "nav";
+    grid:
+      "brand" auto
+      "utils" auto
+      "nav"   auto
+      / 1fr;
     justify-items: center;
   }
-  header.tworow .top-utils { justify-self: center; }
-  header.tworow .menu-bar  { justify-content: center; }
+  .utils{ justify-self: center; }
+  .menu-bar{ justify-content: center; }
 }
-
-/* --- Force two-row header layout --- */
-header.tworow {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: auto auto;               /* two rows */
-  column-gap: 16px;
-  row-gap: 10px;
-}
-
-/* Place items */
-header.tworow .logo-section { grid-column: 1; grid-row: 1; }
-header.tworow .top-utils    { grid-column: 3; grid-row: 1; justify-self: end; }
-
-/* Make nav occupy the whole second row */
-header.tworow .menu-bar {
-  grid-column: 1 / -1;                          /* span all columns */
-  grid-row: 2;                                   /* second row */
-  justify-self: stretch;                         /* override earlier center */
-  width: 100%;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255,255,255,.25);
-}
-
-/* === HARD OVERRIDE: force two-row header layout === */
-header.tworow {
-  display: grid !important;
-  grid-template-columns: auto 1fr auto !important;
-  grid-template-rows: auto auto !important;   /* <- row for nav */
-  column-gap: 16px;
-  row-gap: 10px;
-}
-
-/* Put children into explicit grid cells */
-header.tworow > .logo-section {
-  grid-column: 1 !important;
-  grid-row: 1 !important;
-}
-
-header.tworow > .top-utils {
-  grid-column: 3 !important;
-  grid-row: 1 !important;
-  justify-self: end !important;
-}
-
-header.tworow > .menu-bar {
-  grid-column: 1 / -1 !important;  /* span full width */
-  grid-row: 2 !important;          /* second row */
-  justify-self: stretch !important;
-  width: 100% !important;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255,255,255,.25);
-}
-
-/* === FORCE TWO-ROW HEADER WHEN class="tworow" === */
-header.tworow {
-  display: grid !important;
-  grid-template-columns: auto 1fr auto !important;
-  grid-template-rows: auto auto !important;   /* row 2 is for the nav */
-  column-gap: 16px;
-  row-gap: 10px;
-}
-
-/* Explicit placement (direct children only) */
-header.tworow > .logo-section { grid-column: 1 !important; grid-row: 1 !important; }
-header.tworow > .top-utils    { grid-column: 3 !important; grid-row: 1 !important; justify-self: end !important; }
-header.tworow > .menu-bar     {
-  grid-column: 1 / -1 !important;   /* span full width */
-  grid-row: 2 !important;           /* second row */
-  justify-self: stretch !important;
-  width: 100% !important;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255,255,255,.25);
-}
-
-/* Kill the generic centering that kept nav in row 1 */
-.menu-bar { justify-self: auto; }                /* base */
-header.tworow .menu-bar { justify-self: stretch; }
-
-/* === FINAL OVERRIDE (paste LAST) === */
-header.tworow{
-  display:grid !important;
-  grid-template-columns:auto 1fr auto !important;
-  grid-auto-rows:auto auto !important;   /* two natural-height rows */
-  column-gap:16px; row-gap:10px;
-}
-
-/* Row 1 */
-header.tworow > .logo-section{ grid-area: 1 / 1 / 2 / 2 !important; }
-header.tworow > .top-utils   { grid-area: 1 / 3 / 2 / 4 !important; justify-self:end !important; }
-
-/* Row 2 (full width nav) */
-header.tworow > .menu-bar{
-  grid-area: 2 / 1 / 3 / 4 !important;    /* row 2, span all columns */
-  justify-self: stretch !important;
-  width: 100% !important;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255,255,255,.25);
-}
-
-/* ===== FINAL FIX: force two-row header with named areas ===== */
-header.tworow{
-  /* one line that sets both columns, rows, and areas */
-  display: grid !important;
-  grid: "logo . utils" auto
-        "nav  nav nav" auto
-        / auto 1fr auto !important;
-  column-gap: 16px;
-  row-gap: 10px;
-}
-
-/* map the three direct children into those areas */
-header.tworow > .logo-section { grid-area: logo !important; }
-header.tworow > .top-utils    { grid-area: utils !important; justify-self: end !important; }
-header.tworow > .menu-bar     {
-  grid-area: nav !important;
-  justify-self: stretch !important;
-  width: 100% !important;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255,255,255,.25);
-}
-
