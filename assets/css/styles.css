@@ -759,81 +759,38 @@ main.card h2{
 main.card h1{ margin: 6px 0 8px; line-height: 1.15; }
 main.card h2{ margin: 0 0 16px; line-height: 1.2; }
 
-<div class="field pwd-wrap">
-  <label for="pwd">Password</label>
-  <input id="pwd" class="input" type="password"
-         placeholder="Enter your password" autocomplete="current-password" />
-  <button type="button" class="pwd-toggle" aria-label="Show password">
-    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-    </svg>
-    <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M1 1l22 22"/><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.73 21.73 0 0 1 5.06-6.06"/>
-    </svg>
-  </button>
-</div>
-
-/* === Password eye — final, forceful overrides === */
-#login-form .pwd-wrap{ position: relative; }
-#login-form .pwd-wrap .input{ padding-right: 52px !important; }
-
+/* ---------- LOGIN: password eye (stable) ---------- */
+#login-form .pwd-wrap{ position:relative; }
+#login-form .pwd-wrap .input{ padding-right:52px !important; }
 #login-form .pwd-wrap .pwd-toggle{
-  position: absolute !important;
-  inset-inline-end: 12px !important;   /* right:12px */
-  inset-block-start: 50% !important;    /* top:50% */
-  transform: translateY(-50%) !important;
-  width: 34px; height: 34px;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: transparent; border: 0; border-radius: 50%;
-  color: #274bb7; cursor: pointer;
-  z-index: 2; pointer-events: auto;
+  position:absolute; inset-inline-end:12px; top:50%; transform:translateY(-50%);
+  width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center;
+  border:0; background:transparent; border-radius:50%; color:#274bb7; cursor:pointer;
 }
-#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
-#login-form .pwd-wrap .pwd-toggle svg{ width: 18px; height: 18px; stroke-width: 1.8; }
+#login-form .pwd-wrap .pwd-toggle:hover{ background:rgba(39,75,183,.08); }
+#login-form .pwd-wrap .pwd-toggle svg{ width:18px; height:18px; stroke-width:1.8; }
 #login-form .pwd-wrap .pwd-toggle .icon-eye-off{ display:none; }
 #login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display:none; }
 #login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display:block; }
 
-/* Title spacing polish */
-.login-card h1{ margin: 8px 0 6px; line-height: 1.15; }
-.login-card h2{ margin: 0 0 18px; line-height: 1.2; }
+/* ---------- DASHBOARD alignment ---------- */
+.card{ text-align:left; }           /* body content left */
+.card h2{ text-align:center; }      /* keep titles centered */
+.links{ padding-left:0; }
+.links a{ text-align:left; }
 
-/* Label spacing */
-#login-form .field label{ margin-bottom: 6px; }
-
-/* Grid & card rhythm so nothing collapses */
-.grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-.card{ background:var(--surface); border:1px solid var(--line);
-  border-radius:12px; box-shadow:0 1px 2px rgba(0,0,0,.04); padding:16px; min-height:140px; }
+/* Key/Value grids (Next Class, Fees, etc.) */
 .card .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
 .card .kv span{ display:block; color:#6e6e73; font-size:12px; }
-.card .kv strong{ font-size:15px; }
+.card .kv strong{ font-size:15px; white-space:nowrap; }  /* e.g. "7 / 14 weeks" */
 
-/* super simple dropdown (click) */
-.menu-item.simple-menu{ position:relative; }
-.menu-item.simple-menu .dropdown{ position:absolute; right:0; top:calc(100% + 8px); z-index:9999; }
-.menu-item.simple-menu .dropdown:not(.is-open){ display:none; }
+/* Tables look populated even with few cols */
+.table td, .table th{ white-space:nowrap; }
 
-/* make sure nothing overlays the header buttons */
+/* Header buttons always clickable */
 header.tworow{ position:relative; z-index:10; }
 
-/* tables don’t look empty */
-.table td, .table th { white-space:nowrap; }
-
-/* small safety: prevent unknown overlay from blocking clicks */
-* { pointer-events: auto; }
-
-/* ---- Dashboard alignment fixes ---- */
-.card{ text-align: left; }           /* left-align everything in cards */
-.card h2{ text-align: center; }      /* but keep the card titles centered */
-.card .kv, .card .kv div{ text-align:left; }  /* key/value blocks left */
-.more{ display:inline-block; }       /* ensure "more" links are not centered */
-
-/* make the Next Class/Fees blocks read nicely */
-.card .kv{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:10px 14px;
-}
-.card .kv span{ display:block; color:#6e6e73; font-size:12px; }
-.card .kv strong{ font-size:15px; }
+/* Simple per-item dropdown support (for account menu) */
+.menu-item.simple-menu{ position:relative; }
+.menu-item.simple-menu .dropdown{ position:absolute; right:0; top:calc(100% + 8px); }
+.menu-item.simple-menu .dropdown:not(.is-open){ display:none; }
