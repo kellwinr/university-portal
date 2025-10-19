@@ -802,3 +802,12 @@ header.tworow{ position:relative; z-index:10; }
 .card .kv strong { font-size:15px; }
 
 .links, .links * { text-align:left; }
+
+.card { text-align: left; }
+.card h2 { text-align: center; }
+.links { text-align: left; }
+.links a{ display:block; padding:10px 0; text-decoration:none; color:#0a2a66; font-weight:700; border-bottom:1px solid #efeff2; }
+.links a:last-child{ border-bottom:0; }
+.card .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+.card .kv span{ display:block; color:#6e6e73; font-size:12px; }
+.card .kv strong{ font-size:15px; }
