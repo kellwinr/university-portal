@@ -1,3 +1,5 @@
+anything wrong here, my whole site is suddenly broken
+
 :root{
   /* brand + background */
   --navy-1:#0a1e55;
@@ -46,11 +48,13 @@ body{
   padding:20px;
 }
 
-/* Constrain major blocks */
+/* constrain major blocks */
 header, .glass, .footer-chip{ width:92%; max-width:1100px; }
 
 /* ===================================================================
    HEADER (Two-Row Glass)
+   - Row 1: logo-section (left) + top-utils (right)
+   - Row 2: full-width .menu-bar
    =================================================================== */
 header.tworow{
   background:rgba(255,255,255,.10);
@@ -60,17 +64,12 @@ header.tworow{
   backdrop-filter:blur(20px) saturate(140%);
   -webkit-backdrop-filter:blur(20px) saturate(140%);
   padding:10px 16px;
-
   display:grid;
-  grid-template-areas:
-    "logo . utils"
-    "nav  nav nav";
-  grid-template-columns:auto 1fr auto;
-  grid-auto-rows:auto;
+  grid:
+    "logo . utils" auto
+    "nav  nav nav" auto
+    / auto 1fr auto;
   gap:10px 16px;
-
-  /* make sure nothing overlays the header buttons */
-  position:relative; z-index:10;
 }
 
 /* Row 1 — left brand */
@@ -168,30 +167,20 @@ header.tworow{
 .card{
   background:var(--surface); border:1px solid var(--line);
   border-radius:12px; box-shadow:0 1px 2px rgba(0,0,0,.04); padding:16px;
-  text-align:left;                 /* body content left */
 }
-.card h2{ margin:0 0 10px; font-size:14px; font-weight:800; color:#111; text-align:center; }
+.card h2{ margin:0 0 10px; font-size:14px; font-weight:800; color:#111; }
 
 /* quick links */
-.links{ text-align:left; padding-left:0; }
-.links a{
-  display:block; padding:10px 0; text-decoration:none; color:#0a2a66;
-  font-weight:700; border-bottom:1px solid #efeff2;
-}
+.links a{ display:block; padding:10px 0; text-decoration:none; color:#0a2a66; font-weight:700; border-bottom:1px solid #efeff2; }
 .links a:last-child{ border-bottom:0; }
 .links a:hover{ background:rgba(0,0,0,0.03); }
 
 /* table */
 .table{ width:100%; border-collapse:collapse; }
-.table th,.table td{ text-align:left; padding:8px 10px; border-bottom:1px solid #efeff2; font-size:14px; white-space:nowrap; }
+.table th,.table td{ text-align:left; padding:8px 10px; border-bottom:1px solid #efeff2; font-size:14px; }
 .table thead th{ font-weight:800; color:#2a2a2a; }
 .more{ display:inline-block; margin-top:10px; font-weight:800; color:#0a4bd3; text-decoration:none; }
 .more:hover{ text-decoration:underline; }
-
-/* key/value blocks (Next Class, Fees, etc.) */
-.card .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
-.card .kv span{ display:block; color:#6e6e73; font-size:12px; }
-.card .kv strong{ font-size:15px; white-space:nowrap; }
 
 /* snapshot */
 .snapshot{ display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; margin:6px 0 2px; }
@@ -207,11 +196,10 @@ header.tworow{
 }
 
 /* ===================================================================
-   LOGIN PAGE (shares this CSS)
+   LOGIN PAGE (Share the same CSS file)
+   - Add class="login" on <body> in login.html
    =================================================================== */
 body.login{ padding:0; }
-
-/* container + card */
 .login-wrap{
   width:min(1100px, 92%); margin:40px auto; display:grid; row-gap:16px; justify-items:center;
 }
@@ -221,8 +209,6 @@ body.login{ padding:0; }
   border-radius:18px; padding:10px 14px; backdrop-filter:blur(14px) saturate(135%);
   box-shadow:0 20px 50px rgba(0,0,0,.35), 0 0 0 6px rgba(255,255,255,.03) inset;
 }
-
-/* login card */
 .login-card{
   width:clamp(320px, 55vw, 440px);
   background:
@@ -236,39 +222,544 @@ body.login{ padding:0; }
   background:linear-gradient(180deg, #000, #4a4a4a); -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .login-card h2{ margin:0 0 10px; text-align:center; color:#555; font-weight:600; }
-
-/* inputs */
-#login-form .field{ display:grid; row-gap:6px; }
-#login-form label{ font-size:13px; color:#4d4d50; }
-#login-form .input{
-  width:100%; padding:12px 14px; border-radius:14px; border:1px solid #d9dbe7;
-  background:linear-gradient(180deg,#fff,#f7f8fc); font-size:16px; outline:none;
-  transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
+.field{ display:grid; row-gap:6px; }
+.field label{ font-size:13px; color:#4d4d50; }
+.input{
+  padding:12px 14px; border-radius:14px; border:1px solid #d9dbe7; background:linear-gradient(180deg,#fff,#f7f8fc);
+  font-size:16px; outline:none; transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
 }
-#login-form .input:focus{ border-color:#9bb4ff; box-shadow:0 0 0 3px rgba(42,102,255,.18), 0 1px 0 rgba(255,255,255,.9) inset; transform:translateY(-1px); }
+.input:focus{ border-color:#9bb4ff; box-shadow:0 0 0 3px rgba(42,102,255,.18), 0 1px 0 rgba(255,255,255,.9) inset; transform:translateY(-1px); }
 
-/* actions */
-#login-form .actions{ display:grid; }
-#login-form .btn{
+.btn{
+  appearance:none; -webkit-appearance:none;
   border:0; border-radius:14px; padding:12px 14px; font-weight:700; color:#fff; cursor:pointer;
   background:linear-gradient(180deg,#2a66ff,#0e2f86); box-shadow:0 12px 28px rgba(14,47,134,.45), 0 1px 0 rgba(255,255,255,.25) inset;
   transition: transform .12s ease, box-shadow .18s ease;
 }
-#login-form .btn:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(14,47,134,.55), 0 1px 0 rgba(255,255,255,.25) inset; }
-#login-form .aux{ margin-top:10px; }
-#login-form .aux a{ color:var(--accent); font-weight:600; text-decoration:none; }
-#login-form .aux a:hover{ text-decoration:underline; }
-#status{ font-size:13px; min-height:1.2em; text-align:center; }
-#status:empty{ display:none; }
+.btn:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(14,47,134,.55), 0 1px 0 rgba(255,255,255,.25) inset; }
 
-/* Center login vertically */
+/* ===================================================================
+   Responsive
+   =================================================================== */
+@media (max-width:900px){ .grid{ grid-template-columns:1fr; } }
+@media (max-width:720px){
+  header.tworow{
+    grid:"logo" auto "utils" auto "nav" auto / 1fr;
+    justify-items:center;
+  }
+  .top-utils{ justify-self:center; }
+  .menu-bar{ justify-content:center; }
+}
+
+/* ==== LOGIN LAYOUT OVERRIDES ==== */
+/* container + card */
+.login-wrap {
+  width: min(1100px, 92%);
+  display: grid;
+  row-gap: 16px;
+  justify-items: center;
+}
+
+.logo-well img{
+  max-width: clamp(150px, 21vw, 260px);
+  width: 60vw;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 18px;
+  padding: 10px 14px;
+  backdrop-filter: blur(14px) saturate(135%);
+  -webkit-backdrop-filter: blur(14px) saturate(135%);
+  box-shadow: 0 20px 50px rgba(0,0,0,.35), 0 0 0 6px rgba(255,255,255,.03) inset;
+}
+
+.login-card{
+  width: clamp(320px, 55vw, 440px);
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.15)) border-box;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.28), 0 1px 0 rgba(255,255,255,.5) inset;
+  padding: 20px;
+  display: grid;
+  row-gap: 14px;
+}
+
+.login-card h1{
+  margin: 6px 0 2px;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: .02em;
+  background: linear-gradient(180deg, #000, #4a4a4a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.login-card h2{
+  margin: 0 0 10px;
+  text-align: center;
+  color: #555;
+  font-weight: 600;
+}
+
+/* inputs */
+#login-form .input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #d9dbe7;
+  background: linear-gradient(180deg, #fff, #f7f8fc);
+  font-size: 16px;
+  outline: none;
+  transition: box-shadow .16s ease, border-color .16s ease, transform .16s ease;
+}
+#login-form .input:focus {
+  border-color: #9bb4ff;
+  box-shadow: 0 0 0 3px rgba(42,102,255,.18), 0 1px 0 rgba(255,255,255,.9) inset;
+  transform: translateY(-1px);
+}
+
+#login-form .field { display: grid; row-gap: 6px; }
+#login-form label { font-size: 13px; color: #4d4d50; }
+
+/* password toggle */
+.pwd-wrap { position: relative; }
+.pwd-wrap .input { padding-right: 56px; }
+.pwd-toggle{
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  border-radius: 50%;
+  color: #274bb7;
+  cursor: pointer;
+  transition: background .15s ease, transform .12s ease, color .15s ease;
+}
+.pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+.pwd-toggle .icon-eye-off{ display: none; }
+.pwd-toggle.visible .icon-eye{ display: none; }
+.pwd-toggle.visible .icon-eye-off{ display: block; }
+
+/* actions */
+#login-form .actions { display: grid; }
+#login-form .btn{
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(180deg,#2a66ff,#0e2f86);
+  box-shadow: 0 12px 28px rgba(14,47,134,.45), 0 1px 0 rgba(255,255,255,.25) inset;
+  transition: transform .12s ease, box-shadow .18s ease;
+}
+#login-form .btn:hover{ transform: translateY(-1px); box-shadow: 0 16px 36px rgba(14,47,134,.55), 0 1px 0 rgba(255,255,255,.25) inset; }
+#login-form .aux { margin-top: 10px; }
+#login-form .aux a { color: var(--accent); font-weight: 600; text-decoration: none; }
+#login-form .aux a:hover { text-decoration: underline; }
+
+#status{ font-size: 13px; min-height: 1.2em; text-align: center; }
+#status:empty{ display: none; }
+
+/* footer in the card */
+.login-card .footer{
+  margin-top: 6px;
+  color: #666;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* === Adjust login page layout === */
+body.login {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.login-wrap,
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Centered logo with proper shadow */
+.logo-well img {
+  max-width: clamp(160px, 25vw, 260px);
+  margin-bottom: 10px;
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+}
+
+/* Login card visual refinement */
+main.card {
+  width: clamp(340px, 55vw, 440px);
+  background: linear-gradient(180deg, #ffffff, #f8f8f8);
+  border-radius: 20px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  padding: 32px 28px 26px;
+}
+
+/* Title and subtitle spacing */
+main.card h1 {
+  margin: 8px 0 4px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+main.card h2 {
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Input field and label layout */
+.field {
+  width: 100%;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #333;
+}
+
+.input,
+.field input[type="text"],
+.field input[type="password"] {
+  width: 100%;
+  padding: 12px 40px 12px 14px; /* add right padding for eye icon */
+  border-radius: 14px;
+  border: 1px solid #d9dbe7;
+  background: linear-gradient(180deg, #fff, #f7f8fc);
+  font-size: 16px;
+  outline: none;
+  transition: box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.input:focus {
+  border-color: #9bb4ff;
+  box-shadow: 0 0 0 3px rgba(42, 102, 255, 0.18);
+}
+
+/* Fix password eye icon position */
+.pwd-wrap {
+  position: relative;
+}
+
+.pwd-toggle {
+  position: absolute;
+  top: 36px;  /* aligns with input height */
+  right: 14px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pwd-toggle svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.8;
+}
+
+.pwd-toggle .icon-eye-off {
+  display: none;
+}
+
+.pwd-toggle.visible .icon-eye {
+  display: none;
+}
+
+.pwd-toggle.visible .icon-eye-off {
+  display: block;
+}
+
+/* Login button */
+.btn {
+  width: 100%;
+  padding: 12px;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(180deg, #2a66ff, #0e2f86);
+  box-shadow: 0 10px 25px rgba(14, 47, 134, 0.4);
+  transition: transform 0.12s ease, box-shadow 0.18s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px rgba(14, 47, 134, 0.5);
+}
+
+/* Forgot password link */
+.aux {
+  text-align: left;
+  margin-top: 6px;
+}
+
+.aux a {
+  color: #0a4bd3;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.aux a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer.footer {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+}
+
+/* ==== LOGIN FIXES (final overrides) ==== */
+
+/* layout + card rhythm */
 body.login{
-  min-height:100svh; display:flex; align-items:center; justify-content:center; padding:0;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
-/* IMPORTANT: scope “.card” flex to login ONLY */
-body.login .card{
-  display:flex; flex-direction:column; align-items:center; gap:18px;
+
+main.card{
+  width: clamp(340px, 55vw, 440px);
+  background: linear-gradient(180deg,#fff,#f8f8f8);
+  border-radius: 20px;
+  box-shadow: 0 18px 45px rgba(0,0,0,.25);
+  padding: 28px 24px 22px;
 }
+
+/* tighter, consistent heading spacing */
+main.card h1{
+  margin: 6px 0 6px;
+  font-size: 24px;
+  line-height: 1.2;
+  text-align: center;
+  font-weight: 800;
+}
+main.card h2{
+  margin: 0 0 16px;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: #555;
+  text-align: center;
+}
+
+/* field rhythm */
+#login-form .field{ margin-bottom: 12px; }
+#login-form label{ display:block; margin-bottom: 4px; font-size: 13px; color:#333; }
+
+/* inputs: ensure right padding for the eye */
+#login-form input[type="text"],
+#login-form input[type="password"]{
+  width:100%;
+  padding:12px 46px 12px 14px;   /* room for eye on the right */
+  border-radius:14px;
+  border:1px solid #d9dbe7;
+  background:linear-gradient(180deg,#fff,#f7f8fc);
+  font-size:16px;
+  outline:none;
+  transition: box-shadow .16s ease, border-color .16s ease;
+}
+#login-form input:focus{
+  border-color:#9bb4ff;
+  box-shadow:0 0 0 3px rgba(42,102,255,.18), 0 1px 0 rgba(255,255,255,.9) inset;
+}
+
+/* eye button: vertically centered, consistent size */
+#login-form .pwd-wrap{ position:relative; }
+#login-form .pwd-toggle{
+  position:absolute;
+  top:50%;
+  right:12px;
+  transform:translateY(-50%);
+  width:32px; height:32px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:0; background:transparent; border-radius:50%;
+  color:#274bb7; cursor:pointer;
+  transition: background .15s ease, transform .12s ease, color .15s ease;
+}
+#login-form .pwd-toggle:hover{ background:rgba(39,75,183,.08); }
+
+#login-form .pwd-toggle svg{ width:18px; height:18px; stroke-width:1.8; }
+#login-form .pwd-toggle .icon-eye-off{ display:none; }
+#login-form .pwd-toggle.visible .icon-eye{ display:none; }
+#login-form .pwd-toggle.visible .icon-eye-off{ display:block; }
+
+/* button & extras */
+#login-form .actions{ display:grid; }
+#login-form .btn{
+  width:100%;
+  padding:12px;
+  border:0; border-radius:14px;
+  font-weight:700; color:#fff;
+  background:linear-gradient(180deg,#2a66ff,#0e2f86);
+  box-shadow:0 10px 25px rgba(14,47,134,.4);
+  transition: transform .12s ease, box-shadow .18s ease;
+}
+#login-form .btn:hover{ transform:translateY(-1px); box-shadow:0 14px 32px rgba(14,47,134,.5); }
+#login-form .aux{ margin-top:8px; text-align:left; }
+#login-form .aux a{ color:#0a4bd3; text-decoration:none; font-weight:600; }
+#login-form .aux a:hover{ text-decoration:underline; }
+
+/* === Password eye: lock it to the input row (no absolute math) === */
+#login-form .pwd-wrap{
+  display: grid;
+  grid-template-rows: auto auto;   /* row 1 = label, row 2 = input */
+  grid-template-columns: 1fr;
+}
+
+#login-form .pwd-wrap label{ grid-row: 1; }
+#login-form .pwd-wrap input{ grid-row: 2; }
+
+/* put the eye inside the same grid cell as the input, right/center */
+#login-form .pwd-wrap .pwd-toggle{
+  position: static !important;      /* stop absolute-from-wrapper behavior */
+  grid-row: 2;                      /* same row as input */
+  grid-column: 1;
+  justify-self: end;                /* push to the right edge of the input cell */
+  align-self: center;               /* vertically center to the input */
+  margin-right: 12px;               /* spacing from input border */
+  width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+}
+
+/* make sure there's room for the icon inside the input */
+#login-form .pwd-wrap input{
+  padding-right: 46px !important;
+}
+
+/* crisp icon size */
+#login-form .pwd-wrap .pwd-toggle svg{
+  width: 18px; height: 18px; stroke-width: 1.8;
+}
+
+/* =========================
+   PASSWORD EYE – FINAL FIX
+   ========================= */
+
+/* 2-row grid: row 1 = label (full width), row 2 = input + eye */
+#login-form .pwd-wrap{
+  display: grid;
+  grid-template-areas:
+    "label label"
+    "input eye";
+  grid-template-columns: 1fr auto;
+  row-gap: 6px;
+  align-items: center;
+}
+
+#login-form .pwd-wrap label{ grid-area: label; margin: 0 0 2px; }
+#login-form .pwd-wrap input{ grid-area: input; }
+
+/* keep room for the eye inside the input */
+#login-form .pwd-wrap input{
+  padding-right: 48px !important;
+}
+
+/* eye lives in the same row as the input, visually inside the field */
+#login-form .pwd-wrap .pwd-toggle{
+  grid-area: eye;
+  position: relative;          /* no absolute math */
+  right: 0;
+  margin-left: -40px;           /* overlap into the input */
+  width: 32px; height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  border-radius: 50%;
+  color: #274bb7;
+  cursor: pointer;
+}
+#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+
+#login-form .pwd-wrap .pwd-toggle svg{
+  width: 18px; height: 18px; stroke-width: 1.8;
+}
+#login-form .pwd-wrap .pwd-toggle .icon-eye-off{ display: none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display: none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display: block; }
+
+/* =========================
+   TITLE SPACING TWEAKS
+   ========================= */
+main.card h1{
+  margin: 6px 0 8px;        /* tighter gap above subtitle */
+  line-height: 1.15;
+}
+main.card h2{
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+#login-form .field label{
+  margin-bottom: 6px;       /* consistent label -> input gap */
+}
+
+/* === PASSWORD EYE: force correct centering & override previous rules === */
+#login-form .pwd-wrap{ position: relative; }
+
+#login-form .pwd-wrap input{
+  padding-right: 48px !important;           /* leave room for the eye */
+}
+
+#login-form .pwd-wrap .pwd-toggle{
+  position: absolute !important;            /* override any earlier grid/absolute */
+  inset-inline-end: 12px !important;        /* right:12px in LTR / left in RTL */
+  inset-block-start: 50% !important;        /* top:50% in a logical way */
+  transform: translateY(-50%) !important;   /* perfect vertical centering */
+  width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 0; background: transparent; border-radius: 50%;
+  color: #274bb7; cursor: pointer;
+}
+
+#login-form .pwd-wrap .pwd-toggle:hover{ background: rgba(39,75,183,.08); }
+#login-form .pwd-wrap .pwd-toggle svg{ width: 18px; height: 18px; stroke-width: 1.8; }
+#login-form .pwd-wrap .pwd-toggle .icon-eye-off{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display:none; }
+#login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display:block; }
+
+/* Minor spacing polish so text rhythm matches the mock */
+#login-form .field label{ margin-bottom: 6px; }
+main.card h1{ margin: 6px 0 8px; line-height: 1.15; }
+main.card h2{ margin: 0 0 16px; line-height: 1.2; }
 
 /* ---------- LOGIN: password eye (stable) ---------- */
 #login-form .pwd-wrap{ position:relative; }
@@ -277,7 +768,6 @@ body.login .card{
   position:absolute; inset-inline-end:12px; top:50%; transform:translateY(-50%);
   width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center;
   border:0; background:transparent; border-radius:50%; color:#274bb7; cursor:pointer;
-  transition: background .15s ease, transform .12s ease, color .15s ease;
 }
 #login-form .pwd-wrap .pwd-toggle:hover{ background:rgba(39,75,183,.08); }
 #login-form .pwd-wrap .pwd-toggle svg{ width:18px; height:18px; stroke-width:1.8; }
@@ -285,24 +775,41 @@ body.login .card{
 #login-form .pwd-wrap .pwd-toggle.visible .icon-eye{ display:none; }
 #login-form .pwd-wrap .pwd-toggle.visible .icon-eye-off{ display:block; }
 
-/* ===================================================================
-   Responsive
-   =================================================================== */
-@media (max-width:900px){ .grid{ grid-template-columns:1fr; } }
-@media (max-width:720px){
-  header.tworow{
-    grid-template-areas:
-      "logo"
-      "utils"
-      "nav";
-    grid-template-columns:1fr;
-    justify-items:center;
-  }
-  .top-utils{ justify-self:center; }
-  .menu-bar{ justify-content:center; }
-}
+/* ---------- DASHBOARD alignment ---------- */
+.card{ text-align:left; }           /* body content left */
+.card h2{ text-align:center; }      /* keep titles centered */
+.links{ padding-left:0; }
+.links a{ text-align:left; }
 
-/* ---------- Simple per-item dropdown (for account) ---------- */
+/* Key/Value grids (Next Class, Fees, etc.) */
+.card .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+.card .kv span{ display:block; color:#6e6e73; font-size:12px; }
+.card .kv strong{ font-size:15px; white-space:nowrap; }  /* e.g. "7 / 14 weeks" */
+
+/* Tables look populated even with few cols */
+.table td, .table th{ white-space:nowrap; }
+
+/* Header buttons always clickable */
+header.tworow{ position:relative; z-index:10; }
+
+/* Simple per-item dropdown support (for account menu) */
 .menu-item.simple-menu{ position:relative; }
-.menu-item.simple-menu .dropdown{ position:absolute; right:0; top:calc(100% + 8px); z-index:9999; }
+.menu-item.simple-menu .dropdown{ position:absolute; right:0; top:calc(100% + 8px); }
 .menu-item.simple-menu .dropdown:not(.is-open){ display:none; }
+
+.card { text-align:left; }
+.card h2 { text-align:center; }
+.card .kv { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+.card .kv span { display:block; color:#6e6e73; font-size:12px; }
+.card .kv strong { font-size:15px; }
+
+.links, .links * { text-align:left; }
+
+.card { text-align: left; }
+.card h2 { text-align: center; }
+.links { text-align: left; }
+.links a{ display:block; padding:10px 0; text-decoration:none; color:#0a2a66; font-weight:700; border-bottom:1px solid #efeff2; }
+.links a:last-child{ border-bottom:0; }
+.card .kv{ display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+.card .kv span{ display:block; color:#6e6e73; font-size:12px; }
+.card .kv strong{ font-size:15px; }
