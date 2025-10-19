@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>UTAR University Portal — Demo Login</title>
   <meta name="color-scheme" content="light dark" />
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body class="login">
+  <noscript><p style="text-align:center;color:#b00020">This page requires JavaScript.</p></noscript>
+
   <div class="login-wrap">
     <div class="logo-well" aria-label="University logo">
-      <img src="assets/img/Universiti_Tunku_Abdul_Rahman_Logo.jpg" alt="UTAR Logo">
+      <!-- CHECK: the file name & extension must match exactly on your server -->
+      <img src="assets/img/Universiti_Tunku_Abdul_Rahman_Logo.jpg" alt="UTAR Logo" />
     </div>
 
     <section class="login-card" aria-label="UTAR University Portal">
@@ -21,21 +24,24 @@
         <div class="field">
           <label for="id">Student ID</label>
           <input class="input" id="id" name="id" type="text" inputmode="numeric"
-                 placeholder="e.g. 22XXXXXX" autocomplete="username" required>
+                 placeholder="e.g. 22XXXXXX" autocomplete="username" required />
         </div>
-<div class="field pwd-wrap">
-  <label for="pwd">Password</label>
-  <input class="input" id="pwd" name="pwd" type="password"
-         placeholder="Enter your password" autocomplete="current-password" required>
-  <button type="button" class="pwd-toggle" aria-label="Show password">
-    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-    </svg>
-    <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M1 1l22 22"/><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.73 21.73 0 0 1 5.06-6.06"/>
-    </svg>
-  </button>
-</div>
+
+        <div class="field pwd-wrap">
+          <label for="pwd">Password</label>
+          <input class="input" id="pwd" name="pwd" type="password"
+                 placeholder="Enter your password" autocomplete="current-password" required />
+          <button type="button" class="pwd-toggle" aria-label="Show password">
+            <svg class="icon-eye" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="icon-eye-off" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.73 21.73 0 0 1 5.06-6.06"></path>
+              <path d="M1 1l22 22"></path>
+            </svg>
+          </button>
+        </div>
 
         <div class="actions">
           <button class="btn" type="submit" aria-label="Log in">Login</button>
@@ -51,6 +57,7 @@
     </section>
   </div>
 
-  <script src="assets/js/main.js"></script>
+  <!-- Ensure this path exists and the file name matches exactly -->
+  <script src="assets/js/main.js" defer></script>
 </body>
 </html>
