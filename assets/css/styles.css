@@ -633,3 +633,36 @@ main.card h2{
 #login-form .aux{ margin-top:8px; text-align:left; }
 #login-form .aux a{ color:#0a4bd3; text-decoration:none; font-weight:600; }
 #login-form .aux a:hover{ text-decoration:underline; }
+
+/* === Password eye: lock it to the input row (no absolute math) === */
+#login-form .pwd-wrap{
+  display: grid;
+  grid-template-rows: auto auto;   /* row 1 = label, row 2 = input */
+  grid-template-columns: 1fr;
+}
+
+#login-form .pwd-wrap label{ grid-row: 1; }
+#login-form .pwd-wrap input{ grid-row: 2; }
+
+/* put the eye inside the same grid cell as the input, right/center */
+#login-form .pwd-wrap .pwd-toggle{
+  position: static !important;      /* stop absolute-from-wrapper behavior */
+  grid-row: 2;                      /* same row as input */
+  grid-column: 1;
+  justify-self: end;                /* push to the right edge of the input cell */
+  align-self: center;               /* vertically center to the input */
+  margin-right: 12px;               /* spacing from input border */
+  width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+}
+
+/* make sure there's room for the icon inside the input */
+#login-form .pwd-wrap input{
+  padding-right: 46px !important;
+}
+
+/* crisp icon size */
+#login-form .pwd-wrap .pwd-toggle svg{
+  width: 18px; height: 18px; stroke-width: 1.8;
+}
