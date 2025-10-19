@@ -358,3 +358,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const b = document.getElementById('notifBadge'); if (b) b.textContent = '';
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ----- Current Subjects -----
+  const subjBody = document.querySelector('#subjectsTable tbody') 
+                || document.querySelector('[data-demo="subjects-body"]');
+  if (subjBody){
+    const subjects = [
+      { code:'UCCD2513', name:'Data Structures', units:3, wble:'Open' },
+      { code:'UCCD2223', name:'Web Engineering', units:3, wble:'Open' },
+      { code:'UCCD2123', name:'Discrete Math',  units:3, wble:'Open' },
+    ];
+    subjBody.innerHTML = subjects.map(s =>
+      `<tr><td>${s.code}</td><td>${s.name}</td><td>${s.units}</td><td>${s.wble}</td></tr>`
+    ).join('');
+  }
+
+  // ----- Upcoming Exams -----
+  const examBody = document.querySelector('#examTable tbody')
+                 || document.querySelector('[data-demo="exams-body"]');
+  if (examBody){
+    const exams = [
+      { date:'28 Oct, 9:00', course:'UCCD2513 Data Structures', venue:'KB A-201' },
+      { date:'31 Oct, 2:00', course:'UCCD2223 Web Engineering', venue:'KB C-105' },
+      { date:'04 Nov, 9:00', course:'UCCD2123 Discrete Math',   venue:'KB Hall' },
+    ];
+    examBody.innerHTML = exams.map(e =>
+      `<tr><td>${e.date}</td><td>${e.course}</td><td>${e.venue}</td></tr>`
+    ).join('');
+  }
+
+  // ----- Next Class & Semester -----
+  const ncName = document.getElementById('nc-name');
+  const ncIn   = document.getElementById('nc-in');
+  const wk     = document.getElementById('wk');
+  if (ncName && ncIn && wk){
+    const next = { name:'UCCD2513 Tutorial', startsIn:'1h 40m', week:'7' };
+    ncName.textContent = next.name;
+    ncIn.textContent   = next.startsIn;
+    wk.textContent     = `${next.week} / 14 weeks`;
+  }
+
+  // ----- Fees & Payments -----
+  const bal = document.getElementById('bal');
+  const inv = document.getElementById('inv');
+  if (bal && inv){
+    bal.textContent = 'RM 0.00';
+    inv.textContent = '—';
+  }
+
+  // ----- Messages (Mailmaster) -----
+  const msgCount = document.getElementById('msg-count');
+  if (msgCount) msgCount.textContent = '2';
+});
