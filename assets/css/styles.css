@@ -857,3 +857,49 @@ input:-webkit-autofill:focus{
 
 /* Edge case: iOS password UI icons sitting on a tinted chip */
 .pwd-toggle{ color:#274bb7; }
+
+/* ===== FORCE SITE-WIDE GRADIENT BACKDROP ===== */
+
+/* Kill any white UA/earlier backgrounds */
+html, body, #app, main, .page, .content, .wrapper {
+  background: transparent !important;
+}
+
+/* Paint the gradient on a fixed pseudo-layer behind everything */
+html, body { min-height: 100vh; }
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;                    /* sits behind the whole page */
+  background:
+    radial-gradient(900px 450px at 50% 10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(700px 350px at 50% 90%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  background-color: var(--navy-1); /* fallback */
+  background-attachment: fixed;    /* stable on scroll */
+}
+
+/* Keep cards/glass panels as-is */
+.glass { background: var(--glass); }
+.card  { background: var(--surface); }
+
+/* Make sure the login page also uses the same gradient */
+body.login::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(900px 450px at 50% 10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(700px 350px at 50% 90%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  background-color: var(--navy-1);
+  background-attachment: fixed;
+}
+
+/* Optional: header strip should not paint white */
+header, .header, .navbar { background: transparent !important; }
+
+/* If a generic container is painting white, make it transparent */
+.container, .site, .shell { background: transparent !important; }
